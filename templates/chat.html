@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Mental Health Assistant | Elmed Wellmind</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --accent: #36D1DC;
+            --light: #F8F9FF;
+            --dark: #2A2D43;
+            --white: #FFFFFF;
+            --gradient: linear-gradient(135deg, #6C63FF 0%, #36D1DC 100%);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background: var(--gradient);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .chat-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .chat-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .disclaimer {
+            background: rgba(255, 101, 132, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            margin: 15px auto;
+            max-width: 800px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .chat-container {
+            flex: 1;
+            max-width: 900px;
+            width: 90%;
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 60vh;
+            min-height: 400px;
+        }
+        
+        .message {
+            margin-bottom: 25px;
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 18px 25px;
+            border-radius: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .user .message-content {
+            background: var(--gradient);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .assistant .message-content {
+            background: #f0f2ff;
+            color: var(--dark);
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .user .message-avatar {
+            order: 2;
+            margin-right: 0;
+            margin-left: 15px;
+            background: var(--primary);
+            color: white;
+        }
+        
+        .assistant .message-avatar {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .chat-input-area {
+            padding: 25px;
+            border-top: 1px solid #eee;
+            background: #fafbff;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 15px;
+        }
+        
+        #messageInput {
+            flex: 1;
+            padding: 18px 25px;
+            border: 2px solid #e0e2ff;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            resize: none;
+            min-height: 60px;
+            max-height: 120px;
+        }
+        
+        #messageInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+        }
+        
+        #sendButton {
+            padding: 0 35px;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        
+        #sendButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.3);
+        }
+        
+        #sendButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 15px 25px;
+            background: #f0f2ff;
+            border-radius: 25px;
+            margin-bottom: 25px;
+            width: fit-content;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .quick-action {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #e0e2ff;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-action:hover {
+            background: var(--gradient);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .emergency-bar {
+            background: linear-gradient(135deg, #FF6584 0%, #FF9F1C 100%);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 15px;
+        }
+        
+        .emergency-bar a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 15px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        
+        .emergency-bar a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        
+        .back-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .chat-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .chat-container {
+                width: 95%;
+                margin: 15px auto;
+            }
+            
+            .message-content {
+                max-width: 85%;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            #sendButton {
+                width: 100%;
+                justify-content: center;
+                padding: 18px;
+            }
+            
+            .emergency-bar {
+                font-size: 0.9rem;
+            }
+            
+            .emergency-bar a {
+                display: block;
+                margin: 10px auto 0;
+                width: fit-content;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-header">
+        <div class="container">
+            <h1><i class="fas fa-robot"></i> AI Mental Health Assistant</h1>
+            <p>Get immediate, confidential support for anxiety, depression, stress, and other mental health concerns</p>
+            
+            <div class="disclaimer">
+                <strong><i class="fas fa-exclamation-triangle"></i> Important:</strong> This AI assistant provides general support and information only. 
+                It is NOT a substitute for professional medical advice, diagnosis, or treatment. 
+                For emergencies, please use the emergency contacts below.
+            </div>
+            
+            <a href="/" class="back-home">
+                <i class="fas fa-arrow-left"></i> Back to Main Website
+            </a>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be loaded here -->
+            <div class="message assistant">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <strong>Mental Health Assistant:</strong> Hello! I'm here to provide supportive mental health information and coping strategies. I can help with anxiety, depression, stress management, and general wellbeing. Remember, I'm not a substitute for professional care. How can I support you today?
+                </div>
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <span></span><span></span><span></span>
+        </div>
+        
+        <div class="chat-input-area">
+            <div class="input-group">
+                <textarea id="messageInput" placeholder="Type your message here... What's on your mind? You can talk about stress, anxiety, relationships, or any mental health concern."></textarea>
+                <button id="sendButton">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="quick-action" data-prompt="I'm feeling anxious today">😰 Anxiety</div>
+                <div class="quick-action" data-prompt="I've been feeling sad and unmotivated">😔 Depression</div>
+                <div class="quick-action" data-prompt="I'm having trouble sleeping">😴 Sleep Issues</div>
+                <div class="quick-action" data-prompt="I'm feeling very stressed at work">💼 Work Stress</div>
+                <div class="quick-action" data-prompt="How can I practice self-care?">💖 Self-Care</div>
+                <div class="quick-action" data-prompt="I'm having relationship problems">❤️ Relationships</div>
+            </div>
+            
+            <div class="emergency-bar">
+                <i class="fas fa-phone-alt"></i> <strong>Emergency Support:</strong>
+                <a href="tel:+254759226354">
+                    <i class="fas fa-phone"></i> Call: +254 759 226354
+                </a>
+                <a href="https://wa.me/254759226354" target="_blank">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = window.location.origin + '/api';
+        let sessionId = localStorage.getItem('chatSessionId') || generateSessionId();
+        localStorage.setItem('chatSessionId', sessionId);
+        
+        // DOM Elements
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        
+        // Generate session ID
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        // Load chat history
+        async function loadChatHistory() {
+            try {
+                const response = await fetch(`${API_BASE}/chat/history/${sessionId}`);
+                const messages = await response.json();
+                
+                // Clear initial message if we have history
+                if (messages.length > 0) {
+                    chatMessages.innerHTML = '';
+                }
+                
+                messages.forEach(msg => {
+                    addMessageToChat(msg.content, msg.role);
+                });
+            } catch (error) {
+                console.log('No chat history found, starting new session');
+            }
+        }
+        
+        // Add message to chat
+        function addMessageToChat(content, role) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const avatarIcon = role === 'user' ? 'fas fa-user' : 'fas fa-robot';
+            const avatarBg = role === 'user' ? 'var(--primary)' : 'var(--accent)';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar" style="background: ${avatarBg};">
+                    <i class="${avatarIcon}"></i>
+                </div>
+                <div class="message-content">
+                    <strong>${role === 'user' ? 'You' : 'Mental Health Assistant'}:</strong> ${escapeHtml(content)}
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        // Send message
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessageToChat(message, 'user');
+            messageInput.value = '';
+            
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+            scrollToBottom();
+            
+            // Disable send button
+            sendButton.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: sessionId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addMessageToChat(data.response, 'assistant');
+                } else {
+                    addMessageToChat('I apologize, but I encountered an error. Please try again or contact our helpline directly.', 'assistant');
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
+                addMessageToChat('I am currently unavailable. Please contact our helpline at +254759226354 for immediate support.', 'assistant');
+            } finally {
+                typingIndicator.style.display = 'none';
+                sendButton.disabled = false;
+                messageInput.focus();
+            }
+        }
+        
+        // Quick action buttons
+        document.querySelectorAll('.quick-action').forEach(button => {
+            button.addEventListener('click', function() {
+                messageInput.value = this.dataset.prompt;
+                messageInput.focus();
+            });
+        });
+        
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+        
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 100);
+        }
+        
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChatHistory();
+            messageInput.focus();
+            
+            // Add welcome tips
+            setTimeout(() => {
+                if (chatMessages.children.length <= 1) {
+                    const tips = [
+                        "💡 You can talk about anything - stress, relationships, work, family, or general wellbeing",
+                        "💡 Try being specific about how you're feeling for more helpful responses",
+                        "💡 Remember to reach out to professionals for serious concerns",
+                        "💡 All conversations here are confidential and supportive"
+                    ];
+                    
+                    tips.forEach((tip, index) => {
+                        setTimeout(() => {
+                            const tipDiv = document.createElement('div');
+                            tipDiv.className = 'message assistant';
+                            tipDiv.style.opacity = '0.8';
+                            tipDiv.style.fontSize = '0.9rem';
+                            tipDiv.innerHTML = `
+                                <div class="message-avatar">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="message-content">
+                                    ${tip}
+                                </div>
+                            `;
+                            chatMessages.appendChild(tipDiv);
+                            scrollToBottom();
+                        }, index * 2000);
+                    });
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

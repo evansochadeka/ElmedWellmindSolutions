@@ -1,0 +1,156 @@
+<!-- templates/footer.html -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Elmed Wellmind Solutions</h3>
+                <p>Professional mental wellness consultancy dedicated to transforming mental health care in Kenya through accessible, quality services.</p>
+                <p style="margin-top: 20px;">
+                    <i class="fas fa-map-marker-alt"></i> Kahawa Wendani, Thika Road<br>
+                    <i class="fas fa-phone"></i> <a href="tel:+254759226354">+254 759 226354</a><br>
+                    <i class="fas fa-envelope"></i> elijahokware@gmaiil.com
+                </p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#services"><i class="fas fa-chevron-right"></i> Services</a></li>
+                    <li><a href="#ai-chat"><i class="fas fa-chevron-right"></i> AI Assistant</a></li>
+                    <li><a href="#community"><i class="fas fa-chevron-right"></i> Community Forum</a></li>
+                    <li><a href="#payment"><i class="fas fa-chevron-right"></i> Donate</a></li>
+                    <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Our Services</h3>
+                <ul>
+                    <li><a href="#services"><i class="fas fa-chevron-right"></i> Individual Counseling</a></li>
+                    <li><a href="#services"><i class="fas fa-chevron-right"></i> Group Therapy</a></li>
+                    <li><a href="#services"><i class="fas fa-chevron-right"></i> School Programs</a></li>
+                    <li><a href="#services"><i class="fas fa-chevron-right"></i> Corporate Training</a></li>
+                    <li><a href="#services"><i class="fas fa-chevron-right"></i> Crisis Intervention</a></li>
+                    <li><a href="#ai-chat"><i class="fas fa-chevron-right"></i> AI Assistant</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal & Accreditation</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Business Registration</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Confidentiality</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Code of Ethics</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2024 Elmed Wellmind Solutions. All rights reserved. | <strong>Nurturing Minds, Building Resilience</strong> | <a href="https://wa.me/254759226354" style="color: #36D1DC; text-decoration: none;">WhatsApp: +254 759 226354</a></p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">Breaking mental health stigma in Kenya, one conversation at a time.</p>
+        </div>
+    </div>
+</footer>
+
+<style>
+    /* Footer */
+    footer {
+        background: var(--gradient-dark);
+        color: var(--white);
+        padding: 100px 0 40px;
+        position: relative;
+    }
+    
+    footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--gradient-primary);
+    }
+    
+    .footer-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 50px;
+        margin-bottom: 60px;
+    }
+    
+    .footer-column {
+        flex: 1;
+        min-width: 250px;
+    }
+    
+    .footer-column h3 {
+        color: var(--white);
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    .footer-column h3::after {
+        content: '';
+        position: absolute;
+        width: 50px;
+        height: 4px;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+        bottom: 0;
+        left: 0;
+    }
+    
+    .footer-column ul {
+        list-style: none;
+    }
+    
+    .footer-column ul li {
+        margin-bottom: 15px;
+    }
+    
+    .footer-column ul li a {
+        color: #ccc;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .footer-column ul li a:hover {
+        color: var(--accent);
+        transform: translateX(5px);
+    }
+    
+    .footer-column ul li a i {
+        width: 20px;
+        text-align: center;
+    }
+    
+    .copyright {
+        text-align: center;
+        padding-top: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: #aaa;
+        font-size: 0.95rem;
+    }
+    
+    @media (max-width: 992px) {
+        .footer-container {
+            gap: 30px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .footer-container {
+            flex-direction: column;
+        }
+    }
+</style>

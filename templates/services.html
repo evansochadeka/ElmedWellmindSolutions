@@ -1,0 +1,203 @@
+<!-- templates/services.html -->
+<!-- Services Section -->
+<section class="services" id="services">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our <span>Services</span></h2>
+            <p>Comprehensive mental health solutions tailored for individuals, families, schools, and organizations across Kenya</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3>Individual Counseling</h3>
+                <p>One-on-one therapy sessions with licensed mental health professionals for depression, anxiety, trauma, and other concerns.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Confidential sessions</li>
+                    <li><i class="fas fa-check"></i> Online & in-person options</li>
+                    <li><i class="fas fa-check"></i> Flexible scheduling</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI Mental Health Assistant</h3>
+                <p>24/7 AI-powered support for immediate guidance, coping strategies, and mental health information. Chat directly on this page.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Instant responses</li>
+                    <li><i class="fas fa-check"></i> Confidential chats</li>
+                    <li><i class="fas fa-check"></i> Evidence-based information</li>
+                </ul>
+                <a href="#ai-chat" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-comments"></i> Start Chat Now
+                </a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Group Therapy</h3>
+                <p>Support groups for specific challenges like grief, addiction recovery, parenting stress, and relationship issues.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Peer support</li>
+                    <li><i class="fas fa-check"></i> Expert facilitation</li>
+                    <li><i class="fas fa-check"></i> Safe environment</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Mental Health Training</h3>
+                <p>Workshops and training programs for schools, corporations, and community organizations on mental health awareness.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Customized programs</li>
+                    <li><i class="fas fa-check"></i> Certification available</li>
+                    <li><i class="fas fa-check"></i> Practical skills</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-school"></i>
+                </div>
+                <h3>School Programs</h3>
+                <p>Comprehensive mental health support for students, teachers, and parents in educational institutions.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Student counseling</li>
+                    <li><i class="fas fa-check"></i> Teacher training</li>
+                    <li><i class="fas fa-check"></i> Parent workshops</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-briefcase-medical"></i>
+                </div>
+                <h3>Crisis Intervention</h3>
+                <p>Immediate support for mental health emergencies, suicide prevention, and acute psychological distress.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> 24/7 availability</li>
+                    <li><i class="fas fa-check"></i> Emergency response</li>
+                    <li><i class="fas fa-check"></i> Follow-up care</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Services Section - Enhanced */
+    .services {
+        padding: 120px 0;
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+        position: relative;
+    }
+    
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .service-card {
+        background: white;
+        border-radius: 25px;
+        padding: 40px 35px;
+        transition: all 0.4s ease;
+        box-shadow: 0 15px 40px rgba(108, 99, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+        border: none;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--gradient-primary);
+        transition: height 0.4s ease;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 25px 50px rgba(108, 99, 255, 0.2);
+    }
+    
+    .service-card:hover::before {
+        height: 100%;
+        opacity: 0.05;
+    }
+    
+    .service-icon {
+        font-size: 3.5rem;
+        margin-bottom: 25px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+    }
+    
+    .service-card h3 {
+        font-size: 1.7rem;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .service-card p {
+        position: relative;
+        z-index: 2;
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 25px;
+        flex-grow: 1;
+    }
+    
+    .service-features {
+        list-style: none;
+        margin: 20px 0;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .service-features li {
+        padding: 8px 0;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .service-features li i {
+        color: var(--success);
+        font-size: 1.1rem;
+    }
+    
+    @media (max-width: 992px) {
+        .services-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .service-card {
+            padding: 30px;
+        }
+    }
+</style>

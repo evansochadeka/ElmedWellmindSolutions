@@ -1,0 +1,42 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Elmed Wellmind Solutions | Mental Wellness Kenya{% endblock %}
+
+{% block content %}
+    <!-- Include Hero Section -->
+    {% include 'hero.html' %}
+    
+    <!-- Include Services Section -->
+    {% include 'services.html' %}
+    
+    <!-- Include AI Chat Section -->
+    {% include 'ai-chat.html' %}
+    
+    <!-- Include Community Section -->
+    {% include 'community.html' %}
+    
+    <!-- Include Payment Section -->
+    {% include 'payment.html' %}
+    
+    <!-- Include Contact Section -->
+    {% include 'contact.html' %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Additional initialization that needs to run after all sections are loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Elmed Wellmind Solutions loaded successfully');
+        
+        // Make phone numbers clickable
+        document.querySelectorAll('.phone-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if(this.getAttribute('href').startsWith('tel:')) {
+                    return; // For call links, they work naturally
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

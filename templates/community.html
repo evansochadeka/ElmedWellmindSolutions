@@ -1,0 +1,709 @@
+<!-- templates/community.html -->
+<!-- Community Section -->
+<section class="community" id="community">
+    <div class="container">
+        <div class="section-title">
+            <h2>Safe Community Forum</h2>
+            <p>Share experiences, find support, and connect with others on similar journeys in our moderated mental wellness community.</p>
+        </div>
+        
+        <div class="community-container">
+            <div class="community-posts">
+                <div class="post-form">
+                    <h3>Share Your Experience</h3>
+                    <form id="postForm">
+                        <div class="form-group">
+                            <label for="postName">Name (Optional)</label>
+                            <input type="text" id="postName" class="form-control" placeholder="Anonymous names are welcome">
+                        </div>
+                        <div class="form-group">
+                            <label for="postContent">What's on your mind?</label>
+                            <textarea id="postContent" class="form-control" placeholder="Share your concern, ask a question, or offer support. Remember to be respectful and kind." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="postCategory">Category (Optional)</label>
+                            <select id="postCategory" class="form-control">
+                                <option value="">Select a category</option>
+                                <option value="Anxiety">Anxiety</option>
+                                <option value="Depression">Depression</option>
+                                <option value="Relationships">Relationships</option>
+                                <option value="Parenting">Parenting</option>
+                                <option value="Work Stress">Work Stress</option>
+                                <option value="Grief & Loss">Grief & Loss</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Post to Community
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="posts-container" id="postsContainer">
+                    <h3>Recent Community Posts</h3>
+                    
+                    <div class="post" id="postTemplate" style="display: none;">
+                        <div class="post-header">
+                            <div class="post-author">
+                                <div class="author-avatar">A</div>
+                                <span class="author-name">Anonymous User</span>
+                            </div>
+                            <div class="post-date">Just now</div>
+                        </div>
+                        <div class="post-content">
+                            <p class="post-text">Sample post content</p>
+                            <div class="post-category" style="display: none;"></div>
+                        </div>
+                        <div class="post-actions">
+                            <span class="post-action like-btn"><i class="far fa-heart"></i> <span class="like-count">0</span> Support</span>
+                            <span class="post-action comment-btn"><i class="far fa-comment"></i> <span class="comment-count">0</span> Comments</span>
+                        </div>
+                        <div class="comments" style="display: none;">
+                            <!-- Comments will be added here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Posts will be loaded here by JavaScript -->
+                    <div id="loadingPosts" style="text-align: center; padding: 30px;">
+                        <i class="fas fa-spinner fa-spin fa-2x" style="color: var(--primary);"></i>
+                        <p style="margin-top: 15px;">Loading community posts...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="community-info">
+                <h3>Community Guidelines</h3>
+                <ul>
+                    <li><i class="fas fa-shield-alt"></i> Respect everyone's privacy</li>
+                    <li><i class="fas fa-heart"></i> Be kind and compassionate</li>
+                    <li><i class="fas fa-ban"></i> No hate speech or discrimination</li>
+                    <li><i class="fas fa-comment-medical"></i> This is not a crisis helpline</li>
+                    <li><i class="fas fa-handshake"></i> Share resources responsibly</li>
+                    <li><i class="fas fa-flag"></i> Report concerning posts to moderators</li>
+                </ul>
+                
+                <div class="emergency-contact">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Need Immediate Help?</h4>
+                    <p>If you or someone you know is in crisis, please contact our emergency support:</p>
+                    <a href="tel:+254759226354" class="phone-link">
+                        <i class="fas fa-phone"></i> +254 759 226354
+                    </a>
+                    <p style="margin-top: 15px; font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                        Or visit the nearest healthcare facility for immediate assistance.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Community Section - Enhanced */
+    .community {
+        padding: 120px 0;
+        background: var(--gradient-dark);
+        color: white;
+        position: relative;
+    }
+    
+    .community::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.02)"/></svg>');
+        background-size: cover;
+    }
+    
+    .community .section-title h2 {
+        color: white;
+    }
+    
+    .community .section-title p {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .community-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px;
+        align-items: flex-start;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .community-posts {
+        flex: 2;
+        min-width: 300px;
+    }
+    
+    .post-form {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 35px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .post-form h3 {
+        color: white;
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.95);
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 16px 20px;
+        border-radius: 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+    
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.5);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+    
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+    
+    .posts-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 35px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    
+    .posts-container::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .posts-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+    
+    .posts-container::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+    }
+    
+    .post {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 25px 0;
+        transition: all 0.3s;
+    }
+    
+    .post:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 25px 15px;
+        margin: 0 -15px;
+    }
+    
+    .post:last-child {
+        border-bottom: none;
+    }
+    
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        align-items: center;
+    }
+    
+    .post-author {
+        font-weight: 700;
+        color: white;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .author-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .post-date {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+    }
+    
+    .post-content {
+        margin-bottom: 20px;
+        color: rgba(255, 255, 255, 0.95);
+        line-height: 1.7;
+        font-size: 1.05rem;
+    }
+    
+    .post-actions {
+        display: flex;
+        gap: 25px;
+    }
+    
+    .post-action {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .post-action:hover {
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .comments {
+        margin-top: 20px;
+        padding-left: 20px;
+        border-left: 3px solid rgba(255, 255, 255, 0.3);
+        display: none;
+    }
+    
+    .comment {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+    
+    .comment:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .comment-author {
+        font-weight: 600;
+        color: white;
+        font-size: 0.95rem;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .comment-content {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.6;
+    }
+    
+    .community-info {
+        flex: 1;
+        min-width: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 35px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .community-info h3 {
+        color: white;
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+    }
+    
+    .community-info ul {
+        list-style: none;
+        margin-bottom: 30px;
+    }
+    
+    .community-info ul li {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .community-info ul li:last-child {
+        border-bottom: none;
+    }
+    
+    .community-info ul li i {
+        color: var(--accent);
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+    
+    .emergency-contact {
+        background: rgba(255, 101, 132, 0.2);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 25px;
+        border: 1px solid rgba(255, 101, 132, 0.3);
+    }
+    
+    .emergency-contact h4 {
+        color: white;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .emergency-contact h4 i {
+        color: var(--secondary);
+    }
+    
+    .emergency-contact .phone-link {
+        color: white;
+        font-weight: 700;
+        font-size: 1.4rem;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: inline-block;
+        margin: 10px 0;
+        background: var(--gradient-secondary);
+        padding: 10px 20px;
+        border-radius: 50px;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .emergency-contact .phone-link:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 101, 132, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+        .community-container {
+            flex-direction: column;
+        }
+        
+        .post-form, .posts-container, .community-info {
+            padding: 30px;
+        }
+    }
+</style>
+
+<script>
+    // COMMUNITY FORUM FUNCTIONS
+    document.addEventListener('DOMContentLoaded', function() {
+        const samplePosts = [
+            {
+                author: "Anonymous",
+                content: "Today marks 30 days of being anxiety-free. For anyone struggling, it does get better. One day at a time.",
+                category: "Anxiety",
+                likes: 24,
+                comments: 8,
+                date: "2 hours ago"
+            },
+            {
+                author: "Teacher_254",
+                content: "The stress management workshop for our school staff was transformative. We're now better equipped to support our students.",
+                category: "Work Stress",
+                likes: 15,
+                comments: 3,
+                date: "1 day ago"
+            },
+            {
+                author: "Recovering",
+                content: "Grateful for this community. Sharing my story has been healing. You're not alone in your struggles.",
+                category: "Other",
+                likes: 42,
+                comments: 12,
+                date: "3 days ago"
+            }
+        ];
+        
+        // Load community posts
+        async function loadCommunityPosts() {
+            const loadingElement = document.getElementById('loadingPosts');
+            
+            try {
+                const response = await fetch(`${API_BASE}/community/posts`);
+                if (response.ok) {
+                    const posts = await response.json();
+                    displayPosts(posts);
+                    if (loadingElement) loadingElement.remove();
+                } else {
+                    throw new Error('API failed');
+                }
+            } catch (error) {
+                console.log('Using sample posts:', error);
+                displayPosts(samplePosts);
+                if (loadingElement) loadingElement.remove();
+            }
+        }
+        
+        // Display posts
+        function displayPosts(posts) {
+            const postsContainer = document.getElementById('postsContainer');
+            const template = document.getElementById('postTemplate');
+            
+            // Clear existing posts except template and loading
+            Array.from(postsContainer.children).forEach(child => {
+                if (child.id !== 'postTemplate' && child.id !== 'loadingPosts') {
+                    child.remove();
+                }
+            });
+            
+            if (posts.length === 0) {
+                const noPostsDiv = document.createElement('div');
+                noPostsDiv.className = 'text-center py-4';
+                noPostsDiv.innerHTML = `
+                    <p style="color: rgba(255,255,255,0.8);">No posts yet. Be the first to share!</p>
+                `;
+                postsContainer.appendChild(noPostsDiv);
+                return;
+            }
+            
+            posts.forEach((post, index) => {
+                const newPost = template.cloneNode(true);
+                newPost.style.display = 'block';
+                newPost.id = 'post-' + (post.id || index);
+                
+                newPost.querySelector('.author-avatar').textContent = post.author.charAt(0).toUpperCase();
+                newPost.querySelector('.author-name').textContent = post.author;
+                newPost.querySelector('.post-text').textContent = post.content;
+                newPost.querySelector('.like-count').textContent = post.likes;
+                newPost.querySelector('.comment-count').textContent = post.comments;
+                newPost.querySelector('.post-date').textContent = post.date || formatDate(post.createdAt);
+                
+                if (post.category) {
+                    const categoryEl = newPost.querySelector('.post-category');
+                    categoryEl.style.display = 'inline-block';
+                    categoryEl.textContent = '#' + post.category;
+                    categoryEl.style.marginTop = '10px';
+                    categoryEl.style.padding = '5px 10px';
+                    categoryEl.style.background = 'rgba(255,255,255,0.1)';
+                    categoryEl.style.borderRadius = '5px';
+                    categoryEl.style.fontSize = '0.9rem';
+                }
+                
+                // Add event listeners for interactions
+                newPost.querySelector('.like-btn').addEventListener('click', function() {
+                    let count = parseInt(this.querySelector('.like-count').textContent);
+                    this.querySelector('.like-count').textContent = count + 1;
+                    this.querySelector('i').classList.remove('far');
+                    this.querySelector('i').classList.add('fas');
+                    this.style.color = '#FF6584';
+                });
+                
+                newPost.querySelector('.comment-btn').addEventListener('click', function() {
+                    const commentsSection = newPost.querySelector('.comments');
+                    if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+                        commentsSection.style.display = 'block';
+                        // Add sample comment
+                        if (!commentsSection.querySelector('.comment')) {
+                            const comment = document.createElement('div');
+                            comment.className = 'comment';
+                            comment.innerHTML = `
+                                <div class="comment-author">Community Moderator</div>
+                                <div class="comment-content">Thank you for sharing your experience. Your courage helps others feel less alone.</div>
+                            `;
+                            commentsSection.appendChild(comment);
+                        }
+                    } else {
+                        commentsSection.style.display = 'none';
+                    }
+                });
+                
+                postsContainer.appendChild(newPost);
+            });
+        }
+        
+        // Post form submission
+        document.getElementById('postForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const postName = document.getElementById('postName').value.trim() || 'Anonymous';
+            const postContent = document.getElementById('postContent').value.trim();
+            const postCategory = document.getElementById('postCategory').value;
+            
+            if (!postContent) {
+                alert('Please write something to share with the community.');
+                return;
+            }
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}/community/posts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        author: postName,
+                        content: postContent,
+                        category: postCategory || null
+                    })
+                });
+                
+                if (response.ok) {
+                    const newPost = await response.json();
+                    addPostToUI(newPost);
+                    
+                    // Clear form
+                    document.getElementById('postName').value = '';
+                    document.getElementById('postContent').value = '';
+                    document.getElementById('postCategory').value = '';
+                    
+                    showSuccessMessage('Your post has been shared with the community!');
+                } else {
+                    throw new Error('API failed');
+                }
+            } catch (error) {
+                // Fallback to local display
+                addPostToUI({
+                    id: Date.now(),
+                    author: postName,
+                    content: postContent,
+                    category: postCategory,
+                    likes: 0,
+                    comments: 0,
+                    createdAt: new Date().toISOString()
+                });
+                
+                // Clear form
+                document.getElementById('postName').value = '';
+                document.getElementById('postContent').value = '';
+                document.getElementById('postCategory').value = '';
+                
+                showSuccessMessage('Your post has been shared with the community!');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Add a new post to UI
+        function addPostToUI(postData) {
+            const postsContainer = document.getElementById('postsContainer');
+            const template = document.getElementById('postTemplate');
+            const newPost = template.cloneNode(true);
+            newPost.style.display = 'block';
+            newPost.id = 'post-' + postData.id;
+            
+            newPost.querySelector('.author-avatar').textContent = postData.author.charAt(0).toUpperCase();
+            newPost.querySelector('.author-name').textContent = postData.author;
+            newPost.querySelector('.post-text').textContent = postData.content;
+            newPost.querySelector('.post-date').textContent = 'Just now';
+            
+            if (postData.category) {
+                const categoryEl = newPost.querySelector('.post-category');
+                categoryEl.style.display = 'inline-block';
+                categoryEl.textContent = '#' + postData.category;
+                categoryEl.style.marginTop = '10px';
+                categoryEl.style.padding = '5px 10px';
+                categoryEl.style.background = 'rgba(255,255,255,0.1)';
+                categoryEl.style.borderRadius = '5px';
+                categoryEl.style.fontSize = '0.9rem';
+            }
+            
+            // Add event listeners for interactions
+            newPost.querySelector('.like-btn').addEventListener('click', function() {
+                let count = parseInt(this.querySelector('.like-count').textContent);
+                this.querySelector('.like-count').textContent = count + 1;
+                this.querySelector('i').classList.remove('far');
+                this.querySelector('i').classList.add('fas');
+                this.style.color = '#FF6584';
+            });
+            
+            newPost.querySelector('.comment-btn').addEventListener('click', function() {
+                const commentsSection = newPost.querySelector('.comments');
+                if (commentsSection.style.display === 'none' || commentsSection.style.display === '') {
+                    commentsSection.style.display = 'block';
+                    // Add sample comment
+                    if (!commentsSection.querySelector('.comment')) {
+                        const comment = document.createElement('div');
+                        comment.className = 'comment';
+                        comment.innerHTML = `
+                            <div class="comment-author">Community Moderator</div>
+                            <div class="comment-content">Thank you for sharing your experience. Your courage helps others feel less alone.</div>
+                        `;
+                        commentsSection.appendChild(comment);
+                    }
+                } else {
+                    commentsSection.style.display = 'none';
+                }
+            });
+            
+            // Insert new post at the top
+            const existingPosts = postsContainer.querySelectorAll('.post[style*="display: block"]');
+            if (existingPosts.length > 0) {
+                postsContainer.insertBefore(newPost, existingPosts[0]);
+            } else {
+                postsContainer.appendChild(newPost);
+            }
+            
+            // Remove loading indicator if it exists
+            const loadingElement = document.getElementById('loadingPosts');
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+        }
+        
+        // Show success message
+        function showSuccessMessage(message) {
+            const postsContainer = document.getElementById('postsContainer');
+            const successMsg = document.createElement('div');
+            successMsg.innerHTML = `
+                <div style="background: rgba(76, 201, 167, 0.2); border: 1px solid #4CC9A7; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+                    <i class="fas fa-check-circle" style="color: #4CC9A7; margin-right: 10px;"></i>
+                    ${message}
+                </div>
+            `;
+            postsContainer.insertBefore(successMsg, postsContainer.children[1]);
+            
+            setTimeout(() => {
+                successMsg.remove();
+            }, 5000);
+        }
+        
+        // Load posts on page load
+        loadCommunityPosts();
+    });
+</script>

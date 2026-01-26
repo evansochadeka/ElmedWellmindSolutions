@@ -1,0 +1,733 @@
+<!-- templates/contact.html -->
+<!-- Contact Section -->
+<section class="contact-section" id="contact">
+    <div class="container">
+        <div class="section-title">
+            <h2>Contact <span>Us</span></h2>
+            <p>Reach out for consultations, support, or inquiries. We're here to help on your mental wellness journey.</p>
+        </div>
+        
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3>Get In Touch</h3>
+                <p>We offer multiple ways to connect. All conversations are confidential and handled with compassion.</p>
+                
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>WhatsApp Support</h4>
+                            <a href="https://wa.me/254759226354" class="phone-link" target="_blank">+254 759 226354</a>
+                            <p>Fast response for counseling and support</p>
+                            <div class="social-links">
+                                <a href="https://wa.me/254759226354" class="social-link whatsapp-btn" target="_blank" title="WhatsApp">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Call Us</h4>
+                            <a href="tel:+254759226354" class="phone-link">+254 759 226354</a>
+                            <p>Available during business hours (8 AM - 8 PM)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fab fa-facebook"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Facebook</h4>
+                            <p>Connect with us on Facebook for updates and community</p>
+                            <div class="social-links">
+                                <a href="https://www.facebook.com/people/Elmed-Well-Mind/61585798993172/" class="social-link facebook" target="_blank" title="Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>elijahokware@gmaiil.com</p>
+                            <p>For detailed inquiries, partnerships, and appointments</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>Kahawa Wendani</p>
+                            <p>Along Thika Superhighway</p>
+                            <p>Githurai Sub County, Kiambu County</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <h3>Send a Message</h3>
+                <form id="contactForm" novalidate>
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" class="form-control" required placeholder="Your full name">
+                        <div class="error-message" id="nameError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" class="form-control" required placeholder="your.email@example.com">
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="+254 XXX XXX XXX">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service">Service Interested In</label>
+                        <select id="service" name="service" class="form-control">
+                            <option value="">Select a service</option>
+                            <option value="counseling">Individual Counseling</option>
+                            <option value="group">Group Therapy</option>
+                            <option value="training">Mental Health Training</option>
+                            <option value="school">School Program</option>
+                            <option value="corporate">Corporate Services</option>
+                            <option value="emergency">Emergency Support</option>
+                            <option value="other">Other Inquiry</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Your Message *</label>
+                        <textarea id="message" name="message" class="form-control" rows="5" required placeholder="Tell us how we can help you..."></textarea>
+                        <div class="error-message" id="messageError"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="consent" name="consent" required>
+                            <span>I agree to the <a href="#" class="privacy-link">Privacy Policy</a> and allow Elmed Wellmind to contact me regarding my inquiry.</span>
+                        </label>
+                        <div class="error-message" id="consentError"></div>
+                    </div>
+                    
+                    <div id="formStatus"></div>
+                    
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Contact Section - Enhanced */
+    .contact-section {
+        padding: 120px 0;
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    }
+    
+    .contact-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 60px;
+    }
+    
+    .contact-info {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .contact-info h3 {
+        font-size: 2.5rem;
+        margin-bottom: 25px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    .contact-methods {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .contact-method {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        padding: 25px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(108, 99, 255, 0.1);
+        transition: all 0.3s;
+        border: 2px solid transparent;
+    }
+    
+    .contact-method:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(108, 99, 255, 0.2);
+        border-color: var(--primary);
+    }
+    
+    .contact-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 20px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 1.8rem;
+        box-shadow: 0 10px 25px rgba(108, 99, 255, 0.3);
+        flex-shrink: 0;
+    }
+    
+    .contact-details h4 {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+        color: var(--dark);
+    }
+    
+    .contact-details p {
+        color: #666;
+        margin-bottom: 5px;
+        line-height: 1.6;
+    }
+    
+    .phone-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: block;
+        margin-bottom: 5px;
+        transition: color 0.3s;
+    }
+    
+    .phone-link:hover {
+        color: var(--accent);
+    }
+    
+    .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .social-link {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .social-link:hover {
+        transform: translateY(-5px) rotate(5deg);
+        box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+    }
+    
+    .social-link.facebook {
+        background: #1877F2;
+    }
+    
+    .social-link.whatsapp-btn {
+        background: #25D366;
+    }
+    
+    .contact-form {
+        flex: 1;
+        min-width: 300px;
+        background: white;
+        border-radius: 25px;
+        padding: 50px;
+        box-shadow: 0 25px 60px rgba(108, 99, 255, 0.15);
+    }
+    
+    .contact-form h3 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+        color: var(--dark);
+    }
+    
+    .contact-form .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .contact-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--dark);
+    }
+    
+    .contact-form .form-control {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e0e2ff;
+        border-radius: 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: #fafbff;
+    }
+    
+    .contact-form .form-control:focus {
+        border-color: var(--primary);
+        background: white;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+    }
+    
+    .contact-form textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+    
+    .contact-form select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236C63FF' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 20px center;
+        background-size: 12px;
+        padding-right: 45px;
+    }
+    
+    .error-message {
+        color: #FF6584;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: none;
+    }
+    
+    .checkbox-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        color: #555;
+        line-height: 1.5;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+        margin-top: 3px;
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #e0e2ff;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .checkbox-label input[type="checkbox"]:checked {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    
+    .privacy-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .privacy-link:hover {
+        text-decoration: underline;
+    }
+    
+    #formStatus {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        display: none;
+    }
+    
+    .status-success {
+        background: rgba(76, 201, 167, 0.1);
+        border: 1px solid #4CC9A7;
+        color: #2a7c63;
+    }
+    
+    .status-error {
+        background: rgba(255, 101, 132, 0.1);
+        border: 1px solid #FF6584;
+        color: #c44569;
+    }
+    
+    .status-loading {
+        background: rgba(108, 99, 255, 0.1);
+        border: 1px solid var(--primary);
+        color: var(--primary);
+    }
+    
+    @media (max-width: 992px) {
+        .contact-container {
+            gap: 40px;
+        }
+        
+        .contact-form {
+            padding: 40px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .contact-section {
+            padding: 80px 0;
+        }
+        
+        .contact-form {
+            padding: 30px;
+        }
+        
+        .contact-method {
+            padding: 20px;
+        }
+        
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .contact-info h3 {
+            font-size: 2rem;
+        }
+        
+        .contact-form h3 {
+            font-size: 1.8rem;
+        }
+        
+        .contact-method {
+            flex-direction: column;
+            text-align: center;
+            gap: 20px;
+        }
+        
+        .social-links {
+            justify-content: center;
+        }
+    }
+</style>
+
+<script>
+    // Contact form functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formStatus = document.getElementById('formStatus');
+        
+        // Error elements
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const messageError = document.getElementById('messageError');
+        const consentError = document.getElementById('consentError');
+        
+        // Validation functions
+        function validateName() {
+            const name = document.getElementById('name').value.trim();
+            if (!name) {
+                showError(nameError, 'Please enter your name');
+                return false;
+            }
+            if (name.length < 2) {
+                showError(nameError, 'Name must be at least 2 characters');
+                return false;
+            }
+            hideError(nameError);
+            return true;
+        }
+        
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!email) {
+                showError(emailError, 'Please enter your email address');
+                return false;
+            }
+            if (!emailRegex.test(email)) {
+                showError(emailError, 'Please enter a valid email address');
+                return false;
+            }
+            hideError(emailError);
+            return true;
+        }
+        
+        function validateMessage() {
+            const message = document.getElementById('message').value.trim();
+            if (!message) {
+                showError(messageError, 'Please enter your message');
+                return false;
+            }
+            if (message.length < 10) {
+                showError(messageError, 'Message must be at least 10 characters');
+                return false;
+            }
+            hideError(messageError);
+            return true;
+        }
+        
+        function validateConsent() {
+            const consent = document.getElementById('consent').checked;
+            if (!consent) {
+                showError(consentError, 'Please agree to the Privacy Policy');
+                return false;
+            }
+            hideError(consentError);
+            return true;
+        }
+        
+        function showError(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+        
+        function hideError(element) {
+            element.textContent = '';
+            element.style.display = 'none';
+        }
+        
+        function showFormStatus(message, type) {
+            formStatus.textContent = message;
+            formStatus.className = `status-${type}`;
+            formStatus.style.display = 'block';
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    formStatus.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        // Real-time validation
+        document.getElementById('name').addEventListener('blur', validateName);
+        document.getElementById('email').addEventListener('blur', validateEmail);
+        document.getElementById('message').addEventListener('blur', validateMessage);
+        document.getElementById('consent').addEventListener('change', validateConsent);
+        
+        // Form submission
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate all fields
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isMessageValid = validateMessage();
+            const isConsentValid = validateConsent();
+            
+            if (!isNameValid || !isEmailValid || !isMessageValid || !isConsentValid) {
+                showFormStatus('Please fix the errors above', 'error');
+                return;
+            }
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim() || 'Not provided',
+                service: document.getElementById('service').value || 'General Inquiry',
+                message: document.getElementById('message').value.trim(),
+                timestamp: new Date().toISOString(),
+                source: 'Website Contact Form'
+            };
+            
+            // Show loading state
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            showFormStatus('Sending your message...', 'loading');
+            
+            try {
+                // Option 1: Send via API endpoint
+                const response = await fetch(`${API_BASE}/contact`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    showFormStatus(result.message || 'Message sent successfully! We\'ll contact you within 24 hours.', 'success');
+                    contactForm.reset();
+                    
+                    // Show success animation
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> Sent!';
+                    submitBtn.style.background = 'var(--success)';
+                    
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.style.background = '';
+                        submitBtn.disabled = false;
+                    }, 2000);
+                    
+                } else {
+                    throw new Error('Server error');
+                }
+                
+            } catch (error) {
+                console.error('Form submission error:', error);
+                
+                // Option 2: Fallback to mailto link
+                const subject = encodeURIComponent(`Contact from ${formData.name} - ${formData.service}`);
+                const body = encodeURIComponent(`
+Name: ${formData.name}
+Email: ${formData.email}
+Phone: ${formData.phone}
+Service: ${formData.service}
+
+Message:
+${formData.message}
+
+---
+Sent from Elmed Wellmind Website
+Timestamp: ${new Date().toLocaleString('en-KE')}
+                `);
+                
+                const mailtoLink = `mailto:elijahokware@gmaiil.com?subject=${subject}&body=${body}`;
+                
+                // Ask user if they want to use email client
+                if (confirm('Unable to send automatically. Would you like to send via your email client instead?')) {
+                    window.location.href = mailtoLink;
+                    showFormStatus('Opening your email client...', 'success');
+                    contactForm.reset();
+                } else {
+                    showFormStatus('Failed to send message. Please try again or contact us directly.', 'error');
+                }
+                
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Phone number formatting
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            // Format Kenyan phone number
+            if (value.startsWith('0') && value.length >= 1) {
+                value = '+254' + value.substring(1);
+            } else if (value.startsWith('254') && value.length >= 3) {
+                value = '+' + value;
+            } else if (value.length > 0 && !value.startsWith('+')) {
+                value = '+254' + value;
+            }
+            
+            // Limit to 13 characters (+254XXXXXXXXX)
+            value = value.substring(0, 13);
+            
+            e.target.value = value;
+        });
+        
+        // Auto-save form data to localStorage
+        function autoSaveForm() {
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value
+            };
+            localStorage.setItem('contactFormDraft', JSON.stringify(formData));
+        }
+        
+        // Load saved form data
+        function loadSavedForm() {
+            const saved = localStorage.getItem('contactFormDraft');
+            if (saved) {
+                try {
+                    const formData = JSON.parse(saved);
+                    document.getElementById('name').value = formData.name || '';
+                    document.getElementById('email').value = formData.email || '';
+                    document.getElementById('phone').value = formData.phone || '';
+                    document.getElementById('service').value = formData.service || '';
+                    document.getElementById('message').value = formData.message || '';
+                } catch (e) {
+                    console.error('Error loading saved form:', e);
+                }
+            }
+        }
+        
+        // Clear saved form after successful submission
+        function clearSavedForm() {
+            localStorage.removeItem('contactFormDraft');
+        }
+        
+        // Auto-save on input
+        const formInputs = contactForm.querySelectorAll('input, textarea, select');
+        formInputs.forEach(input => {
+            input.addEventListener('input', autoSaveForm);
+        });
+        
+        // Load saved form on page load
+        loadSavedForm();
+        
+        // Clear saved form when form is submitted
+        contactForm.addEventListener('submit', clearSavedForm);
+        
+        // Add character counter for message
+        const messageTextarea = document.getElementById('message');
+        const charCounter = document.createElement('div');
+        charCounter.className = 'char-counter';
+        charCounter.style.cssText = `
+            font-size: 0.8rem;
+            color: #666;
+            text-align: right;
+            margin-top: 5px;
+        `;
+        messageTextarea.parentNode.appendChild(charCounter);
+        
+        function updateCharCounter() {
+            const length = messageTextarea.value.length;
+            charCounter.textContent = `${length} / 1000 characters`;
+            
+            if (length > 800) {
+                charCounter.style.color = '#FF9F1C';
+            } else if (length > 950) {
+                charCounter.style.color = '#FF6584';
+            } else {
+                charCounter.style.color = '#666';
+            }
+        }
+        
+        messageTextarea.addEventListener('input', updateCharCounter);
+        updateCharCounter();
+    });
+</script>

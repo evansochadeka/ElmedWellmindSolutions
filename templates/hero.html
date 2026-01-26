@@ -1,0 +1,357 @@
+<!-- templates/hero.html -->
+<!-- Hero Section -->
+<section class="hero" id="home">
+    <div class="hero-bg hero-bg-pattern"></div>
+    
+    <div class="container hero-content">
+        <h1 class="animate__animated animate__fadeInUp">Your Journey to Mental <span>Wellness</span> Starts Here</h1>
+        <p class="animate__animated animate__fadeInUp animate__delay-1s">Professional mental health support, counseling, and community for Kenyans. Break the stigma and embrace healing with our expert team.</p>
+        
+        <div class="hero-stats animate__animated animate__fadeInUp animate__delay-2s">
+            <div class="stat-item">
+                <span class="stat-number">2,500+</span>
+                <span class="stat-label">People Helped</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">Satisfaction Rate</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">Support Available</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Communities Served</span>
+            </div>
+        </div>
+        
+        <div class="hero-cta animate__animated animate__fadeInUp animate__delay-3s">
+            <a href="#ai-chat" class="btn btn-ai">
+                <i class="fas fa-robot"></i> Chat with AI Assistant
+            </a>
+            <a href="#community" class="btn btn-primary">
+                <i class="fas fa-comments"></i> Join Community
+            </a>
+            <a href="https://wa.me/254759226354" target="_blank" class="btn btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> WhatsApp Support
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Mental Health Assessment -->
+<section class="assessment-section">
+    <div class="container">
+        <div class="assessment-card">
+            <div class="assessment-content">
+                <h2>Take Your First Step to Wellness</h2>
+                <p>Complete our confidential mental health assessment to understand your current state and get personalized recommendations.</p>
+                <a href="https://wa.me/254759226354?text=Hi,%20I%20would%20like%20to%20take%20the%20mental%20health%20assessment" target="_blank" class="btn btn-secondary">
+                    <i class="fas fa-clipboard-check"></i> Start Free Assessment
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Enhanced Hero Section */
+    .hero {
+        padding-top: 150px;
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        background: var(--gradient-dark);
+    }
+    
+    .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        opacity: 0.1;
+    }
+    
+    .hero-bg-pattern {
+        background-image: 
+            radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.3) 0%, transparent 20%),
+            radial-gradient(circle at 80% 20%, rgba(54, 209, 220, 0.3) 0%, transparent 20%),
+            radial-gradient(circle at 40% 40%, rgba(255, 101, 132, 0.2) 0%, transparent 30%);
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 3;
+        color: white;
+        max-width: 900px;
+        padding: 60px 0;
+        text-align: center;
+        margin: 0 auto;
+    }
+    
+    .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 25px;
+        color: white;
+        line-height: 1.2;
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero h1 span {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: none;
+    }
+    
+    .hero p {
+        font-size: 1.4rem;
+        margin-bottom: 40px;
+        opacity: 0.9;
+        font-weight: 400;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin: 50px 0;
+        flex-wrap: wrap;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        min-width: 150px;
+        transition: transform 0.3s;
+    }
+    
+    .stat-item:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        font-weight: 500;
+    }
+    
+    .hero-cta {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn-whatsapp {
+        background: #25D366;
+        color: white;
+        box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+    }
+    
+    .btn-whatsapp:hover {
+        background: #1DA851;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5);
+    }
+    
+    .btn-ai {
+        background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+        color: white;
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+    }
+    
+    .btn-ai:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(255, 107, 107, 0.5);
+    }
+    
+    /* Mental Health Assessment Section */
+    .assessment-section {
+        padding: 100px 0;
+        background: white;
+        position: relative;
+    }
+    
+    .assessment-card {
+        background: var(--gradient-primary);
+        border-radius: 25px;
+        padding: 50px;
+        color: white;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(108, 99, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .assessment-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: float 20s linear infinite;
+    }
+    
+    @keyframes float {
+        0% {
+            transform: translate(0, 0) rotate(0deg);
+        }
+        100% {
+            transform: translate(-50px, -50px) rotate(360deg);
+        }
+    }
+    
+    .assessment-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .assessment-card h2 {
+        font-size: 2.8rem;
+        color: white;
+        margin-bottom: 20px;
+    }
+    
+    .assessment-card p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+    }
+    
+    @media (max-width: 1200px) {
+        .hero h1 {
+            font-size: 3.5rem;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .hero h1 {
+            font-size: 3rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+        }
+        
+        .assessment-card h2 {
+            font-size: 2.5rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .hero {
+            padding-top: 120px;
+            min-height: 90vh;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+        }
+        
+        .hero-stats {
+            gap: 20px;
+        }
+        
+        .stat-item {
+            min-width: 120px;
+            padding: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+        }
+        
+        .hero-cta {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .btn {
+            width: 100%;
+            max-width: 300px;
+            justify-content: center;
+        }
+        
+        .assessment-card {
+            padding: 30px 20px;
+        }
+        
+        .assessment-card h2 {
+            font-size: 2rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .hero h1 {
+            font-size: 2.2rem;
+        }
+        
+        .hero-stats {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-item {
+            width: 100%;
+            max-width: 200px;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate stats
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach(stat => {
+            const text = stat.textContent;
+            const isPercentage = text.includes('%');
+            const isPlus = text.includes('+');
+            const numericText = text.replace(/[^0-9]/g, '');
+            const finalValue = parseInt(numericText) || 0;
+            let currentValue = 0;
+            const increment = finalValue / 50;
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= finalValue) {
+                    stat.textContent = finalValue + (isPercentage ? '%' : '') + (isPlus ? '+' : '');
+                    clearInterval(timer);
+                } else {
+                    stat.textContent = Math.floor(currentValue) + (isPercentage ? '%' : '') + (isPlus ? '+' : '');
+                }
+            }, 30);
+        });
+    });
+</script>

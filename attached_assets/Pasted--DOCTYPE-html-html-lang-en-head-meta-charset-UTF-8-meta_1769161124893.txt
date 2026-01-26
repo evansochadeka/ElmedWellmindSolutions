@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elmed Wellmind Solutions | Mental Wellness Kenya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --accent: #36D1DC;
+            --light: #F8F9FF;
+            --dark: #2A2D43;
+            --success: #4CC9A7;
+            --warning: #FF9F1C;
+            --text: #333344;
+            --white: #FFFFFF;
+            --gradient-primary: linear-gradient(135deg, #6C63FF 0%, #36D1DC 100%);
+            --gradient-secondary: linear-gradient(135deg, #FF6584 0%, #FF9F1C 100%);
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 30px rgba(108, 99, 255, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-img {
+            height: 70px;
+            width: 70px;
+            background: var(--gradient-primary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.8rem;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        .logo-text h1 {
+            font-size: 1.8rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-style: italic;
+            font-weight: 500;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            padding: 8px 0;
+            position: relative;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            left: 0;
+            bottom: 0;
+            transition: width 0.3s;
+            border-radius: 3px;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        /* Hero Section with Image Carousel */
+        .hero {
+            padding-top: 120px;
+            position: relative;
+            overflow: hidden;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-carousel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        
+        .slide-1 {
+            background-image: linear-gradient(rgba(42, 45, 67, 0.7), rgba(42, 45, 67, 0.8)), url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+        }
+        
+        .slide-2 {
+            background-image: linear-gradient(rgba(42, 45, 67, 0.7), rgba(42, 45, 67, 0.8)), url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+        }
+        
+        .slide-3 {
+            background-image: linear-gradient(rgba(42, 45, 67, 0.7), rgba(42, 45, 67, 0.8)), url('https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            max-width: 800px;
+            padding: 40px 0;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: white;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.5);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        /* Flying Testimonials */
+        .testimonials-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .section-title h2 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2 span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #666;
+            font-size: 1.2rem;
+        }
+        
+        .testimonials-container {
+            position: relative;
+            height: 500px;
+            width: 100%;
+        }
+        
+        .testimonial-card {
+            position: absolute;
+            width: 320px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(108, 99, 255, 0.15);
+            opacity: 0;
+            animation: floatTestimonial 30s infinite linear;
+            z-index: 2;
+        }
+        
+        @keyframes floatTestimonial {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            5% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            25% {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+        }
+        
+        .testimonial-card:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+        
+        .testimonial-card:nth-child(2) {
+            top: 60%;
+            left: 10%;
+            animation-delay: 5s;
+        }
+        
+        .testimonial-card:nth-child(3) {
+            top: 30%;
+            right: 10%;
+            animation-delay: 10s;
+        }
+        
+        .testimonial-card:nth-child(4) {
+            top: 70%;
+            right: 5%;
+            animation-delay: 15s;
+        }
+        
+        .testimonial-card:nth-child(5) {
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 20s;
+        }
+        
+        .testimonial-card:nth-child(6) {
+            top: 50%;
+            left: 30%;
+            animation-delay: 25s;
+        }
+        
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+            border: 3px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .testimonial-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .testimonial-service {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .testimonial-text {
+            font-size: 1rem;
+            color: var(--text);
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .testimonial-rating {
+            color: var(--warning);
+            font-size: 1.1rem;
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 100px 0;
+            background-color: var(--white);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 30px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.08);
+            border-top: 5px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+            transition: height 0.4s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(108, 99, 255, 0.15);
+        }
+        
+        .service-card:hover::before {
+            height: 100%;
+            opacity: 0.05;
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .service-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .service-card p {
+            position: relative;
+            z-index: 2;
+            color: #555;
+        }
+        
+        /* Community Section */
+        .community {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #6C63FF 0%, #36D1DC 100%);
+            color: white;
+        }
+        
+        .community .section-title h2 {
+            color: white;
+        }
+        
+        .community .section-title p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .community-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            align-items: flex-start;
+        }
+        
+        .community-posts {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .post-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .post-form h3 {
+            color: white;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 140px;
+            resize: vertical;
+        }
+        
+        .posts-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .post {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px 0;
+        }
+        
+        .post:last-child {
+            border-bottom: none;
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .post-author {
+            font-weight: 700;
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .post-date {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .post-content {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .post-action {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .post-action:hover {
+            color: white;
+        }
+        
+        .comments {
+            margin-top: 20px;
+            padding-left: 20px;
+            border-left: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .comment {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        .comment:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            color: white;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        
+        .comment-content {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .community-info {
+            flex: 1;
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .community-info h3 {
+            color: white;
+            margin-bottom: 25px;
+        }
+        
+        .community-info ul {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .community-info ul li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+        }
+        
+        .community-info ul li:last-child {
+            border-bottom: none;
+        }
+        
+        .community-info ul li i {
+            color: var(--accent);
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            padding: 100px 0;
+            background-color: var(--white);
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 60px;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .contact-info h3 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        }
+        
+        .contact-details h4 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .contact-details p {
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .phone-link {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .phone-link:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+        
+        .contact-form {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(108, 99, 255, 0.1);
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #2A2D43 0%, #1A1D33 100%);
+            color: var(--white);
+            padding: 80px 0 40px;
+        }
+        
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-column h3 {
+            color: var(--white);
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+        
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            bottom: 30px;
+            right: 30px;
+            background: #25d366;
+            color: var(--white);
+            border-radius: 50px;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .whatsapp-float:hover {
+            background: #1da851;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 30px rgba(37, 211, 102, 0.7);
+        }
+        
+        .call-float {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            bottom: 110px;
+            right: 30px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.5);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .call-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(108, 99, 255, 0.7);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1100px) {
+            .testimonial-card {
+                width: 280px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+            
+            .testimonials-container {
+                height: 700px;
+            }
+            
+            .testimonial-card:nth-child(5) {
+                left: 10%;
+                transform: none;
+            }
+            
+            .testimonial-card:nth-child(6) {
+                left: 60%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.5s;
+                order: 3;
+            }
+            
+            nav.active {
+                max-height: 300px;
+                margin-top: 20px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul li {
+                margin: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding-top: 100px;
+                min-height: 80vh;
+            }
+            
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .testimonials-container {
+                height: 900px;
+            }
+            
+            .testimonial-card {
+                position: relative;
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto 30px;
+                opacity: 1;
+                animation: none;
+                top: auto;
+                left: auto;
+                right: auto;
+            }
+            
+            .testimonials-container {
+                height: auto;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .whatsapp-float, .call-float {
+                width: 60px;
+                height: 60px;
+                font-size: 30px;
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .call-float {
+                bottom: 90px;
+                font-size: 25px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .logo {
+                flex-direction: row;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.6rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .service-card, .post-form, .posts-container, .community-info, .contact-form {
+                padding: 25px;
+            }
+            
+            .contact-container {
+                gap: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo"><img src =./wellmed.jpg> <img src =./kenya-kenya-flag.gif>
+                
+                <div class="logo-text">
+                    
+                </div>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#community">Community</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section with Image Carousel -->
+    <section class="hero" id="home">
+        <div class="hero-carousel">
+            <div class="carousel-slide slide-1 active"></div>
+            <div class="carousel-slide slide-2"></div>
+            <div class="carousel-slide slide-3"></div>
+        </div>
+        
+        <div class="container hero-content">
+            <h1>Professional Mental Wellness Solutions in Kenya</h1>
+            <p>Delivering high-quality mental health training, psychosocial support, and capacity-building services to corporates, schools, religious institutions, and community organisations across Kenya.</p>
+            <div class="hero-cta">
+                <a href="https://wa.me/254759226354" target="_blank" class="btn btn-primary">
+                    <i class="fab fa-whatsapp"></i> WhatsApp Us Now
+                </a>
+                <a href="#contact" class="btn btn-secondary">
+                    <i class="fas fa-phone-alt"></i> Book Consultation
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" id="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Client <span>Testimonials</span></h2>
+                <p>Hear from individuals and organizations we've supported on their mental wellness journey</p>
+            </div>
+            
+            <div class="testimonials-container">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/88.jpg" alt="Mary Wanjiku">
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>Mary Wanjiku</h4>
+                            <div class="testimonial-service">Corporate Training Client</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "The stress management workshop transformed our workplace. Our team is now more resilient and productive. Elmed's approach is practical and effective!"
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="James Omondi">
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>James Omondi</h4>
+                            <div class="testimonial-service">Individual Counseling</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "I was struggling with anxiety for years. After sessions with Elmed, I've learned coping skills that changed my life. The counselors are compassionate and professional."
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/6.jpg" alt="Sarah Atieno">
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>Sarah Atieno</h4>
+                            <div class="testimonial-service">School Program</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "The mental health awareness program in our school helped students open up about their struggles. Highly recommended for any educational institution!"
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 4 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/16.jpg" alt="Robert Kipchoge">
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>Robert Kipchoge</h4>
+                            <div class="testimonial-service">HR Training Client</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "Our HR team received excellent training on mental health policies. This has improved our workplace culture significantly. Professional and impactful!"
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 5 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="" alt="">
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>Linda Muthoni</h4>
+                            <div class="testimonial-service">Parent Workshop</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "The parenting adolescent workshop gave me practical tools to connect with my teenager. Thank you Elmed for the invaluable support!"
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 6 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="" alt="">
+                        </div>
+                        <div class="testimonial-info">
+                            <h4>Paul Ngugi</h4>
+                            <div class="testimonial-service">Community Support</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-text">
+                        "The bereavement support group helped me through my darkest days. Compassionate and professional service when I needed it most."
+                    </div>
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our <span>Services</span></h2>
+                <p>Comprehensive mental health solutions tailored to organizations, schools, communities, and individuals across Kenya</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Corporate Mental Health</h3>
+                    <p>Staff training, mental health screening, counseling packages, trauma debriefing, HR training, and employee wellness programs for businesses.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <h3>School Mental Health</h3>
+                    <p>Mental health awareness for students, teacher training, parent workshops, counseling clinics, and crisis response for educational institutions.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community Support</h3>
+                    <p>Mental health awareness, group psychosocial sessions, screening & early identification, life skills training, and crisis intervention for communities.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>Psychosocial Support</h3>
+                    <p>Individual and group counseling, trauma support, suicide prevention workshops, and mental health first aid training for all groups.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Online Services</h3>
+                    <p>Tele-counseling, virtual mental health check-ins, online workshops, and digital support for remote accessibility across Kenya.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Mobile Services</h3>
+                    <p>Home care visits, on-site mental health screening, community outreach programs, and mobile counseling units for flexible support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="community" id="community">
+        <div class="container">
+            <div class="section-title">
+                <h2>Community Support Forum</h2>
+                <p>Share experiences, ask questions, and find support in our safe and moderated mental wellness community.</p>
+            </div>
+            
+            <div class="community-container">
+                <div class="community-posts">
+                    <div class="post-form">
+                        <h3>Share Your Concern or Experience</h3>
+                        <form id="postForm">
+                            <div class="form-group">
+                                <label for="postName">Name (Optional)</label>
+                                <input type="text" id="postName" class="form-control" placeholder="You can use a pseudonym">
+                            </div>
+                            <div class="form-group">
+                                <label for="postContent">What's on your mind?</label>
+                                <textarea id="postContent" class="form-control" placeholder="Share your concern, experience, or ask a question. Remember to be respectful and kind." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Post to Community</button>
+                        </form>
+                    </div>
+                    
+                    <div class="posts-container">
+                        <h3>Recent Community Posts</h3>
+                        
+                        <div class="post">
+                            <div class="post-header">
+                                <div class="post-author">Anonymous User</div>
+                                <div class="post-date">2 days ago</div>
+                            </div>
+                            <div class="post-content">
+                                <p>How can I help a friend who is showing signs of depression but refuses to seek professional help?</p>
+                            </div>
+                            <div class="post-actions">
+                                <span class="post-action"><i class="far fa-comment"></i> 5 Comments</span>
+                                <span class="post-action"><i class="far fa-heart"></i> 8 Supports</span>
+                            </div>
+                            
+                            <div class="comments">
+                                <div class="comment">
+                                    <div class="comment-author">Community Moderator</div>
+                                    <div class="comment-content">It's important to express concern without judgment. Let them know you're there for them and share resources like our helpline. Sometimes offering to accompany them to a first appointment can help.</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="post">
+                            <div class="post-header">
+                                <div class="post-author">Teacher_123</div>
+                                <div class="post-date">5 days ago</div>
+                            </div>
+                            <div class="post-content">
+                                <p>Our school recently had Elmed conduct mental health first aid training for our staff. The practical skills we learned have already helped us support several students in crisis.</p>
+                            </div>
+                            <div class="post-actions">
+                                <span class="post-action"><i class="far fa-comment"></i> 3 Comments</span>
+                                <span class="post-action"><i class="far fa-heart"></i> 12 Supports</span>
+                            </div>
+                        </div>
+                        
+                        <div class="post">
+                            <div class="post-header">
+                                <div class="post-author">WorkingParent</div>
+                                <div class="post-date">1 week ago</div>
+                            </div>
+                            <div class="post-content">
+                                <p>Managing work stress while parenting teens is overwhelming. Any tips for maintaining mental wellness during this challenging phase?</p>
+                            </div>
+                            <div class="post-actions">
+                                <span class="post-action"><i class="far fa-comment"></i> 8 Comments</span>
+                                <span class="post-action"><i class="far fa-heart"></i> 7 Supports</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="community-info">
+                    <h3>Community Guidelines</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Respect everyone's privacy</li>
+                        <li><i class="fas fa-check-circle"></i> Be kind and compassionate</li>
+                        <li><i class="fas fa-check-circle"></i> No hate speech or discrimination</li>
+                        <li><i class="fas fa-check-circle"></i> This is not a crisis helpline</li>
+                        <li><i class="fas fa-check-circle"></i> Share resources responsibly</li>
+                        <li><i class="fas fa-check-circle"></i> Report concerning posts to moderators</li>
+                    </ul>
+                    
+                    <h3>Need Immediate Help?</h3>
+                    <p>If you or someone you know is in crisis, please contact our emergency support line:</p>
+                    <a href="https://wa.me/254759226354" class="phone-link" target="_blank">+254759226354</a>
+                    <p style="margin-top: 15px; font-size: 0.9rem;">Or visit the nearest healthcare facility.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-title">
+			<p><h2> <a href =./donations.html>Donate</h2></p></a>
+                <h2>Contact <span>Us</span></h2>
+                <p>Reach out to us for consultations, bookings, or inquiries. We're here to support your mental wellness journey.</p>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Get In Touch</h3>
+                    <p>We offer flexible communication options to suit your preferences and needs. All conversations are confidential and handled with compassion.</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>WhatsApp</h4>
+                                <a href="https://wa.me/254759226354" class="phone-link" target="_blank">+254759226354</a>
+                                <p>Fast response for inquiries and appointments</p>
+                            </div>
+                        </div>
+                        
+						
+						<div class="contact-methods">
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fab fa-Facebook"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Facebook</h4>
+                                <a href="https://www.facebook.com/profile.php?id=61585798993172" class="fab fa-Facebook" target="_blank">Facebook</a>
+                                <p>Facebook chat</p>
+                            </div>
+                        </div>
+						
+						
+						
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Call Us</h4>
+                                <a href="tel:+254759226354" class="phone-link">+254759226354</a>
+                                <p>Available during business hours</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Email</h4>
+                                <p>elijahokware@gmaiil.com</p>
+                                <p>For detailed inquiries and partnerships</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Location</h4>
+                                <p>Kahawa Wendani along Thika Superhighway </p>
+                                <p>Githurai Sub County</p>
+								<p> Kiambu County</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Send a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="service">Service Interested In</label>
+                            <select id="service" class="form-control">
+                                <option value="">Select a service</option>
+                                <option value="corporate">Corporate Mental Health</option>
+                                <option value="school">School Mental Health</option>
+                                <option value="community">Community Support</option>
+                                <option value="counseling">Counseling Services</option>
+                                <option value="training">Mental Health Training</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-control" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Elmed Wellmind Solutions</h3>
+                    <p>Professional mental wellness consultancy based in Kenya, dedicated to delivering high-quality mental health services.</p>
+                    <p style="margin-top: 20px;">
+                        <i class="fas fa-map-marker-alt"></i> Kahawa Wendani, along Thika Superhighway, Kiambu<br>
+                        <i class="fas fa-phone"></i> <a href="tel:+254759226354">+254759226354</a><br>
+                        <i class="fas fa-envelope"></i> elijahokware@gmaiil.com
+                    </p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#testimonials"><i class="fas fa-chevron-right"></i> Testimonials</a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="#community"><i class="fas fa-chevron-right"></i> Community</a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Our Services</h3>
+                    <ul>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> Corporate Mental Health</a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> School Programs</a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> Community Support</a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> Counseling Services</a></li>
+                        <li><a href="#services"><i class="fas fa-chevron-right"></i> Online Therapy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Business Registration: BN-EOSBPRV2</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Confidentiality Agreement</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 Elmed Wellmind Solutions. All rights reserved. | Nurturing Minds, Building Resilience | <a href="https://wa.me/254759226354" style="color: #36D1DC;">WhatsApp: +254 759226354</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/254759226354" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <!-- Call Floating Button -->
+    <a href="tel:+254759226354" class="call-float">
+        <i class="fas fa-phone"></i>
+    </a>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const nav = document.getElementById('mainNav');
+            nav.classList.toggle('active');
+            
+            // Change icon
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('#mainNav a').forEach(link => {
+            link.addEventListener('click', () => {
+                const nav = document.getElementById('mainNav');
+                const icon = document.querySelector('#mobileMenuBtn i');
+                
+                nav.classList.remove('active');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+        
+        // Image Carousel
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        
+        function changeSlide() {
+            // Hide current slide
+            slides[currentSlide].classList.remove('active');
+            
+            // Move to next slide
+            currentSlide = (currentSlide + 1) % slides.length;
+            
+            // Show next slide
+            slides[currentSlide].classList.add('active');
+        }
+        
+        // Change slide every 5 seconds
+        setInterval(changeSlide, 5000);
+        
+        // Form Submission Handling
+        document.getElementById('postForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const postName = document.getElementById('postName').value || 'Anonymous User';
+            const postContent = document.getElementById('postContent').value;
+            
+            if (postContent.trim() === '') return;
+            
+            // Create new post element
+            const postsContainer = document.querySelector('.posts-container');
+            const firstPost = postsContainer.querySelector('.post');
+            
+            const newPost = document.createElement('div');
+            newPost.className = 'post';
+            newPost.innerHTML = `
+                <div class="post-header">
+                    <div class="post-author">${postName}</div>
+                    <div class="post-date">Just now</div>
+                </div>
+                <div class="post-content">
+                    <p>${postContent}</p>
+                </div>
+                <div class="post-actions">
+                    <span class="post-action"><i class="far fa-comment"></i> 0 Comments</span>
+                    <span class="post-action"><i class="far fa-heart"></i> Support</span>
+                </div>
+            `;
+            
+            // Insert new post after the form and before existing posts
+            postsContainer.insertBefore(newPost, firstPost);
+            
+            // Clear form
+            document.getElementById('postName').value = '';
+            document.getElementById('postContent').value = '';
+            
+            // Show confirmation message
+            alert('Your post has been shared with the community!');
+        });
+        
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const service = document.getElementById('service').value;
+            
+            // In a real implementation, this would send data to a server
+            // For this demo, we'll just show a confirmation
+            
+            alert(`Thank you ${name}! Your message has been sent. We'll contact you at ${email} regarding ${service ? service + ' services' : 'your inquiry'} soon.`);
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Make all phone numbers clickable
+        document.querySelectorAll('.phone-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if(this.getAttribute('href').startsWith('tel:')) {
+                    // For call links, we don't need to prevent default
+                    return;
+                }
+                // For WhatsApp links, they will open in new tab
+            });
+        });
+    </script>
+</body>
+</html>
