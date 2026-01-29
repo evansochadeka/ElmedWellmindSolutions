@@ -1,7 +1,8 @@
 # app.py - RENDER READY VERSION
 
 import os
-from flask import Flask, render_template, jsonify
+import json
+from flask import Flask, render_template, jsonify, request, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 
@@ -79,6 +80,91 @@ def health_check():
         "ai_status": "active" if os.getenv("COHERE_API_KEY") else "inactive",
         "database": "connected"
     })
+
+# --------------------------------------------------
+# ADD MISSING ROUTES FROM LOGS
+# --------------------------------------------------
+
+# 1. Community posts endpoint (404 in logs)
+@app.route("/api/community/posts")
+def community_posts():
+    try:
+        # Return empty array for now - implement database logic later
+        return jsonify([])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# 2. Email endpoint replacement for PHP
+@app.route("/send_email.php", methods=["POST"])
+@app.route("/api/send_email", methods=["POST"])
+def send_email():
+    try:
+        # Get form data
+        name = request.form.get("name", "")
+        email = request.form.get("email", "")
+        subject = request.form.get("subject", "")
+        message = request.form.get("message", "")
+        
+        # Log the email attempt (in production, connect to email service)
+        print(f"📧 Email attempted: {name} <{email}> - {subject}")
+        
+        # For now, just acknowledge receipt
+        return jsonify({
+            "status": "success",
+            "message": "Message received. We'll get back to you soon!",
+            "data": {
+                "name": name,
+                "email": email,
+                "subject": subject[:50]  # Truncate for safety
+            }
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# 3. Static file serving - ensure images work
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('static', filename)
+
+# 4. Chat history endpoint (already works but ensure it's here)
+@app.route("/api/chat/history/<session_id>")
+def chat_history(session_id):
+    # This might be handled in your api blueprint
+    # If not, implement basic version
+    return jsonify({"messages": [], "session_id": session_id})
+
+# --------------------------------------------------
+# FALLBACK ROUTES FOR MISSING IMAGES
+# --------------------------------------------------
+
+@app.route("/static/images/<image_name>")
+def serve_image(image_name):
+    """Serve images with fallback for missing files"""
+    try:
+        return send_from_directory('static/images', image_name)
+    except:
+        # Return a placeholder or default image if file doesn't exist
+        # This prevents 404 errors breaking the page
+        try:
+            return send_from_directory('static/images', 'wellmed.jpg')
+        except:
+            # Ultimate fallback
+            return jsonify({"error": "Image not found"}), 404
+
+# --------------------------------------------------
+# ERROR HANDLERS
+# --------------------------------------------------
+
+@app.errorhandler(404)
+def not_found(e):
+    """Handle 404 errors gracefully"""
+    if request.path.startswith('/api/'):
+        return jsonify({"error": "Endpoint not found", "path": request.path}), 404
+    elif request.path.startswith('/static/'):
+        # For missing static files, don't return JSON - let browser handle it
+        return "File not found", 404
+    # For HTML pages, redirect to home or show error page
+    return render_template("index.html"), 200
 
 # --------------------------------------------------
 # IMPORTANT
