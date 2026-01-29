@@ -1,3 +1,4 @@
+<!-- Save this as templates/hero.html -->
 <!-- Enhanced Hero Section with Working Images -->
 <section class="hero" id="home">
     <!-- Animated Background with Floating Elements -->
@@ -13,19 +14,29 @@
         <!-- Image Slideshow -->
         <div class="image-slideshow">
             <div class="slide active" data-index="0">
-                <img src="{{ url_for('static', filename='images/pas1.jpg') }}" alt="Mental Wellness" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
+                <img src="{{ url_for('static', filename='images/pas1.jpg') }}" 
+                     alt="Mental Wellness" 
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
             </div>
             <div class="slide" data-index="1">
-                <img src="{{ url_for('static', filename='images/pas2.jpg') }}" alt="Support Community" onerror="this.src='https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
+                <img src="{{ url_for('static', filename='images/pas2.jpg') }}" 
+                     alt="Support Community" 
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
             </div>
             <div class="slide" data-index="2">
-                <img src="{{ url_for('static', filename='images/pas3.jpg') }}" alt="Therapy Session" onerror="this.src='https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
+                <img src="{{ url_for('static', filename='images/pas3.jpg') }}" 
+                     alt="Therapy Session" 
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
             </div>
             <div class="slide" data-index="3">
-                <img src="{{ url_for('static', filename='images/pas4.jpg') }}" alt="Mental Health" onerror="this.src='https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
+                <img src="{{ url_for('static', filename='images/pas4.jpg') }}" 
+                     alt="Mental Health" 
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
             </div>
             <div class="slide" data-index="4">
-                <img src="{{ url_for('static', filename='images/pas5.jpg') }}" alt="Wellness Journey" onerror="this.src='https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
+                <img src="{{ url_for('static', filename='images/pas5.jpg') }}" 
+                     alt="Wellness Journey" 
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80'">
             </div>
         </div>
         
@@ -39,7 +50,9 @@
     <div class="container hero-content">
         <!-- Logo -->
         <div class="hero-logo animate__animated animate__fadeInDown">
-            <img src="{{ url_for('static', filename='images/wellmed.jpg') }}" alt="Elmed Wellmind Solutions Logo" onerror="this.src='https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'">
+            <img src="{{ url_for('static', filename='images/wellmed.jpg') }}" 
+                 alt="Elmed Wellmind Solutions Logo" 
+                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'">
         </div>
 
         <!-- Animated Title -->
@@ -346,7 +359,9 @@
         <div class="extra-features">
             <div class="feature-highlight">
                 <div class="feature-image">
-                    <img src="{{ url_for('static', filename='images/therapy.jpg') }}" alt="Therapy Session" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
+                    <img src="{{ url_for('static', filename='images/therapy.jpg') }}" 
+                         alt="Therapy Session" 
+                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'">
                 </div>
                 <div class="feature-content">
                     <h3>Why Choose Our Assessment?</h3>
@@ -1478,6 +1493,7 @@
     }
 </style>
 
+{% raw %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Image Slideshow
@@ -1614,16 +1630,25 @@ document.addEventListener('DOMContentLoaded', function() {
         el.style.animationDelay = delay + 's';
     });
     
-    // Fix for Flask template syntax in JavaScript
-    // This ensures images load even if Flask doesn't render properly
-    const images = document.querySelectorAll('img[src*="{{ url_for"]');
+    // Check and fix image loading
+    const images = document.querySelectorAll('img');
     images.forEach(img => {
-        const src = img.getAttribute('src');
-        // If Flask template didn't render, use fallback
-        if (src.includes('{{')) {
-            const alt = img.getAttribute('alt').toLowerCase().replace(/\s+/g, '-');
-            img.src = `https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80&text=${encodeURIComponent(alt)}`;
+        // Check if image failed to load
+        img.addEventListener('error', function() {
+            console.log('Image failed to load:', this.src);
+            // Use a fallback image
+            const altText = this.getAttribute('alt') || 'mental wellness';
+            const searchTerm = encodeURIComponent(altText.toLowerCase().replace(/\s+/g, '-'));
+            this.src = `https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80&text=${searchTerm}`;
+        });
+        
+        // Check if image is from static folder
+        if (img.src.includes('static/images/')) {
+            img.addEventListener('load', function() {
+                console.log('Image loaded successfully:', this.src);
+            });
         }
     });
 });
 </script>
+{% endraw %}
