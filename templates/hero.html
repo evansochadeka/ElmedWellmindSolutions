@@ -63,6 +63,130 @@
     </div>
 </section>
 
+<!-- Enhanced Mental Health Assessment Section -->
+<section class="assessment-section">
+    <div class="container">
+        <div class="assessment-wrapper">
+            <!-- Main Assessment Card -->
+            <div class="assessment-card-main">
+                <div class="assessment-card">
+                    <div class="assessment-content">
+                        <div class="assessment-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h2>Take Your First Step to Wellness</h2>
+                        <p class="assessment-subtitle">Complete our confidential mental health assessment to understand your current state and get personalized recommendations.</p>
+                        
+                        <div class="assessment-features">
+                            <div class="feature">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>100% Confidential</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-clock"></i>
+                                <span>10-15 Minutes</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-user-md"></i>
+                                <span>Expert Analysis</span>
+                            </div>
+                        </div>
+                        
+                        <div class="assessment-options">
+                            <a href="#assessment-modal" class="btn-assessment btn-assessment-primary">
+                                <i class="fas fa-clipboard-check"></i>
+                                <span>Start Free Assessment</span>
+                                <small>Takes 15 minutes</small>
+                            </a>
+                            
+                            <a href="https://wa.me/254759226354?text=Hi,%20I%20have%20questions%20about%20the%20mental%20health%20assessment" 
+                               target="_blank" 
+                               class="btn-assessment btn-assessment-whatsapp">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Chat with Expert</span>
+                                <small>Get clarification</small>
+                            </a>
+                        </div>
+                        
+                        <p class="assessment-disclaimer">
+                            <i class="fas fa-info-circle"></i>
+                            This is a preliminary screening tool. For a comprehensive evaluation, schedule a consultation with our licensed professionals.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Progress Indicator -->
+                <div class="assessment-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-steps">
+                        <div class="step active">
+                            <div class="step-icon">1</div>
+                            <span>Assessment</span>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">2</div>
+                            <span>Analysis</span>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">3</div>
+                            <span>Recommendations</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Assessment Modal -->
+<div id="assessment-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Mental Health Assessment</h3>
+            <a href="#" class="modal-close">&times;</a>
+        </div>
+        <div class="modal-body">
+            <div class="assessment-intro">
+                <h4>Welcome to Your Wellness Journey</h4>
+                <p>This confidential assessment will help us understand your current mental state and provide personalized recommendations.</p>
+                
+                <div class="assessment-info-cards">
+                    <div class="info-card">
+                        <i class="fas fa-lock"></i>
+                        <h5>Completely Private</h5>
+                        <p>Your responses are encrypted and never shared</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h5>Personalized Results</h5>
+                        <p>Get insights tailored to your specific needs</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <h5>Supportive Guidance</h5>
+                        <p>Receive compassionate, actionable advice</p>
+                    </div>
+                </div>
+                
+                <div class="assessment-buttons">
+                    <button class="btn btn-primary btn-start-assessment">
+                        <i class="fas fa-play-circle"></i>
+                        Begin Assessment
+                    </button>
+                    <a href="https://wa.me/254759226354?text=Hi,%20I'd%20like%20to%20ask%20some%20questions%20before%20starting%20the%20assessment" 
+                       target="_blank" 
+                       class="btn btn-outline">
+                        <i class="fab fa-whatsapp"></i>
+                        Ask Questions First
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     /* Enhanced Hero Section with Slideshow */
     .hero {
@@ -75,7 +199,7 @@
         background: var(--gradient-dark);
     }
     
-    /* Slideshow Container */
+    /* Slideshow Styles (keep from previous code) */
     .slideshow-container {
         position: absolute;
         top: 0;
@@ -86,14 +210,12 @@
         overflow: hidden;
     }
     
-    /* Slideshow */
     .slideshow {
         position: relative;
         width: 100%;
         height: 100%;
     }
     
-    /* Individual Slide */
     .slide {
         position: absolute;
         top: 0;
@@ -108,7 +230,6 @@
         opacity: 1;
     }
     
-    /* Image Placeholder */
     .slide .image-placeholder {
         width: 100%;
         height: 100%;
@@ -124,7 +245,6 @@
         transform: scale(1);
     }
     
-    /* Gradient Overlay */
     .gradient-overlay {
         position: absolute;
         top: 0;
@@ -143,7 +263,6 @@
         pointer-events: none;
     }
     
-    /* Pattern Overlay */
     .pattern-overlay {
         position: absolute;
         top: 0;
@@ -160,288 +279,523 @@
         animation: patternFloat 20s ease-in-out infinite alternate;
     }
     
-    @keyframes patternFloat {
-        0% {
-            background-position: 0% 0%;
-        }
-        100% {
-            background-position: 100% 100%;
-        }
-    }
-    
-    /* Hero Content */
-    .hero-content {
+    /* Enhanced Assessment Section */
+    .assessment-section {
+        padding: 100px 0;
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
         position: relative;
-        z-index: 4;
-        color: white;
-        max-width: 900px;
-        padding: 60px 0;
-        text-align: center;
-        margin: 0 auto;
+        overflow: hidden;
     }
     
-    /* Slide Navigation Dots */
-    .slide-dots {
+    .assessment-section::before {
+        content: '';
         position: absolute;
-        bottom: 30px;
+        top: 0;
         left: 0;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        z-index: 5;
+        right: 0;
+        height: 5px;
+        background: var(--gradient-primary);
+        z-index: 1;
     }
     
-    .slide-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.3s ease;
+    .assessment-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(108, 99, 255, 0.3), transparent);
     }
     
-    .slide-dot.active {
-        background: var(--accent);
-        transform: scale(1.2);
-        box-shadow: 0 0 10px rgba(108, 99, 255, 0.7);
+    .assessment-wrapper {
+        position: relative;
+        z-index: 2;
     }
     
-    .hero h1 {
+    .assessment-card-main {
+        background: white;
+        border-radius: 25px;
+        padding: 40px;
+        box-shadow: 
+            0 25px 60px rgba(108, 99, 255, 0.15),
+            0 10px 30px rgba(0, 0, 0, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(108, 99, 255, 0.1);
+    }
+    
+    .assessment-card-main::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(108, 99, 255, 0.05) 1px, transparent 1px);
+        background-size: 60px 60px;
+        animation: float 25s linear infinite;
+        z-index: 0;
+    }
+    
+    .assessment-card {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .assessment-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .assessment-icon {
         font-size: 4rem;
-        margin-bottom: 25px;
-        color: white;
-        line-height: 1.2;
-        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    }
-    
-    .hero h1 span {
         background: var(--gradient-primary);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
-        text-shadow: none;
+        margin-bottom: 20px;
+        animation: pulse 2s ease-in-out infinite;
     }
     
-    .hero p {
-        font-size: 1.4rem;
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    .assessment-card h2 {
+        font-size: 2.8rem;
+        color: #1a237e;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    .assessment-subtitle {
+        font-size: 1.2rem;
+        color: #5a5a72;
         margin-bottom: 40px;
-        opacity: 0.95;
-        font-weight: 400;
-        max-width: 700px;
+        line-height: 1.6;
+        max-width: 800px;
         margin-left: auto;
         margin-right: auto;
-        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     }
     
-    .hero-stats {
+    .assessment-features {
         display: flex;
         justify-content: center;
-        gap: 40px;
-        margin: 50px 0;
+        gap: 30px;
+        margin: 40px 0;
         flex-wrap: wrap;
     }
     
-    .stat-item {
-        text-align: center;
+    .feature {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 25px;
+        background: rgba(108, 99, 255, 0.08);
+        border-radius: 15px;
+        border: 1px solid rgba(108, 99, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .feature:hover {
+        transform: translateY(-5px);
+        background: rgba(108, 99, 255, 0.12);
+        box-shadow: 0 10px 20px rgba(108, 99, 255, 0.1);
+    }
+    
+    .feature i {
+        color: var(--primary);
+        font-size: 1.2rem;
+    }
+    
+    .feature span {
+        color: #4a4a6a;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    
+    .assessment-options {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+    
+    .btn-assessment {
+        flex: 1;
+        min-width: 250px;
+        max-width: 300px;
         padding: 25px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
         border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        min-width: 150px;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
     }
     
-    .stat-item::before {
+    .btn-assessment::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-            45deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.05) 50%,
-            transparent 100%
-        );
+        background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
         transform: translateX(-100%);
     }
     
-    .stat-item:hover {
-        transform: translateY(-15px) scale(1.05);
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.3);
-        box-shadow: 
-            0 20px 40px rgba(0, 0, 0, 0.3),
-            0 0 30px rgba(108, 99, 255, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-    
-    .stat-item:hover::before {
+    .btn-assessment:hover::before {
         animation: shine 1.5s ease-out;
     }
     
-    @keyframes shine {
-        100% {
-            transform: translateX(100%);
-        }
+    .btn-assessment-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, #6c63ff 100%);
+        color: white;
+        box-shadow: 0 15px 35px rgba(108, 99, 255, 0.3);
     }
     
-    .stat-number {
+    .btn-assessment-primary:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(108, 99, 255, 0.4);
+    }
+    
+    .btn-assessment-whatsapp {
+        background: linear-gradient(135deg, #25D366 0%, #1DA851 100%);
+        color: white;
+        box-shadow: 0 15px 35px rgba(37, 211, 102, 0.3);
+    }
+    
+    .btn-assessment-whatsapp:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(37, 211, 102, 0.4);
+    }
+    
+    .btn-assessment i {
         font-size: 2.5rem;
-        font-weight: 800;
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
         margin-bottom: 10px;
-        display: block;
-        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
     
-    .stat-label {
-        font-size: 0.95rem;
-        opacity: 0.9;
-        font-weight: 500;
+    .btn-assessment span {
+        font-size: 1.3rem;
+        font-weight: 700;
         letter-spacing: 0.5px;
-        text-transform: uppercase;
     }
     
-    .hero-cta {
+    .btn-assessment small {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 400;
+    }
+    
+    .assessment-disclaimer {
+        margin-top: 30px;
+        padding: 15px;
+        background: rgba(108, 99, 255, 0.05);
+        border-radius: 12px;
+        color: #666;
+        font-size: 0.9rem;
+        border-left: 4px solid var(--primary);
+    }
+    
+    .assessment-disclaimer i {
+        color: var(--primary);
+        margin-right: 8px;
+    }
+    
+    /* Progress Indicator */
+    .assessment-progress {
+        margin-top: 50px;
+        padding: 20px;
+        background: rgba(108, 99, 255, 0.03);
+        border-radius: 15px;
+        border: 1px dashed rgba(108, 99, 255, 0.2);
+    }
+    
+    .progress-bar {
+        height: 6px;
+        background: rgba(108, 99, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        width: 33%;
+        background: linear-gradient(90deg, var(--primary), #6c63ff);
+        border-radius: 3px;
+        animation: progressPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes progressPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    .progress-steps {
         display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+    
+    .progress-steps::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: rgba(108, 99, 255, 0.1);
+        z-index: 0;
+    }
+    
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .step-icon {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #999;
+        border: 3px solid rgba(108, 99, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .step.active .step-icon {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: scale(1.1);
+        box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+    }
+    
+    .step span {
+        color: #777;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .step.active span {
+        color: var(--primary);
+    }
+    
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+    }
+    
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 25px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+        padding: 25px 30px;
+        background: linear-gradient(135deg, var(--primary) 0%, #6c63ff 100%);
+        color: white;
+        border-radius: 25px 25px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .modal-header h3 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+    
+    .modal-close {
+        color: white;
+        font-size: 2rem;
+        text-decoration: none;
+        line-height: 1;
+        transition: transform 0.3s;
+    }
+    
+    .modal-close:hover {
+        transform: scale(1.2);
+    }
+    
+    .modal-body {
+        padding: 30px;
+    }
+    
+    .assessment-intro h4 {
+        color: #1a237e;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    
+    .assessment-intro p {
+        color: #666;
+        text-align: center;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+    
+    .assessment-info-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 20px;
+        margin: 30px 0;
+    }
+    
+    .info-card {
+        text-align: center;
+        padding: 20px;
+        background: rgba(108, 99, 255, 0.05);
+        border-radius: 15px;
+        border: 1px solid rgba(108, 99, 255, 0.1);
+    }
+    
+    .info-card i {
+        font-size: 2rem;
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+    
+    .info-card h5 {
+        color: #1a237e;
+        margin: 10px 0 5px;
+        font-size: 1rem;
+    }
+    
+    .info-card p {
+        color: #666;
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    
+    .assessment-buttons {
+        display: flex;
+        gap: 15px;
         justify-content: center;
         flex-wrap: wrap;
         margin-top: 30px;
     }
     
-    .btn {
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        transform-origin: center;
+    .btn-outline {
+        background: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
     }
     
-    .btn:hover {
-        transform: translateY(-8px) scale(1.05);
-        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
-    }
-    
-    .btn-whatsapp {
-        background: linear-gradient(135deg, #25D366 0%, #1DA851 100%);
+    .btn-outline:hover {
+        background: var(--primary);
         color: white;
-        box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
     }
     
-    .btn-whatsapp:hover {
-        box-shadow: 0 20px 40px rgba(37, 211, 102, 0.6);
-    }
-    
-    .btn-ai {
-        background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
-        color: white;
-        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
-    }
-    
-    .btn-ai:hover {
-        box-shadow: 0 20px 40px rgba(255, 107, 107, 0.6);
-    }
-    
-    @media (max-width: 1200px) {
-        .hero h1 {
-            font-size: 3.5rem;
-        }
-    }
-    
-    @media (max-width: 992px) {
-        .hero h1 {
-            font-size: 3rem;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-        }
-    }
-    
+    /* Responsive Design */
     @media (max-width: 768px) {
-        .hero {
-            padding-top: 120px;
-            min-height: 90vh;
+        .assessment-card-main {
+            padding: 25px;
         }
         
-        .hero h1 {
-            font-size: 2.5rem;
+        .assessment-card h2 {
+            font-size: 2.2rem;
         }
         
-        .hero p {
+        .assessment-subtitle {
             font-size: 1.1rem;
         }
         
-        .hero-stats {
-            gap: 20px;
+        .btn-assessment {
+            min-width: 100%;
         }
         
-        .stat-item {
-            min-width: 120px;
-            padding: 20px;
+        .assessment-features {
+            gap: 15px;
         }
         
-        .stat-number {
-            font-size: 2rem;
+        .feature {
+            padding: 12px 20px;
         }
         
-        .hero-cta {
+        .assessment-options {
             flex-direction: column;
             align-items: center;
         }
         
-        .btn {
-            width: 100%;
-            max-width: 300px;
-            justify-content: center;
+        .modal-content {
+            width: 95%;
+        }
+        
+        .assessment-info-cards {
+            grid-template-columns: 1fr;
         }
     }
     
     @media (max-width: 576px) {
-        .hero h1 {
-            font-size: 2.2rem;
+        .assessment-section {
+            padding: 60px 0;
         }
         
-        .hero-stats {
-            flex-direction: column;
-            align-items: center;
+        .assessment-card h2 {
+            font-size: 1.8rem;
         }
         
-        .stat-item {
-            width: 100%;
-            max-width: 200px;
+        .btn-assessment span {
+            font-size: 1.1rem;
         }
     }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Get all slides and create image elements
+        // Slideshow functionality (from previous code)
         const slides = document.querySelectorAll('.slide');
         const slideDotsContainer = document.createElement('div');
         slideDotsContainer.className = 'slide-dots';
         
-        // List of image filenames from your static/images folder
-        const imageFilenames = ['pas1.jpg', 'pas2.jpg', 'pas3.jpg', 'pas4.jpg', 'pas5.jpg'];
+        const imageFilenames = ['paps1.jpg', 'paps2.jpg', 'paps3.jpg', 'paps4.jpg', 'paps5.jpg'];
         
-        // Create slide dots and set images
         slides.forEach((slide, index) => {
-            // Set background image for each slide
             if (index < imageFilenames.length) {
                 const placeholder = slide.querySelector('.image-placeholder');
                 placeholder.style.backgroundImage = `url('{{ url_for('static', filename='images/${imageFilenames[index]}') }}')`;
             }
             
-            // Create dot for each slide
             const dot = document.createElement('div');
             dot.className = 'slide-dot' + (index === 0 ? ' active' : '');
             dot.dataset.index = index;
@@ -449,16 +803,12 @@
             slideDotsContainer.appendChild(dot);
         });
         
-        // Add dots to slideshow container
         document.querySelector('.slideshow-container').appendChild(slideDotsContainer);
-        
-        // Get all dots
         const dots = document.querySelectorAll('.slide-dot');
         
         let currentSlide = 0;
         const totalSlides = slides.length;
         
-        // Function to go to specific slide
         function goToSlide(n) {
             slides[currentSlide].classList.remove('active');
             dots[currentSlide].classList.remove('active');
@@ -469,15 +819,12 @@
             dots[currentSlide].classList.add('active');
         }
         
-        // Auto slide function
         function nextSlide() {
             goToSlide(currentSlide + 1);
         }
         
-        // Start auto slideshow (change every 5 seconds)
         let slideInterval = setInterval(nextSlide, 5000);
         
-        // Pause on hover
         const slideshowContainer = document.querySelector('.slideshow-container');
         slideshowContainer.addEventListener('mouseenter', () => clearInterval(slideInterval));
         slideshowContainer.addEventListener('mouseleave', () => {
@@ -495,7 +842,6 @@
             let currentValue = 0;
             const increment = finalValue / 50;
             
-            // Reset for animation
             stat.textContent = '0' + (isPercentage ? '%' : '') + (isPlus ? '+' : '');
             
             const timer = setInterval(() => {
@@ -509,18 +855,64 @@
             }, 40);
         });
         
-        // Add floating animation to hero content
-        const heroContent = document.querySelector('.hero-content');
-        let floatingOffset = 0;
+        // Modal functionality
+        const modal = document.getElementById('assessment-modal');
+        const modalLinks = document.querySelectorAll('a[href="#assessment-modal"]');
+        const closeModal = document.querySelector('.modal-close');
         
-        function updateFloatingAnimation() {
-            const time = Date.now() * 0.001;
-            floatingOffset = Math.sin(time) * 5;
-            heroContent.style.transform = `translateY(${floatingOffset}px)`;
-            requestAnimationFrame(updateFloatingAnimation);
+        modalLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeModal.addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Start assessment button
+        const startBtn = document.querySelector('.btn-start-assessment');
+        if (startBtn) {
+            startBtn.addEventListener('click', function() {
+                // Here you would typically redirect to the actual assessment page
+                // For now, we'll show an alert
+                alert('Assessment starting soon! This would redirect to the actual assessment interface.');
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
         }
         
-        // Start floating animation
-        updateFloatingAnimation();
+        // Animate progress bar
+        const progressFill = document.querySelector('.progress-fill');
+        if (progressFill) {
+            let progressWidth = 33;
+            const progressInterval = setInterval(() => {
+                progressWidth = progressWidth === 33 ? 66 : progressWidth === 66 ? 99 : 33;
+                progressFill.style.width = progressWidth + '%';
+            }, 3000);
+        }
+        
+        // Animate features on hover
+        const features = document.querySelectorAll('.feature');
+        features.forEach(feature => {
+            feature.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            feature.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
     });
 </script>
