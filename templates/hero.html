@@ -1,7 +1,30 @@
-<!-- templates/hero.html -->
 <!-- Hero Section -->
 <section class="hero" id="home">
-    <div class="hero-bg hero-bg-pattern"></div>
+    <!-- Image Slideshow Background -->
+    <div class="slideshow-container">
+        <div class="slideshow">
+            <!-- Images will be dynamically loaded here -->
+            <div class="slide active">
+                <div class="image-placeholder"></div>
+            </div>
+            <div class="slide">
+                <div class="image-placeholder"></div>
+            </div>
+            <div class="slide">
+                <div class="image-placeholder"></div>
+            </div>
+            <div class="slide">
+                <div class="image-placeholder"></div>
+            </div>
+            <div class="slide">
+                <div class="image-placeholder"></div>
+            </div>
+        </div>
+        <!-- Gradient Overlay -->
+        <div class="gradient-overlay"></div>
+        <!-- Pattern Overlay -->
+        <div class="pattern-overlay"></div>
+    </div>
     
     <div class="container hero-content">
         <h1 class="animate__animated animate__fadeInUp">Your Journey to Mental <span>Wellness</span> Starts Here</h1>
@@ -40,23 +63,8 @@
     </div>
 </section>
 
-<!-- Mental Health Assessment -->
-<section class="assessment-section">
-    <div class="container">
-        <div class="assessment-card">
-            <div class="assessment-content">
-                <h2>Take Your First Step to Wellness</h2>
-                <p>Complete our confidential mental health assessment to understand your current state and get personalized recommendations.</p>
-                <a href="https://wa.me/254759226354?text=Hi,%20I%20would%20like%20to%20take%20the%20mental%20health%20assessment" target="_blank" class="btn btn-secondary">
-                    <i class="fas fa-clipboard-check"></i> Start Free Assessment
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
 <style>
-    /* Enhanced Hero Section */
+    /* Enhanced Hero Section with Slideshow */
     .hero {
         padding-top: 150px;
         position: relative;
@@ -67,26 +75,104 @@
         background: var(--gradient-dark);
     }
     
-    .hero-bg {
+    /* Slideshow Container */
+    .slideshow-container {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         z-index: 1;
-        opacity: 0.1;
+        overflow: hidden;
     }
     
-    .hero-bg-pattern {
+    /* Slideshow */
+    .slideshow {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    
+    /* Individual Slide */
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+    }
+    
+    .slide.active {
+        opacity: 1;
+    }
+    
+    /* Image Placeholder */
+    .slide .image-placeholder {
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: brightness(0.6) contrast(1.1);
+        transform: scale(1.1);
+        transition: transform 15s ease-out;
+    }
+    
+    .slide.active .image-placeholder {
+        transform: scale(1);
+    }
+    
+    /* Gradient Overlay */
+    .gradient-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.9) 0%,
+            rgba(0, 0, 0, 0.7) 20%,
+            rgba(0, 0, 0, 0.5) 50%,
+            rgba(0, 0, 0, 0.7) 80%,
+            rgba(0, 0, 0, 0.9) 100%
+        );
+        z-index: 2;
+        pointer-events: none;
+    }
+    
+    /* Pattern Overlay */
+    .pattern-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         background-image: 
-            radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.3) 0%, transparent 20%),
-            radial-gradient(circle at 80% 20%, rgba(54, 209, 220, 0.3) 0%, transparent 20%),
-            radial-gradient(circle at 40% 40%, rgba(255, 101, 132, 0.2) 0%, transparent 30%);
+            radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.15) 0%, transparent 20%),
+            radial-gradient(circle at 80% 20%, rgba(54, 209, 220, 0.15) 0%, transparent 20%),
+            radial-gradient(circle at 40% 40%, rgba(255, 101, 132, 0.1) 0%, transparent 30%),
+            radial-gradient(circle at 60% 60%, rgba(255, 193, 7, 0.1) 0%, transparent 25%);
+        z-index: 3;
+        pointer-events: none;
+        animation: patternFloat 20s ease-in-out infinite alternate;
     }
     
+    @keyframes patternFloat {
+        0% {
+            background-position: 0% 0%;
+        }
+        100% {
+            background-position: 100% 100%;
+        }
+    }
+    
+    /* Hero Content */
     .hero-content {
         position: relative;
-        z-index: 3;
+        z-index: 4;
         color: white;
         max-width: 900px;
         padding: 60px 0;
@@ -94,12 +180,40 @@
         margin: 0 auto;
     }
     
+    /* Slide Navigation Dots */
+    .slide-dots {
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        z-index: 5;
+    }
+    
+    .slide-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .slide-dot.active {
+        background: var(--accent);
+        transform: scale(1.2);
+        box-shadow: 0 0 10px rgba(108, 99, 255, 0.7);
+    }
+    
     .hero h1 {
         font-size: 4rem;
         margin-bottom: 25px;
         color: white;
         line-height: 1.2;
-        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
     
     .hero h1 span {
@@ -113,11 +227,12 @@
     .hero p {
         font-size: 1.4rem;
         margin-bottom: 40px;
-        opacity: 0.9;
+        opacity: 0.95;
         font-weight: 400;
         max-width: 700px;
         margin-left: auto;
         margin-right: auto;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     }
     
     .hero-stats {
@@ -130,18 +245,52 @@
     
     .stat-item {
         text-align: center;
-        padding: 20px;
+        padding: 25px;
         background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border-radius: 20px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         min-width: 150px;
-        transition: transform 0.3s;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            45deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.05) 50%,
+            transparent 100%
+        );
+        transform: translateX(-100%);
     }
     
     .stat-item:hover {
-        transform: translateY(-10px);
+        transform: translateY(-15px) scale(1.05);
         background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.3),
+            0 0 30px rgba(108, 99, 255, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    .stat-item:hover::before {
+        animation: shine 1.5s ease-out;
+    }
+    
+    @keyframes shine {
+        100% {
+            transform: translateX(100%);
+        }
     }
     
     .stat-number {
@@ -153,12 +302,15 @@
         color: transparent;
         margin-bottom: 10px;
         display: block;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
     
     .stat-label {
-        font-size: 0.9rem;
-        opacity: 0.8;
+        font-size: 0.95rem;
+        opacity: 0.9;
         font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
     }
     
     .hero-cta {
@@ -166,18 +318,27 @@
         gap: 20px;
         justify-content: center;
         flex-wrap: wrap;
+        margin-top: 30px;
+    }
+    
+    .btn {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-origin: center;
+    }
+    
+    .btn:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
     }
     
     .btn-whatsapp {
-        background: #25D366;
+        background: linear-gradient(135deg, #25D366 0%, #1DA851 100%);
         color: white;
         box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
     }
     
     .btn-whatsapp:hover {
-        background: #1DA851;
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5);
+        box-shadow: 0 20px 40px rgba(37, 211, 102, 0.6);
     }
     
     .btn-ai {
@@ -187,64 +348,7 @@
     }
     
     .btn-ai:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(255, 107, 107, 0.5);
-    }
-    
-    /* Mental Health Assessment Section */
-    .assessment-section {
-        padding: 100px 0;
-        background: white;
-        position: relative;
-    }
-    
-    .assessment-card {
-        background: var(--gradient-primary);
-        border-radius: 25px;
-        padding: 50px;
-        color: white;
-        text-align: center;
-        box-shadow: 0 20px 50px rgba(108, 99, 255, 0.3);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .assessment-card::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-        background-size: 50px 50px;
-        animation: float 20s linear infinite;
-    }
-    
-    @keyframes float {
-        0% {
-            transform: translate(0, 0) rotate(0deg);
-        }
-        100% {
-            transform: translate(-50px, -50px) rotate(360deg);
-        }
-    }
-    
-    .assessment-content {
-        position: relative;
-        z-index: 2;
-    }
-    
-    .assessment-card h2 {
-        font-size: 2.8rem;
-        color: white;
-        margin-bottom: 20px;
-    }
-    
-    .assessment-card p {
-        font-size: 1.2rem;
-        margin-bottom: 30px;
-        opacity: 0.9;
+        box-shadow: 0 20px 40px rgba(255, 107, 107, 0.6);
     }
     
     @media (max-width: 1200px) {
@@ -260,10 +364,6 @@
         
         .hero p {
             font-size: 1.2rem;
-        }
-        
-        .assessment-card h2 {
-            font-size: 2.5rem;
         }
     }
     
@@ -287,7 +387,7 @@
         
         .stat-item {
             min-width: 120px;
-            padding: 15px;
+            padding: 20px;
         }
         
         .stat-number {
@@ -303,14 +403,6 @@
             width: 100%;
             max-width: 300px;
             justify-content: center;
-        }
-        
-        .assessment-card {
-            padding: 30px 20px;
-        }
-        
-        .assessment-card h2 {
-            font-size: 2rem;
         }
     }
     
@@ -333,6 +425,65 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Get all slides and create image elements
+        const slides = document.querySelectorAll('.slide');
+        const slideDotsContainer = document.createElement('div');
+        slideDotsContainer.className = 'slide-dots';
+        
+        // List of image filenames from your static/images folder
+        const imageFilenames = ['pas1.jpg', 'pas2.jpg', 'pas3.jpg', 'pas4.jpg', 'pas5.jpg'];
+        
+        // Create slide dots and set images
+        slides.forEach((slide, index) => {
+            // Set background image for each slide
+            if (index < imageFilenames.length) {
+                const placeholder = slide.querySelector('.image-placeholder');
+                placeholder.style.backgroundImage = `url('{{ url_for('static', filename='images/${imageFilenames[index]}') }}')`;
+            }
+            
+            // Create dot for each slide
+            const dot = document.createElement('div');
+            dot.className = 'slide-dot' + (index === 0 ? ' active' : '');
+            dot.dataset.index = index;
+            dot.addEventListener('click', () => goToSlide(index));
+            slideDotsContainer.appendChild(dot);
+        });
+        
+        // Add dots to slideshow container
+        document.querySelector('.slideshow-container').appendChild(slideDotsContainer);
+        
+        // Get all dots
+        const dots = document.querySelectorAll('.slide-dot');
+        
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+        
+        // Function to go to specific slide
+        function goToSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+            
+            currentSlide = (n + totalSlides) % totalSlides;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+        
+        // Auto slide function
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+        
+        // Start auto slideshow (change every 5 seconds)
+        let slideInterval = setInterval(nextSlide, 5000);
+        
+        // Pause on hover
+        const slideshowContainer = document.querySelector('.slideshow-container');
+        slideshowContainer.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        slideshowContainer.addEventListener('mouseleave', () => {
+            slideInterval = setInterval(nextSlide, 5000);
+        });
+        
         // Animate stats
         const statNumbers = document.querySelectorAll('.stat-number');
         statNumbers.forEach(stat => {
@@ -343,6 +494,10 @@
             const finalValue = parseInt(numericText) || 0;
             let currentValue = 0;
             const increment = finalValue / 50;
+            
+            // Reset for animation
+            stat.textContent = '0' + (isPercentage ? '%' : '') + (isPlus ? '+' : '');
+            
             const timer = setInterval(() => {
                 currentValue += increment;
                 if (currentValue >= finalValue) {
@@ -351,7 +506,21 @@
                 } else {
                     stat.textContent = Math.floor(currentValue) + (isPercentage ? '%' : '') + (isPlus ? '+' : '');
                 }
-            }, 30);
+            }, 40);
         });
+        
+        // Add floating animation to hero content
+        const heroContent = document.querySelector('.hero-content');
+        let floatingOffset = 0;
+        
+        function updateFloatingAnimation() {
+            const time = Date.now() * 0.001;
+            floatingOffset = Math.sin(time) * 5;
+            heroContent.style.transform = `translateY(${floatingOffset}px)`;
+            requestAnimationFrame(updateFloatingAnimation);
+        }
+        
+        // Start floating animation
+        updateFloatingAnimation();
     });
 </script>
