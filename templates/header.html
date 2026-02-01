@@ -2,168 +2,290 @@
 <!-- Header -->
 <header id="mainHeader">
     <div class="container header-container">
+        <!-- Logo Section -->
         <a href="#home" class="logo">
             <div class="logo-img">
                 <img src="{{ url_for('static', filename='images/mental.png') }}" alt="Logo" class="flag">
             </div>
             <div class="logo-text">
-			
-			
-			
-			
-			
-			<img src="{{ url_for('static', filename='images/wellmed.jpg') }}"
-     alt="Logo"
-     style="height: 160px; width: auto;">
-
-			
-			
-			
-			
-			
-                
-                
+                <img src="{{ url_for('static', filename='images/wellmed.jpg') }}"
+                     alt="WellMed Logo"
+                     class="wellmed-logo">
             </div>
-           
-		   <p><img src="{{ url_for('static', filename='images/kenya-flag.gif') }}" alt="Kenya Flag" style="height: 100px; width: auto;">
+            <img src="{{ url_for('static', filename='images/kenya-flag.gif') }}" 
+                 alt="Kenya Flag" 
+                 class="kenya-flag">
         </a>
-        </p>
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
             <i class="fas fa-bars"></i>
         </button>
         
+        <!-- Main Navigation -->
         <nav id="mainNav">
             <ul>
-                <li><a href="#home" class="active"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#services"><i class="fas fa-hand-holding-heart"></i> Services</a></li>
-                <li><a href="#ai-chat"><i class="fas fa-robot"></i> AI Assistant</a></li>
-                <li><a href="#community"><i class="fas fa-users"></i> Community</a></li>
-                <li><a href="#payment"><i class="fas fa-heart"></i> Donate</a></li>
-                <li><a href="#contact"><i class="fas fa-phone-alt"></i> Contact</a></li>
-                <li><a href="#payment" class="donate-btn"><i class="fas fa-donate"></i> Donate Now</a></li>
+                <li><a href="#home" class="active"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                <li><a href="#services"><i class="fas fa-hand-holding-heart"></i> <span>Services</span></a></li>
+                <li><a href="#resources" id="resourcesTab"><i class="fas fa-folder-open"></i> <span>Resources</span></a></li>
+                <li><a href="#ai-chat"><i class="fas fa-robot"></i> <span>AI Assistant</span></a></li>
+                <li><a href="#community"><i class="fas fa-users"></i> <span>Community</span></a></li>
+                <li><a href="#contact"><i class="fas fa-phone-alt"></i> <span>Contact</span></a></li>
+                <li><a href="#payment" class="donate-btn"><i class="fas fa-donate"></i> <span>Donate Now</span></a></li>
             </ul>
         </nav>
     </div>
 </header>
 
+<!-- Resources Modal -->
+<div id="resourcesModal" class="resources-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-folder-open"></i> Mental Health Resources</h2>
+            <button class="close-modal" id="closeResourcesModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>Mental Health Manual</h3>
+                    <p>Comprehensive guide to mental wellness and self-care practices</p>
+                    <a href="{{ url_for('static', filename='downloads/mental_health_manual.pdf') }}" 
+                       class="download-btn" download>
+                        <i class="fas fa-download"></i> Download PDF
+                    </a>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3>Self-Care Workbook</h3>
+                    <p>Interactive workbook for daily mental health practices</p>
+                    <a href="#" class="download-btn coming-soon">
+                        <i class="fas fa-clock"></i> Coming Soon
+                    </a>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3>Support Guide</h3>
+                    <p>How to support loved ones with mental health challenges</p>
+                    <a href="#" class="download-btn coming-soon">
+                        <i class="fas fa-clock"></i> Coming Soon
+                    </a>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="resource-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile App</h3>
+                    <p>Download our mental wellness app (Android & iOS)</p>
+                    <a href="#" class="download-btn app-download">
+                        <i class="fas fa-external-link-alt"></i> Learn More
+                    </a>
+                </div>
+            </div>
+            
+            <div class="resources-info">
+                <h3><i class="fas fa-info-circle"></i> Additional Resources</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-phone-volume"></i>
+                        <div>
+                            <h4>Crisis Hotlines</h4>
+                            <p>24/7 Support: 0800-723-723</p>
+                            <p>Emergency: 1190</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <div>
+                            <h4>Upcoming Webinars</h4>
+                            <p>Mental Health Awareness: Feb 15</p>
+                            <p>Stress Management: Feb 22</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     /* Header Styles */
+    :root {
+        --primary: #6c63ff;
+        --secondary: #ff6584;
+        --accent: #36d1dc;
+        --success: #4CAF50;
+        --light: #f8f9ff;
+        --dark: #2d2b5e;
+        --gradient-primary: linear-gradient(135deg, #6c63ff 0%, #36d1dc 100%);
+        --gradient-secondary: linear-gradient(135deg, #ff6584 0%, #ffd166 100%);
+        --gradient-accent: linear-gradient(135deg, #9d4edd 0%, #ff6d00 100%);
+        --shadow: 0 10px 40px rgba(108, 99, 255, 0.1);
+        --shadow-hover: 0 15px 50px rgba(108, 99, 255, 0.2);
+        --radius: 16px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
     header {
-        background-color: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 5px 30px rgba(108, 99, 255, 0.15);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 5px 30px rgba(108, 99, 255, 0.1);
         position: fixed;
         width: 100%;
         top: 0;
         z-index: 1000;
-        transition: all 0.3s ease;
+        transition: var(--transition);
+        border-bottom: 1px solid rgba(108, 99, 255, 0.1);
     }
     
     header.scrolled {
-        padding: 5px 0;
-        box-shadow: 0 10px 30px rgba(108, 99, 255, 0.2);
+        padding: 0;
+        box-shadow: 0 10px 40px rgba(108, 99, 255, 0.15);
+        background: rgba(255, 255, 255, 0.98);
     }
     
     .header-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 0;
+        padding: 10px 20px;
+        max-width: 1400px;
+        margin: 0 auto;
     }
     
     .logo {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 12px;
         text-decoration: none;
+        position: relative;
+        padding: 5px;
+        border-radius: 12px;
+        transition: var(--transition);
+    }
+    
+    .logo:hover {
+        background: rgba(108, 99, 255, 0.05);
+        transform: translateY(-2px);
     }
     
     .logo-img {
-        height: 70px;
-        width: 70px;
+        height: 60px;
+        width: 60px;
         background: var(--gradient-primary);
-        border-radius: 15px;
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         font-weight: 800;
-        font-size: 1.8rem;
-        box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
-        transition: transform 0.3s ease;
+        font-size: 1.5rem;
+        box-shadow: 0 8px 20px rgba(108, 99, 255, 0.2);
+        transition: var(--transition);
+        flex-shrink: 0;
     }
     
     .logo:hover .logo-img {
-        transform: rotate(5deg) scale(1.05);
+        transform: rotate(8deg) scale(1.1);
     }
     
-    .logo-text h1 {
-        font-size: 1.8rem;
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        margin-bottom: 5px;
-        transition: all 0.3s ease;
-    }
-    
-    .logo-text p {
-        font-size: 0.9rem;
-        color: var(--primary);
-        font-style: italic;
-        font-weight: 500;
-    }
-    
-    .flag {
-        height: 30px;
+    .wellmed-logo {
+        height: 70px;
         width: auto;
-        border-radius: 4px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        max-width: 200px;
+        transition: var(--transition);
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    }
+    
+    .kenya-flag {
+        height: 40px;
+        width: auto;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: var(--transition);
+        margin-left: 5px;
     }
     
     nav ul {
         display: flex;
         list-style: none;
-        gap: 10px;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
     }
     
     nav ul li a {
         text-decoration: none;
         color: var(--dark);
         font-weight: 600;
-        font-size: 1rem;
-        transition: all 0.3s;
-        padding: 8px 20px;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        padding: 10px 18px;
         border-radius: 50px;
         position: relative;
         display: flex;
         align-items: center;
         gap: 8px;
+        white-space: nowrap;
+        background: transparent;
+    }
+    
+    nav ul li a span {
+        transition: var(--transition);
     }
     
     nav ul li a:hover {
         color: var(--primary);
         background: rgba(108, 99, 255, 0.08);
+        transform: translateY(-2px);
+    }
+    
+    nav ul li a:hover span {
+        color: var(--primary);
     }
     
     nav ul li a.active {
         background: var(--gradient-primary);
         color: white;
-        box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+        transform: translateY(-2px);
     }
     
     .donate-btn {
         background: var(--gradient-secondary);
         color: white !important;
-        padding: 10px 25px !important;
-        box-shadow: 0 5px 20px rgba(255, 101, 132, 0.3);
-        margin-left: 10px;
+        padding: 12px 24px !important;
+        box-shadow: 0 8px 25px rgba(255, 101, 132, 0.3);
+        margin-left: 5px;
+        animation: pulse 2s infinite;
     }
     
     .donate-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255, 101, 132, 0.4);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 12px 30px rgba(255, 101, 132, 0.4);
         background: var(--gradient-secondary);
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 8px 25px rgba(255, 101, 132, 0.3); }
+        50% { box-shadow: 0 8px 25px rgba(255, 101, 132, 0.6); }
+        100% { box-shadow: 0 8px 25px rgba(255, 101, 132, 0.3); }
     }
     
     .mobile-menu-btn {
@@ -173,61 +295,430 @@
         cursor: pointer;
         background: none;
         border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s;
+        transition: var(--transition);
+        z-index: 1001;
     }
     
     .mobile-menu-btn:hover {
         background: rgba(108, 99, 255, 0.1);
+        transform: rotate(90deg);
+    }
+    
+    /* Resources Modal */
+    .resources-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+        overflow-y: auto;
+    }
+    
+    .modal-content {
+        background: white;
+        margin: 80px auto;
+        padding: 0;
+        width: 90%;
+        max-width: 1000px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-hover);
+        animation: slideUp 0.4s ease;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+    
+    .modal-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 25px 30px;
+        border-radius: var(--radius) var(--radius) 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+    }
+    
+    .close-modal {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+    }
+    
+    .close-modal:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+    
+    .modal-body {
+        padding: 30px;
+    }
+    
+    .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+    
+    .resource-card {
+        background: var(--light);
+        border-radius: var(--radius);
+        padding: 25px;
+        text-align: center;
+        transition: var(--transition);
+        border: 1px solid rgba(108, 99, 255, 0.1);
+    }
+    
+    .resource-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary);
+    }
+    
+    .resource-icon {
+        width: 70px;
+        height: 70px;
+        background: var(--gradient-primary);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 1.8rem;
+        box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+    }
+    
+    .resource-card h3 {
+        color: var(--dark);
+        margin-bottom: 12px;
+        font-size: 1.3rem;
+    }
+    
+    .resource-card p {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+    
+    .download-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--gradient-primary);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        font-size: 0.95rem;
+        width: 100%;
+    }
+    
+    .download-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(108, 99, 255, 0.3);
+    }
+    
+    .coming-soon {
+        background: var(--gradient-secondary);
+        opacity: 0.8;
+    }
+    
+    .app-download {
+        background: var(--gradient-accent);
+    }
+    
+    .resources-info {
+        background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
+        border-radius: var(--radius);
+        padding: 25px;
+        border: 1px solid rgba(108, 99, 255, 0.1);
+    }
+    
+    .resources-info h3 {
+        color: var(--dark);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.4rem;
+    }
+    
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        transition: var(--transition);
+    }
+    
+    .info-item:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+    }
+    
+    .info-item i {
+        font-size: 1.5rem;
+        color: var(--primary);
+        background: rgba(108, 99, 255, 0.1);
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .info-item h4 {
+        color: var(--dark);
+        margin-bottom: 5px;
+        font-size: 1.1rem;
+    }
+    
+    .info-item p {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        margin: 2px 0;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+        from { 
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1100px) {
+        .header-container {
+            padding: 10px 15px;
+        }
+        
+        nav ul li a span {
+            display: none;
+        }
+        
+        nav ul li a {
+            padding: 10px 15px;
+            font-size: 1.2rem;
+        }
+        
+        .donate-btn span {
+            display: inline;
+        }
     }
     
     @media (max-width: 768px) {
         .header-container {
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+        }
+        
+        .logo {
+            flex: 1;
+        }
+        
+        .wellmed-logo {
+            height: 50px;
+            max-width: 150px;
+        }
+        
+        .kenya-flag {
+            display: none;
+        }
+        
+        .logo-img {
+            height: 50px;
+            width: 50px;
+            font-size: 1.2rem;
         }
         
         nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
             width: 100%;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease;
-            order: 3;
-            margin-top: 0;
+            border-radius: 0 0 var(--radius) var(--radius);
+            z-index: 999;
         }
         
         nav.active {
-            max-height: 400px;
-            margin-top: 20px;
+            max-height: 500px;
         }
         
         nav ul {
             flex-direction: column;
-            gap: 10px;
+            gap: 0;
+            padding: 15px;
         }
         
         nav ul li {
-            margin: 0;
+            width: 100%;
         }
         
         nav ul li a {
-            justify-content: center;
-            padding: 12px 20px;
+            padding: 15px 20px;
+            justify-content: flex-start;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        
+        nav ul li a span {
+            display: inline-block;
         }
         
         .mobile-menu-btn {
             display: flex;
+            margin-left: 10px;
+        }
+        
+        .modal-content {
+            margin: 20px auto;
+            width: 95%;
+        }
+        
+        .resources-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .header-container {
+            padding: 8px 10px;
+        }
+        
+        .wellmed-logo {
+            height: 40px;
+            max-width: 120px;
+        }
+        
+        .logo-img {
+            height: 45px;
+            width: 45px;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .resource-card {
+            padding: 20px;
+        }
+        
+        .modal-header {
+            padding: 20px;
+        }
+    }
+    
+    /* Dark Mode Support */
+    @media (prefers-color-scheme: dark) {
+        header {
+            background: rgba(30, 30, 40, 0.95);
+            border-bottom-color: rgba(108, 99, 255, 0.2);
+        }
+        
+        .modal-content {
+            background: #1e1e28;
+            color: white;
+        }
+        
+        .resource-card {
+            background: #2a2a35;
+            border-color: rgba(108, 99, 255, 0.2);
+        }
+        
+        .resource-card h3 {
+            color: white;
+        }
+        
+        .resource-card p {
+            color: #aaa;
+        }
+        
+        .resources-info {
+            background: #2a2a35;
+            border-color: rgba(108, 99, 255, 0.2);
+        }
+        
+        .info-item {
+            background: #1e1e28;
+        }
+        
+        .info-item h4 {
+            color: white;
+        }
+        
+        .info-item p {
+            color: #aaa;
         }
     }
 </style>
 
 <script>
-    // Mobile Menu Toggle
     document.addEventListener('DOMContentLoaded', function() {
+        // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mainNav = document.getElementById('mainNav');
         
@@ -256,6 +747,34 @@
             });
         }
         
+        // Resources Modal Functionality
+        const resourcesTab = document.getElementById('resourcesTab');
+        const resourcesModal = document.getElementById('resourcesModal');
+        const closeResourcesModal = document.getElementById('closeResourcesModal');
+        
+        if (resourcesTab) {
+            resourcesTab.addEventListener('click', function(e) {
+                e.preventDefault();
+                resourcesModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        }
+        
+        if (closeResourcesModal) {
+            closeResourcesModal.addEventListener('click', function() {
+                resourcesModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === resourcesModal) {
+                resourcesModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.getElementById('mainHeader');
@@ -272,6 +791,10 @@
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
                 
+                if (targetId === '#resources') {
+                    return; // Handled by modal
+                }
+                
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     e.preventDefault();
@@ -281,6 +804,14 @@
                         link.classList.remove('active');
                     });
                     this.classList.add('active');
+                    
+                    // Close mobile menu if open
+                    if (mainNav && mainNav.classList.contains('active')) {
+                        mainNav.classList.remove('active');
+                        const icon = mobileMenuBtn.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
                     
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
@@ -296,7 +827,7 @@
             
             document.querySelectorAll('#mainNav a[href^="#"]').forEach(link => {
                 const targetId = link.getAttribute('href');
-                if (targetId === '#') return;
+                if (targetId === '#' || targetId === '#resources') return;
                 
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
@@ -307,6 +838,27 @@
                         document.querySelectorAll('#mainNav a').forEach(l => l.classList.remove('active'));
                         link.classList.add('active');
                     }
+                }
+            });
+        });
+        
+        // Keyboard navigation for modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && resourcesModal.style.display === 'block') {
+                resourcesModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // File download tracking (optional)
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (!this.classList.contains('coming-soon')) {
+                    console.log('Download initiated:', this.href);
+                    // Add analytics tracking here
+                    // Example: ga('send', 'event', 'Resources', 'Download', this.href);
+                } else {
+                    e.preventDefault();
                 }
             });
         });
