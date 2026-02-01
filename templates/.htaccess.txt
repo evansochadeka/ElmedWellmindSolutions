@@ -1,0 +1,51 @@
+# .htaccess
+RewriteEngine On
+
+# Force HTTPS for security
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "\.(log|txt|csv|sql|env|ini|htaccess)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect PHP files
+<Files "send_email.php">
+    Order allow,deny
+    Allow from all
+    # Optional: Add IP restriction for admin access
+    # Deny from all
+    # Allow from 192.168.1.0/24
+</Files>
+
+# Compress output for better performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Set PHP settings if needed
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 12M
+    php_value max_execution_time 300
+</IfModule>
+
+# Error pages
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php
+ErrorDocument 403 /403.php

@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellMed | Mental Health Support - Contact Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS RESET & BASE STYLES ===== */
+        :root {
+            --primary: #6c63ff;
+            --primary-dark: #554fd8;
+            --primary-light: #8b85ff;
+            --secondary: #ff6584;
+            --accent: #36d1dc;
+            --accent-dark: #24b8c4;
+            --success: #4CAF50;
+            --success-dark: #3d8b40;
+            --error: #f44336;
+            --error-dark: #d32f2f;
+            --warning: #ff9800;
+            --warning-dark: #f57c00;
+            --info: #2196F3;
+            --light: #f8f9ff;
+            --light-gray: #f0f2ff;
+            --dark: #2d2b5e;
+            --dark-light: #3a3777;
+            --gray: #6c757d;
+            --gray-light: #adb5bd;
+            --border: #e0e0e0;
+            
+            --gradient-primary: linear-gradient(135deg, #6c63ff 0%, #36d1dc 100%);
+            --gradient-primary-hover: linear-gradient(135deg, #554fd8 0%, #24b8c4 100%);
+            --gradient-secondary: linear-gradient(135deg, #ff6584 0%, #ffd166 100%);
+            --gradient-dark: linear-gradient(135deg, #2d2b5e 0%, #4a43d4 100%);
+            --gradient-light: linear-gradient(135deg, #f0f4ff 0%, #f9f0ff 100%);
+            --gradient-success: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            
+            --shadow-sm: 0 2px 8px rgba(108, 99, 255, 0.08);
+            --shadow-md: 0 5px 20px rgba(108, 99, 255, 0.12);
+            --shadow-lg: 0 10px 40px rgba(108, 99, 255, 0.15);
+            --shadow-xl: 0 20px 60px rgba(108, 99, 255, 0.2);
+            --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+            
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-full: 9999px;
+            
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            --header-height: 80px;
+            --container-width: 1200px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 0.5em;
+        }
+        
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: var(--transition-base);
+        }
+        
+        button, input, textarea, select {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+        }
+        
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+        
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* ===== UTILITY CLASSES ===== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        .text-gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(108, 99, 255, 0.1);
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-base);
+        }
+        
+        .header.scrolled {
+            height: 70px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-base);
+        }
+        
+        .logo:hover .logo-icon {
+            transform: rotate(10deg) scale(1.05);
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-text h1 {
+            font-size: 24px;
+            background: var(--gradient-dark);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+        
+        .logo-text span {
+            font-size: 12px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: calc(var(--header-height) + 60px) 0 100px;
+            background: var(--gradient-light);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .hero::before {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -200px;
+            right: -200px;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .hero::after {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            bottom: -150px;
+            left: -150px;
+            animation: float 25s ease-in-out infinite reverse;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: var(--gradient-dark);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+        
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 400px;
+        }
+        
+        .toast {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-left: 5px solid var(--primary);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .toast::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.05;
+            z-index: -1;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            border-left-color: var(--success);
+        }
+        
+        .toast.error {
+            border-left-color: var(--error);
+        }
+        
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .toast.info {
+            border-left-color: var(--info);
+        }
+        
+        .toast-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .toast.success .toast-icon {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+        }
+        
+        .toast.error .toast-icon {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--error);
+        }
+        
+        .toast.warning .toast-icon {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning);
+        }
+        
+        .toast.info .toast-icon {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--info);
+        }
+        
+        .toast-content {
+            flex: 1;
+        }
+        
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--dark);
+        }
+        
+        .toast-message {
+            color: var(--gray);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--gray-light);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-self: flex-start;
+        }
+        
+        .toast-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--dark);
+        }
+        
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            padding: 100px 0;
+            position: relative;
+        }
+        
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 50px;
+            margin-bottom: 80px;
+        }
+        
+        @media (max-width: 992px) {
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+        
+        /* Contact Info Card */
+        .contact-info-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact-info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+        
+        .contact-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.2);
+        }
+        
+        .contact-header h3 {
+            font-size: 28px;
+            color: var(--dark);
+            margin: 0;
+        }
+        
+        .contact-intro {
+            color: var(--gray);
+            margin-bottom: 40px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .contact-item {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            border-radius: var(--radius-md);
+            transition: var(--transition-base);
+            background: var(--light);
+            border: 1px solid transparent;
+        }
+        
+        .contact-item:hover {
+            border-color: rgba(108, 99, 255, 0.2);
+            transform: translateX(8px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .contact-item-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .contact-item-content {
+            flex: 1;
+        }
+        
+        .contact-item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 6px;
+        }
+        
+        .contact-item-detail {
+            color: var(--dark-light);
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+        
+        .contact-item-detail a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .contact-item-detail a:hover {
+            color: var(--primary-dark);
+        }
+        
+        .contact-item-note {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        /* Emergency Box */
+        .emergency-box {
+            margin-top: 40px;
+            background: linear-gradient(135deg, rgba(255, 101, 132, 0.05), rgba(255, 209, 102, 0.05));
+            border: 1px solid rgba(255, 101, 132, 0.2);
+            border-radius: var(--radius-md);
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .emergency-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-secondary);
+        }
+        
+        .emergency-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .emergency-header i {
+            color: var(--error);
+            font-size: 22px;
+        }
+        
+        .emergency-header h4 {
+            color: var(--error-dark);
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .emergency-box p {
+            color: var(--gray);
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        
+        .emergency-list {
+            list-style: none;
+        }
+        
+        .emergency-list li {
+            padding: 8px 0;
+            color: var(--dark-light);
+            border-bottom: 1px solid rgba(255, 101, 132, 0.1);
+            font-size: 15px;
+        }
+        
+        .emergency-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .emergency-list strong {
+            color: var(--error-dark);
+            font-weight: 600;
+        }
+        
+        /* Contact Form */
+        .contact-form-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 50px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+        
+        .contact-form-header {
+            margin-bottom: 40px;
+        }
+        
+        .contact-form-header h3 {
+            font-size: 28px;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+        
+        .contact-form-header p {
+            color: var(--gray);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 576px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 15px;
+        }
+        
+        .form-label i {
+            color: var(--primary);
+            font-size: 16px;
+            width: 20px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition-base);
+            background: white;
+            color: var(--dark);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .form-input:hover:not(:focus) {
+            border-color: var(--primary-light);
+        }
+        
+        .form-input.error {
+            border-color: var(--error);
+            background: rgba(244, 67, 54, 0.02);
+        }
+        
+        .form-input.success {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.02);
+        }
+        
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236c63ff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 16px;
+            cursor: pointer;
+            padding-right: 50px;
+        }
+        
+        textarea.form-input {
+            resize: vertical;
+            min-height: 140px;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .field-feedback {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .field-error {
+            color: var(--error);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .char-counter {
+            font-size: 14px;
+            color: var(--gray);
+            transition: var(--transition-fast);
+        }
+        
+        .char-counter.warning {
+            color: var(--warning);
+        }
+        
+        .char-counter.error {
+            color: var(--error);
+        }
+        
+        /* Privacy Checkbox */
+        .privacy-checkbox {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(108, 99, 255, 0.03);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+        
+        .privacy-checkbox input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--primary);
+            margin-top: 3px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .privacy-checkbox label {
+            color: var(--gray);
+            font-size: 15px;
+            line-height: 1.6;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .privacy-checkbox a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 2px;
+        }
+        
+        .privacy-checkbox a:hover {
+            color: var(--primary-dark);
+        }
+        
+        /* Submit Button */
+        .submit-button {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: var(--radius-full);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition-slow);
+        }
+        
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(108, 99, 255, 0.3);
+        }
+        
+        .submit-button:hover::before {
+            left: 100%;
+        }
+        
+        .submit-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .submit-icon {
+            font-size: 18px;
+            transition: var(--transition-base);
+        }
+        
+        .submit-loader {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .submit-button.loading .submit-text,
+        .submit-button.loading .submit-icon {
+            display: none;
+        }
+        
+        .submit-button.loading .submit-loader {
+            display: block;
+        }
+        
+        .form-security-note {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--gray);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .form-security-note i {
+            color: var(--success);
+        }
+        
+        /* ===== RESOURCES SECTION ===== */
+        .resources-section {
+            padding: 100px 0;
+            background: var(--light-gray);
+            border-radius: var(--radius-xl);
+            margin: 80px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            background: var(--gradient-dark);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-base);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(108, 99, 255, 0.2);
+        }
+        
+        .resource-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .resource-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(108, 99, 255, 0.1);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+            color: var(--primary);
+            transition: var(--transition-base);
+        }
+        
+        .resource-card:hover .resource-icon {
+            background: var(--gradient-primary);
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .resource-card h4 {
+            font-size: 22px;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .resource-card p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 15px;
+            transition: var(--transition-base);
+        }
+        
+        .resource-link i {
+            transition: transform 0.3s ease;
+        }
+        
+        .resource-link:hover i {
+            transform: translateX(5px);
+        }
+        
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 80px 0 40px;
+            margin-top: 100px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+        
+        .footer-brand h3 {
+            font-size: 28px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+        
+        .footer-links h4 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+        
+        .footer-links h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition-fast);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .footer-links a i {
+            width: 20px;
+            font-size: 14px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+        
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .fade-in-delay-1 {
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+        }
+        
+        .fade-in-delay-2 {
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+        
+        .fade-in-delay-3 {
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+        
+        .fade-in-delay-4 {
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+        
+        .fade-in-delay-5 {
+            animation: fadeInUp 0.8s ease-out 0.5s both;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 100%;
+                padding: 0 32px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-form-card,
+            .contact-info-card {
+                padding: 35px;
+            }
+            
+            .section-title {
+                font-size: 2.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: calc(var(--header-height) + 40px) 0 80px;
+            }
+            
+            .hero-title {
+                font-size: 2.4rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .contact-section {
+                padding: 60px 0;
+            }
+            
+            .contact-form-card,
+            .contact-info-card {
+                padding: 30px;
+            }
+            
+            .contact-header h3 {
+                font-size: 24px;
+            }
+            
+            .contact-form-header h3 {
+                font-size: 24px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .resources-section {
+                padding: 60px 0;
+                margin: 60px 0;
+            }
+            
+            .toast-container {
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+                max-width: none;
+            }
+            
+            .toast {
+                max-width: none;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .contact-form-card,
+            .contact-info-card {
+                padding: 25px;
+            }
+            
+            .contact-item {
+                padding: 16px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .submit-button {
+                padding: 16px 30px;
+                font-size: 16px;
+            }
+            
+            .footer {
+                padding: 60px 0 30px;
+            }
+            
+            .footer-grid {
+                gap: 40px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .contact-form-card,
+            .contact-info-card {
+                padding: 20px;
+            }
+            
+            .logo-text h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="mainHeader">
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>WellMed</h1>
+                    <span>Mental Health Support</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">We're Here to Listen</h1>
+                <p class="hero-subtitle">
+                    Reach out to our compassionate team for support, guidance, or to schedule a consultation. 
+                    Your mental wellness journey starts with a conversation.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-wrapper">
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <div class="contact-info-card fade-in-up">
+                        <div class="contact-header">
+                            <div class="contact-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <h3>Contact Information</h3>
+                        </div>
+                        
+                        <p class="contact-intro">
+                            Our dedicated team is available through multiple channels to ensure you get the support you need, when you need it.
+                        </p>
+                        
+                        <div class="contact-details">
+                            <div class="contact-item fade-in-delay-1">
+                                <div class="contact-item-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="contact-item-content">
+                                    <div class="contact-item-title">Our Location</div>
+                                    <div class="contact-item-detail">Kahawa Wendani, Thika Road</div>
+                                    <div class="contact-item-detail">Nairobi, Kenya</div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item fade-in-delay-2">
+                                <div class="contact-item-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="contact-item-content">
+                                    <div class="contact-item-title">Phone Number</div>
+                                    <div class="contact-item-detail">
+                                        <a href="tel:+254759226354">+254 759 226354</a>
+                                    </div>
+                                    <div class="contact-item-note">Available 24/7 for emergencies</div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item fade-in-delay-3">
+                                <div class="contact-item-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="contact-item-content">
+                                    <div class="contact-item-title">Email Address</div>
+                                    <div class="contact-item-detail">
+                                        <a href="mailto:elijahokware@gmail.com">elijahokware@gmail.com</a>
+                                    </div>
+                                    <div class="contact-item-note">Response within 24 hours</div>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item fade-in-delay-4">
+                                <div class="contact-item-icon">
+                                    <i class="fab fa-whatsapp"></i>
+                                </div>
+                                <div class="contact-item-content">
+                                    <div class="contact-item-title">WhatsApp Support</div>
+                                    <div class="contact-item-detail">
+                                        <a href="https://wa.me/254759226354" target="_blank">+254 759 226354</a>
+                                    </div>
+                                    <div class="contact-item-note">Instant chat support available</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="emergency-box fade-in-delay-5">
+                            <div class="emergency-header">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h4>Emergency Contacts</h4>
+                            </div>
+                            <p>If you're experiencing a crisis, please contact immediately:</p>
+                            <ul class="emergency-list">
+                                <li><strong>Nairobi Women's Hospital:</strong> 0800 720 720</li>
+                                <li><strong>Kenya Red Cross:</strong> 1199</li>
+                                <li><strong>Emergency Police:</strong> 999 or 112</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="contact-form-wrapper">
+                    <div class="contact-form-card fade-in-up">
+                        <div class="contact-form-header">
+                            <h3>Send Us a Message</h3>
+                            <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+                        </div>
+                        
+                        <form id="contactForm" class="contact-form">
+                            <div class="form-group">
+                                <label class="form-label" for="name">
+                                    <i class="fas fa-user"></i> Full Name
+                                </label>
+                                <input type="text" id="name" name="name" class="form-input" 
+                                       placeholder="Enter your full name" required>
+                                <div class="field-feedback">
+                                    <div class="field-error" id="nameError"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="email">
+                                        <i class="fas fa-envelope"></i> Email Address
+                                    </label>
+                                    <input type="email" id="email" name="email" class="form-input" 
+                                           placeholder="your.email@example.com" required>
+                                    <div class="field-feedback">
+                                        <div class="field-error" id="emailError"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="phone">
+                                        <i class="fas fa-phone"></i> Phone Number
+                                    </label>
+                                    <input type="tel" id="phone" name="phone" class="form-input"
+                                           placeholder="+254 712 345678 (Optional)">
+                                    <div class="field-feedback">
+                                        <div class="field-error" id="phoneError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="subject">
+                                    <i class="fas fa-tag"></i> Subject
+                                </label>
+                                <select id="subject" name="subject" class="form-input" required>
+                                    <option value="">Select a topic</option>
+                                    <option value="General Inquiry">General Inquiry</option>
+                                    <option value="Appointment Booking">Appointment Booking</option>
+                                    <option value="Therapy/Counseling">Therapy/Counseling</option>
+                                    <option value="Group Sessions">Group Sessions</option>
+                                    <option value="Corporate Services">Corporate Services</option>
+                                    <option value="Emergency Support">Emergency Support</option>
+                                    <option value="Feedback & Suggestions">Feedback & Suggestions</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="field-feedback">
+                                    <div class="field-error" id="subjectError"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="message">
+                                    <i class="fas fa-comment-dots"></i> Your Message
+                                </label>
+                                <textarea id="message" name="message" class="form-input" rows="5" 
+                                          placeholder="How can we help you today? Please share your thoughts..." required></textarea>
+                                <div class="field-feedback">
+                                    <div class="field-error" id="messageError"></div>
+                                    <div class="char-counter" id="charCounter">0/500 characters</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Privacy Consent -->
+                            <div class="privacy-checkbox">
+                                <input type="checkbox" id="privacy" name="privacy" required>
+                                <label for="privacy">
+                                    I understand that this information will be kept confidential and secure according to our 
+                                    <a href="#" onclick="showPrivacyNotice()">privacy policy</a>.
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="submit-button" id="submitBtn">
+                                <i class="fas fa-paper-plane submit-icon"></i>
+                                <span class="submit-text">Send Message</span>
+                                <div class="submit-loader"></div>
+                            </button>
+                            
+                            <p class="form-security-note">
+                                <i class="fas fa-lock"></i> Your information is encrypted and protected
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resources Section -->
+            <div class="resources-section">
+                <div class="section-header">
+                    <h2 class="section-title">Mental Health Resources</h2>
+                    <p class="section-description">
+                        Access helpful resources to support your mental wellness journey. 
+                        We provide tools and information to help you thrive.
+                    </p>
+                </div>
+                
+                <div class="resources-grid">
+                    <div class="resource-card fade-in-delay-1">
+                        <div class="resource-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4>Coping Strategies</h4>
+                        <p>Learn healthy ways to manage stress, anxiety, and depression through proven techniques.</p>
+                        <a href="#" class="resource-link">Explore Strategies <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card fade-in-delay-2">
+                        <div class="resource-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Support Groups</h4>
+                        <p>Join our community for shared experiences and mutual support in a safe environment.</p>
+                        <a href="#" class="resource-link">Join Community <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card fade-in-delay-3">
+                        <div class="resource-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h4>Self-Help Guides</h4>
+                        <p>Access free downloadable resources and guides for mental wellness and self-care.</p>
+                        <a href="#" class="resource-link">Download Guides <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="resource-card fade-in-delay-4">
+                        <div class="resource-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Crisis App</h4>
+                        <p>Download our mobile app for immediate support tools and crisis management resources.</p>
+                        <a href="#" class="resource-link">Get the App <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>WellMed</h3>
+                    <p>
+                        Providing compassionate mental health support and resources 
+                        to help individuals thrive in their wellness journey.
+                    </p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Resources</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li><a href="tel:+254759226354"><i class="fas fa-phone"></i> +254 759 226354</a></li>
+                        <li><a href="mailto:elijahokware@gmail.com"><i class="fas fa-envelope"></i> elijahokware@gmail.com</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Follow Us</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 WellMed. All rights reserved. | Mental Health Support System</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Toast notification system
+        class ToastSystem {
+            constructor() {
+                this.container = document.getElementById('toastContainer');
+                this.toasts = new Map();
+            }
+            
+            show(message, type = 'info', duration = 5000) {
+                const id = 'toast-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                const icons = {
+                    success: 'fas fa-check-circle',
+                    error: 'fas fa-exclamation-circle',
+                    warning: 'fas fa-exclamation-triangle',
+                    info: 'fas fa-info-circle'
+                };
+                
+                const titles = {
+                    success: 'Success!',
+                    error: 'Error!',
+                    warning: 'Warning!',
+                    info: 'Info'
+                };
+                
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.id = id;
+                toast.innerHTML = `
+                    <div class="toast-icon">
+                        <i class="${icons[type]}"></i>
+                    </div>
+                    <div class="toast-content">
+                        <div class="toast-title">${titles[type]}</div>
+                        <div class="toast-message">${message}</div>
+                    </div>
+                    <button class="toast-close" aria-label="Close notification">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                this.container.appendChild(toast);
+                
+                // Add close functionality
+                const closeBtn = toast.querySelector('.toast-close');
+                closeBtn.addEventListener('click', () => this.remove(id));
+                
+                // Show with animation
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        toast.classList.add('show');
+                    });
+                });
+                
+                // Auto remove
+                if (duration > 0) {
+                    setTimeout(() => this.remove(id), duration);
+                }
+                
+                this.toasts.set(id, toast);
+                return id;
+            }
+            
+            remove(id) {
+                const toast = this.toasts.get(id);
+                if (toast) {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentElement) {
+                            toast.parentElement.removeChild(toast);
+                        }
+                        this.toasts.delete(id);
+                    }, 500);
+                }
+            }
+        }
+        
+        // Form validation system
+        class FormValidator {
+            constructor(formId) {
+                this.form = document.getElementById(formId);
+                this.fields = {};
+                this.toast = new ToastSystem();
+                this.init();
+            }
+            
+            init() {
+                if (!this.form) return;
+                
+                // Character counter for message
+                const messageField = this.form.querySelector('#message');
+                const charCounter = this.form.querySelector('#charCounter');
+                
+                if (messageField && charCounter) {
+                    messageField.addEventListener('input', () => {
+                        const length = messageField.value.length;
+                        charCounter.textContent = `${length}/500 characters`;
+                        
+                        if (length > 450) {
+                            charCounter.classList.add('warning');
+                            charCounter.classList.remove('error');
+                        } else if (length > 500) {
+                            messageField.value = messageField.value.substring(0, 500);
+                            charCounter.textContent = '500/500 characters';
+                            charCounter.classList.add('error');
+                            charCounter.classList.remove('warning');
+                        } else {
+                            charCounter.classList.remove('warning', 'error');
+                        }
+                    });
+                }
+                
+                // Form submission
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                
+                // Real-time validation
+                const inputs = this.form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                    input.addEventListener('input', () => this.clearFieldError(input));
+                });
+                
+                // Emergency subject warning
+                const subjectSelect = this.form.querySelector('#subject');
+                if (subjectSelect) {
+                    subjectSelect.addEventListener('change', () => {
+                        if (subjectSelect.value === 'Emergency Support') {
+                            this.toast.show(
+                                'For immediate emergencies, please call 0800 720 720 or 112', 
+                                'warning', 
+                                10000
+                            );
+                        }
+                    });
+                }
+            }
+            
+            validateField(field) {
+                const value = field.value.trim();
+                const errorElement = document.getElementById(`${field.id}Error`);
+                
+                // Clear previous errors
+                field.classList.remove('error', 'success');
+                if (errorElement) errorElement.textContent = '';
+                
+                // Skip validation for empty optional fields
+                if (!field.required && value === '') {
+                    return true;
+                }
+                
+                let isValid = true;
+                let errorMessage = '';
+                
+                switch(field.type) {
+                    case 'email':
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        isValid = emailRegex.test(value);
+                        errorMessage = 'Please enter a valid email address.';
+                        break;
+                        
+                    case 'tel':
+                        if (value !== '') {
+                            const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
+                            isValid = phoneRegex.test(value.replace(/\s/g, ''));
+                            errorMessage = 'Please enter a valid phone number.';
+                        }
+                        break;
+                        
+                    default:
+                        if (field.tagName === 'SELECT' && field.required) {
+                            isValid = value !== '';
+                            errorMessage = 'Please select an option.';
+                        } else if (field.required) {
+                            isValid = value !== '';
+                            errorMessage = 'This field is required.';
+                        }
+                }
+                
+                // Apply validation results
+                if (!isValid && value !== '') {
+                    field.classList.add('error');
+                    if (errorElement) {
+                        errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${errorMessage}`;
+                    }
+                } else if (value !== '') {
+                    field.classList.add('success');
+                }
+                
+                return isValid;
+            }
+            
+            clearFieldError(field) {
+                field.classList.remove('error');
+                const errorElement = document.getElementById(`${field.id}Error`);
+                if (errorElement) errorElement.textContent = '';
+            }
+            
+            validateForm() {
+                let isValid = true;
+                const requiredFields = this.form.querySelectorAll('[required]');
+                
+                // Validate all required fields
+                requiredFields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        isValid = false;
+                    }
+                });
+                
+                // Validate privacy checkbox
+                const privacyCheck = this.form.querySelector('#privacy');
+                if (privacyCheck && !privacyCheck.checked) {
+                    this.toast.show('Please accept the privacy policy to continue.', 'warning');
+                    privacyCheck.focus();
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            async handleSubmit(event) {
+                event.preventDefault();
+                
+                const submitBtn = this.form.querySelector('#submitBtn');
+                const originalBtnText = submitBtn.innerHTML;
+                
+                // Disable button and show loading
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+                
+                // Validate form
+                if (!this.validateForm()) {
+                    this.toast.show('Please fix the errors in the form.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                    return;
+                }
+                
+                try {
+                    // Prepare form data
+                    const formData = new FormData(this.form);
+                    
+                    // Send request
+                    const response = await fetch('send_email.php', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Show success message
+                        this.toast.show(data.message, 'success', 8000);
+                        
+                        // Reset form
+                        this.form.reset();
+                        
+                        // Reset character counter
+                        const charCounter = this.form.querySelector('#charCounter');
+                        if (charCounter) {
+                            charCounter.textContent = '0/500 characters';
+                            charCounter.classList.remove('warning', 'error');
+                        }
+                        
+                        // Reset field styles
+                        this.form.querySelectorAll('.form-input').forEach(input => {
+                            input.classList.remove('success', 'error');
+                        });
+                        
+                    } else {
+                        // Show error message
+                        this.toast.show(data.message, 'error', 8000);
+                    }
+                    
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    this.toast.show(
+                        'Network error. Please check your connection and try again, or contact us directly.',
+                        'error',
+                        8000
+                    );
+                } finally {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                }
+            }
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize form validator
+            const formValidator = new FormValidator('contactForm');
+            
+            // Header scroll effect
+            const header = document.getElementById('mainHeader');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                
+                lastScroll = currentScroll;
+            });
+            
+            // Auto-expand textarea
+            const messageTextarea = document.getElementById('message');
+            if (messageTextarea) {
+                messageTextarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Add hover effects to interactive elements
+            document.querySelectorAll('.contact-item, .resource-card').forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                element.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Privacy notice function
+            window.showPrivacyNotice = function() {
+                const toast = new ToastSystem();
+                toast.show(
+                    'Your information is encrypted and never shared with third parties. We adhere to strict confidentiality protocols.',
+                    'info',
+                    6000
+                );
+                return false;
+            };
+            
+            // WhatsApp click tracking
+            const whatsappLinks = document.querySelectorAll('a[href*="whatsapp"]');
+            whatsappLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // You can add analytics tracking here
+                    console.log('WhatsApp link clicked:', this.href);
+                });
+            });
+            
+            // Emergency contact pulse animation
+            const emergencyBox = document.querySelector('.emergency-box');
+            if (emergencyBox) {
+                emergencyBox.classList.add('pulse');
+                
+                emergencyBox.addEventListener('mouseenter', function() {
+                    this.classList.remove('pulse');
+                });
+                
+                emergencyBox.addEventListener('mouseleave', function() {
+                    this.classList.add('pulse');
+                });
+            }
+        });
+        
+        // Error boundary
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript Error:', e.error);
+            const toast = new ToastSystem();
+            toast.show(
+                'An unexpected error occurred. Please refresh the page and try again.',
+                'error',
+                5000
+            );
+        });
+    </script>
+</body>
+</html>
