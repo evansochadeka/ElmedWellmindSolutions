@@ -9,6 +9,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Formspree Integration -->
+    <script>
+        // Formspree form ID - REPLACE THIS WITH YOUR FORMPREE FORM ID
+        const FORMPREE_FORM_ID = 'xqkvvdln'; // Change this to your Formspree form ID
+        const FORMPREE_ENDPOINT = `https://formspree.io/f/${FORMPREE_FORM_ID}`;
+    </script>
+    
     <style>
         /* ===== CSS RESET & BASE STYLES ===== */
         :root {
@@ -994,6 +1001,329 @@
             transform: translateX(5px);
         }
         
+        /* ===== FAQ SECTION ===== */
+        .faq-section {
+            padding: 80px 0;
+        }
+        
+        .faq-section h3 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            background: var(--gradient-dark);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+            transition: var(--transition-base);
+        }
+        
+        .faq-item:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .faq-question {
+            width: 100%;
+            padding: 25px 30px;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition-base);
+        }
+        
+        .faq-question:hover {
+            background: rgba(108, 99, 255, 0.05);
+        }
+        
+        .faq-question i {
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            padding: 0 30px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 30px 30px;
+            max-height: 500px;
+        }
+        
+        .faq-answer p {
+            color: var(--gray);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        
+        /* ===== MAP SECTION ===== */
+        .map-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .map-section h3 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            background: var(--gradient-dark);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .map-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 60px 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+        
+        .map-placeholder {
+            color: var(--gray);
+            text-align: center;
+        }
+        
+        .map-placeholder i {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .map-placeholder p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+        
+        .btn-map {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: var(--radius-full);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition-base);
+        }
+        
+        .btn-map:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.3);
+        }
+        
+        /* ===== DEPRESSION HELP MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 0;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.4s ease;
+        }
+        
+        .modal-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-base);
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 40px;
+        }
+        
+        .resource-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .resource-item {
+            background: var(--light);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .resource-item h4 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .resource-item h4 i {
+            color: var(--primary);
+        }
+        
+        .resource-item p {
+            color: var(--gray);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .resource-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .resource-item li {
+            padding: 8px 0;
+            color: var(--dark-light);
+            border-bottom: 1px solid rgba(108, 99, 255, 0.1);
+            font-size: 15px;
+        }
+        
+        .resource-item li:last-child {
+            border-bottom: none;
+        }
+        
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: var(--radius-full);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition-base);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(108, 99, 255, 0.3);
+        }
+        
+        /* ===== DOWNLOADABLE RESOURCES ===== */
+        .download-resources {
+            margin-top: 60px;
+            text-align: center;
+        }
+        
+        .download-resources h4 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+        
+        .download-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition-base);
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.3);
+        }
+        
+        .download-btn i {
+            font-size: 1.2rem;
+        }
+        
         /* ===== FOOTER ===== */
         .footer {
             background: var(--dark);
@@ -1117,6 +1447,17 @@
             }
         }
         
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         @keyframes spin {
             to {
                 transform: rotate(360deg);
@@ -1139,6 +1480,18 @@
             50% {
                 transform: scale(1.05);
             }
+        }
+        
+        @keyframes emergencyPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 101, 132, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 101, 132, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 101, 132, 0); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
         
         /* Animation classes */
@@ -1178,6 +1531,14 @@
             animation: pulse 2s ease-in-out infinite;
         }
         
+        .emergency-pulse {
+            animation: emergencyPulse 2s infinite;
+        }
+        
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
         /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 1200px) {
             .container {
@@ -1202,6 +1563,11 @@
             
             .section-title {
                 font-size: 2.4rem;
+            }
+            
+            .faq-section h3,
+            .map-section h3 {
+                font-size: 2.2rem;
             }
         }
         
@@ -1244,6 +1610,30 @@
                 margin: 60px 0;
             }
             
+            .faq-section,
+            .map-section {
+                padding: 60px 0;
+            }
+            
+            .faq-section h3,
+            .map-section h3 {
+                font-size: 2rem;
+            }
+            
+            .faq-question {
+                padding: 20px;
+                font-size: 16px;
+            }
+            
+            .map-container {
+                padding: 40px 25px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+            
             .toast-container {
                 bottom: 20px;
                 right: 20px;
@@ -1284,6 +1674,27 @@
                 font-size: 16px;
             }
             
+            .faq-question {
+                padding: 18px 20px;
+                font-size: 15px;
+            }
+            
+            .faq-answer {
+                padding: 0 20px;
+            }
+            
+            .faq-item.active .faq-answer {
+                padding: 0 20px 20px;
+            }
+            
+            .modal-body {
+                padding: 25px;
+            }
+            
+            .resource-item {
+                padding: 20px;
+            }
+            
             .footer {
                 padding: 60px 0 30px;
             }
@@ -1306,6 +1717,16 @@
             .logo-text h1 {
                 font-size: 20px;
             }
+            
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .download-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -1327,6 +1748,76 @@
 
     <!-- Toast Notifications Container -->
     <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Depression Help Modal -->
+    <div id="depressionHelpModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-heartbeat"></i> Depression Support Resources</h3>
+                <button class="modal-close" onclick="closeDepressionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="resource-list">
+                    <div class="resource-item">
+                        <h4><i class="fas fa-heartbeat"></i> Immediate Help</h4>
+                        <p>If you're having thoughts of self-harm, please call emergency services immediately or reach out to:</p>
+                        <ul>
+                            <li><strong>Nairobi Women's Hospital Crisis Line:</strong> 0800 720 720</li>
+                            <li><strong>Befrienders Kenya:</strong> 0722 178 178</li>
+                            <li><strong>Emergency Services:</strong> 999 or 112</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4><i class="fas fa-hands-helping"></i> Coping Strategies</h4>
+                        <p>Try these techniques when feeling overwhelmed:</p>
+                        <ul>
+                            <li>Practice deep breathing exercises</li>
+                            <li>Reach out to a trusted friend or family member</li>
+                            <li>Engage in light physical activity</li>
+                            <li>Practice mindfulness meditation</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4><i class="fas fa-calendar-check"></i> Self-Care Tips</h4>
+                        <ul>
+                            <li>Establish a daily routine</li>
+                            <li>Get adequate sleep (7-9 hours)</li>
+                            <li>Eat balanced meals regularly</li>
+                            <li>Limit alcohol and caffeine intake</li>
+                            <li>Spend time in nature</li>
+                            <li>Engage in activities you enjoy</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="resource-item">
+                        <h4><i class="fas fa-book-medical"></i> Professional Help</h4>
+                        <p>Remember: Depression is treatable. Seeking professional help is a sign of strength, not weakness.</p>
+                        <a href="#contactForm" class="btn-primary" onclick="closeDepressionModal()">
+                            <i class="fas fa-calendar-alt"></i> Schedule a Consultation
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Downloadable Resources -->
+                <div class="download-resources">
+                    <h4><i class="fas fa-download"></i> Downloadable Resources</h4>
+                    <div class="download-buttons">
+                        <a href="/downloads/mental_health_manual.pdf" class="download-btn" download>
+                            <i class="fas fa-file-pdf"></i> Mental Health Manual
+                        </a>
+                        <a href="/downloads/self_care_workbook.pdf" class="download-btn" download>
+                            <i class="fas fa-book"></i> Self-Care Workbook
+                        </a>
+                        <a href="/downloads/coping_strategies.pdf" class="download-btn" download>
+                            <i class="fas fa-heart"></i> Coping Strategies
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -1411,7 +1902,7 @@
                             </div>
                         </div>
                         
-                        <div class="emergency-box fade-in-delay-5">
+                        <div class="emergency-box fade-in-delay-5 emergency-pulse">
                             <div class="emergency-header">
                                 <i class="fas fa-exclamation-triangle"></i>
                                 <h4>Emergency Contacts</h4>
@@ -1422,6 +1913,9 @@
                                 <li><strong>Kenya Red Cross:</strong> 1199</li>
                                 <li><strong>Emergency Police:</strong> 999 or 112</li>
                             </ul>
+                            <button class="btn-primary" onclick="openDepressionModal()" style="margin-top: 15px; width: 100%;">
+                                <i class="fas fa-heartbeat"></i> Get Depression Support
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1483,6 +1977,7 @@
                                     <option value="Corporate Services">Corporate Services</option>
                                     <option value="Emergency Support">Emergency Support</option>
                                     <option value="Feedback & Suggestions">Feedback & Suggestions</option>
+                                    <option value="Depression Support">Depression Support</option>
                                     <option value="Other">Other</option>
                                 </select>
                                 <div class="field-feedback">
@@ -1495,7 +1990,8 @@
                                     <i class="fas fa-comment-dots"></i> Your Message
                                 </label>
                                 <textarea id="message" name="message" class="form-input" rows="5" 
-                                          placeholder="How can we help you today? Please share your thoughts..." required></textarea>
+                                          placeholder="How can we help you today? Please share your thoughts..." 
+                                          required maxlength="500"></textarea>
                                 <div class="field-feedback">
                                     <div class="field-error" id="messageError"></div>
                                     <div class="char-counter" id="charCounter">0/500 characters</div>
@@ -1542,7 +2038,9 @@
                         </div>
                         <h4>Coping Strategies</h4>
                         <p>Learn healthy ways to manage stress, anxiety, and depression through proven techniques.</p>
-                        <a href="#" class="resource-link">Explore Strategies <i class="fas fa-arrow-right"></i></a>
+                        <a href="#depressionHelpModal" class="resource-link" onclick="openDepressionModal()">
+                            Explore Strategies <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                     
                     <div class="resource-card fade-in-delay-2">
@@ -1560,7 +2058,9 @@
                         </div>
                         <h4>Self-Help Guides</h4>
                         <p>Access free downloadable resources and guides for mental wellness and self-care.</p>
-                        <a href="#" class="resource-link">Download Guides <i class="fas fa-arrow-right"></i></a>
+                        <a href="#depressionHelpModal" class="resource-link" onclick="openDepressionModal()">
+                            Download Guides <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                     
                     <div class="resource-card fade-in-delay-4">
@@ -1570,6 +2070,66 @@
                         <h4>Crisis App</h4>
                         <p>Download our mobile app for immediate support tools and crisis management resources.</p>
                         <a href="#" class="resource-link">Get the App <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h3>Frequently Asked Questions</h3>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            How quickly will I get a response?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We aim to respond to all inquiries within 24 hours. For emergencies, please call our support line or use the WhatsApp chat for immediate assistance.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Is my information confidential?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, all information shared with us is strictly confidential and protected under professional ethical guidelines and privacy laws.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            What are your consultation fees?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We offer a sliding scale fee structure based on income. Contact us for specific pricing or to discuss financial assistance options.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Do you offer online sessions?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, we offer both in-person and virtual consultations via secure video platforms to accommodate your needs and preferences.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Section -->
+            <div class="map-section">
+                <h3>Our Location</h3>
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Kahawa Wendani, Thika Road, Nairobi</p>
+                        <a href="https://maps.google.com/?q=Kahawa+Wendani+Thika+Road+Nairobi" target="_blank" class="btn-map">
+                            <i class="fas fa-directions"></i> Get Directions
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1593,7 +2153,7 @@
                     <ul>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Services</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Resources</a></li>
+                        <li><a href="#depressionHelpModal" onclick="openDepressionModal()"><i class="fas fa-chevron-right"></i> Resources</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
                     </ul>
                 </div>
@@ -1626,6 +2186,10 @@
 
     <!-- JavaScript -->
     <script>
+        // Formspree Configuration - REPLACE THIS WITH YOUR ACTUAL FORMPREE FORM ID
+        const FORMPREE_FORM_ID = 'xqkvvdln'; // Change this to your Formspree form ID
+        const FORMPREE_ENDPOINT = `https://formspree.io/f/${FORMPREE_FORM_ID}`;
+        
         // Toast notification system
         class ToastSystem {
             constructor() {
@@ -1701,6 +2265,33 @@
             }
         }
         
+        // Depression Help Modal Functions
+        function openDepressionModal() {
+            const modal = document.getElementById('depressionHelpModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeDepressionModal() {
+            const modal = document.getElementById('depressionHelpModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('depressionHelpModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDepressionModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDepressionModal();
+            }
+        });
+        
         // Form validation system
         class FormValidator {
             constructor(formId) {
@@ -1713,7 +2304,7 @@
             init() {
                 if (!this.form) return;
                 
-                // Character counter for message
+                // Character counter for message with enforcement
                 const messageField = this.form.querySelector('#message');
                 const charCounter = this.form.querySelector('#charCounter');
                 
@@ -1726,10 +2317,14 @@
                             charCounter.classList.add('warning');
                             charCounter.classList.remove('error');
                         } else if (length > 500) {
+                            // Enforce limit by trimming
                             messageField.value = messageField.value.substring(0, 500);
                             charCounter.textContent = '500/500 characters';
                             charCounter.classList.add('error');
                             charCounter.classList.remove('warning');
+                            
+                            // Show warning
+                            this.toast.show('Message limit reached (500 characters)', 'warning', 3000);
                         } else {
                             charCounter.classList.remove('warning', 'error');
                         }
@@ -1739,20 +2334,36 @@
                 // Form submission
                 this.form.addEventListener('submit', (e) => this.handleSubmit(e));
                 
-                // Real-time validation
+                // Real-time validation with animations
                 const inputs = this.form.querySelectorAll('input, select, textarea');
                 inputs.forEach(input => {
-                    input.addEventListener('blur', () => this.validateField(input));
+                    input.addEventListener('blur', () => {
+                        this.validateField(input);
+                        // Add shake animation for errors
+                        if (input.classList.contains('error')) {
+                            input.classList.add('shake');
+                            setTimeout(() => input.classList.remove('shake'), 500);
+                        }
+                    });
                     input.addEventListener('input', () => this.clearFieldError(input));
+                    
+                    // Add focus animation
+                    input.addEventListener('focus', function() {
+                        this.parentElement.style.transform = 'translateY(-2px)';
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        this.parentElement.style.transform = 'translateY(0)';
+                    });
                 });
                 
                 // Emergency subject warning
                 const subjectSelect = this.form.querySelector('#subject');
                 if (subjectSelect) {
                     subjectSelect.addEventListener('change', () => {
-                        if (subjectSelect.value === 'Emergency Support') {
+                        if (subjectSelect.value === 'Emergency Support' || subjectSelect.value === 'Depression Support') {
                             this.toast.show(
-                                'For immediate emergencies, please call 0800 720 720 or 112', 
+                                '⚠️ For immediate emergencies, please call 0800 720 720 or 112', 
                                 'warning', 
                                 10000
                             );
@@ -1799,6 +2410,12 @@
                         } else if (field.required) {
                             isValid = value !== '';
                             errorMessage = 'This field is required.';
+                        }
+                        
+                        // Message length validation
+                        if (field.id === 'message' && value.length < 10) {
+                            isValid = false;
+                            errorMessage = 'Message must be at least 10 characters.';
                         }
                 }
                 
@@ -1862,11 +2479,14 @@
                 }
                 
                 try {
-                    // Prepare form data
+                    // Prepare form data for Formspree
                     const formData = new FormData(this.form);
                     
-                    // IMPORTANT: Change this to your PHP file path
-                    const response = await fetch('send_email.php', {
+                    // Log form data for debugging
+                    console.log('Submitting form data:', Object.fromEntries(formData));
+                    
+                    // Send to Formspree
+                    const response = await fetch(FORMPREE_ENDPOINT, {
                         method: 'POST',
                         body: formData,
                         headers: {
@@ -1874,11 +2494,13 @@
                         }
                     });
                     
-                    const data = await response.json();
-                    
-                    if (data.success) {
+                    if (response.ok) {
                         // Show success message
-                        this.toast.show(data.message, 'success', 8000);
+                        this.toast.show(
+                            '✅ Thank you! Your message has been sent successfully. We will respond within 24 hours.', 
+                            'success', 
+                            8000
+                        );
                         
                         // Reset form
                         this.form.reset();
@@ -1897,13 +2519,17 @@
                         
                     } else {
                         // Show error message
-                        this.toast.show(data.message, 'error', 8000);
+                        this.toast.show(
+                            '❌ Sorry, there was an error sending your message. Please try again or contact us directly.', 
+                            'error', 
+                            8000
+                        );
                     }
                     
                 } catch (error) {
                     console.error('Submission error:', error);
                     this.toast.show(
-                        'Network error. Please check your connection and try again, or contact us directly.',
+                        '⚠️ Network error. Please check your connection and try again, or contact us directly.',
                         'error',
                         8000
                     );
@@ -1915,10 +2541,50 @@
             }
         }
         
+        // FAQ functionality
+        function initFAQ() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const faqItem = this.parentElement;
+                    const isActive = faqItem.classList.contains('active');
+                    
+                    // Close all other FAQ items
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Toggle current item if it wasn't active
+                    if (!isActive) {
+                        faqItem.classList.add('active');
+                    }
+                });
+            });
+        }
+        
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('Contact form initialized. Formspree endpoint:', FORMPREE_ENDPOINT);
+            
+            // Check if Formspree ID is set
+            if (FORMPREE_FORM_ID === 'xqkvvdln') {
+                console.warn('⚠️ Please replace FORMPREE_FORM_ID with your actual Formspree form ID!');
+                
+                // Show warning toast
+                const warningToast = new ToastSystem();
+                warningToast.show(
+                    '⚠️ Form not configured. Please set up Formspree to enable email functionality.',
+                    'warning',
+                    10000
+                );
+            }
+            
             // Initialize form validator
             const formValidator = new FormValidator('contactForm');
+            
+            // Initialize FAQ
+            initFAQ();
             
             // Header scroll effect
             const header = document.getElementById('mainHeader');
@@ -1977,7 +2643,7 @@
             window.showPrivacyNotice = function() {
                 const toast = new ToastSystem();
                 toast.show(
-                    'Your information is encrypted and never shared with third parties. We adhere to strict confidentiality protocols.',
+                    '🔒 Your information is encrypted and never shared with third parties. We adhere to strict confidentiality protocols.',
                     'info',
                     6000
                 );
@@ -1987,25 +2653,57 @@
             // WhatsApp click tracking
             const whatsappLinks = document.querySelectorAll('a[href*="whatsapp"]');
             whatsappLinks.forEach(link => {
-                link.addEventListener('click', function() {
+                link.addEventListener('click', function(e) {
+                    console.log('WhatsApp support initiated');
                     // You can add analytics tracking here
-                    console.log('WhatsApp link clicked:', this.href);
+                    // Example: gtag('event', 'whatsapp_click', { 'event_category': 'contact' });
                 });
             });
             
-            // Emergency contact pulse animation
+            // Phone number click tracking
+            const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+            phoneLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    console.log('Phone call initiated:', this.href);
+                });
+            });
+            
+            // Email link tracking
+            const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+            emailLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    console.log('Email client opened:', this.href);
+                });
+            });
+            
+            // Emergency box hover effect
             const emergencyBox = document.querySelector('.emergency-box');
             if (emergencyBox) {
-                emergencyBox.classList.add('pulse');
-                
                 emergencyBox.addEventListener('mouseenter', function() {
-                    this.classList.remove('pulse');
+                    this.classList.remove('emergency-pulse');
                 });
                 
                 emergencyBox.addEventListener('mouseleave', function() {
-                    this.classList.add('pulse');
+                    this.classList.add('emergency-pulse');
                 });
             }
+            
+            // Download button tracking
+            const downloadButtons = document.querySelectorAll('.download-btn');
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // If file doesn't exist, prevent default and show message
+                    if (!this.hasAttribute('href') || this.getAttribute('href') === '#') {
+                        e.preventDefault();
+                        const toast = new ToastSystem();
+                        toast.show(
+                            '📁 Download functionality will be enabled when files are uploaded to your server.',
+                            'info',
+                            5000
+                        );
+                    }
+                });
+            });
         });
         
         // Error boundary
@@ -2013,11 +2711,17 @@
             console.error('JavaScript Error:', e.error);
             const toast = new ToastSystem();
             toast.show(
-                'An unexpected error occurred. Please refresh the page and try again.',
+                '⚠️ An unexpected error occurred. Please refresh the page and try again.',
                 'error',
                 5000
             );
         });
+        
+        // Export for debugging
+        window.FormValidator = FormValidator;
+        window.ToastSystem = ToastSystem;
+        window.openDepressionModal = openDepressionModal;
+        window.closeDepressionModal = closeDepressionModal;
     </script>
 </body>
 </html>
