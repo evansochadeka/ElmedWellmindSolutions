@@ -5,10 +5,34 @@
     <meta name="google-site-verification" content="HzFd4jLBlbEmktxR8XoUh8H7SBQAn72BDgKZt0OmMWo" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6C63FF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Elmed Wellmind">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/static/icons/icon-152x152.png">
+    
+    <!-- Windows Tiles -->
+    <meta name="msapplication-TileColor" content="#6C63FF">
+    <meta name="msapplication-TileImage" content="/static/icons/icon-144x144.png">
+    
     <title>{% block title %}Elmed Wellmind Solutions | Mental Wellness Kenya{% endblock %}</title>
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
     <style>
         :root {
             --primary: #6C63FF;
@@ -268,8 +292,71 @@
                 day: 'numeric'
             });
         }
+        
+        // Prevent all anchor links from scrolling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Override all anchor link clicks
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('a');
+                if (!target) return;
+                
+                const href = target.getAttribute('href');
+                
+                // Check if it's an anchor link (starts with #)
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    
+                    // Instead of scrolling, we just prevent default
+                    // This keeps the page at the top
+                    console.log('Anchor link prevented:', href);
+                    return false;
+                }
+            });
+            
+            console.log('Elmed Wellmind Solutions loaded successfully');
+            
+            // Make phone numbers clickable
+            document.querySelectorAll('.phone-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if(this.getAttribute('href').startsWith('tel:')) {
+                        return; // For call links, they work naturally
+                    }
+                });
+            });
+        });
     </script>
     {% endblock %}
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registered with scope:', registration.scope);
+                        
+                        // Check for updates
+                        registration.addEventListener('updatefound', function() {
+                            const newWorker = registration.installing;
+                            console.log('ServiceWorker update found!');
+                        });
+                    })
+                    .catch(function(error) {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+                
+                // Check for PWA install prompt
+                let deferredPrompt;
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    console.log('Install prompt available');
+                    
+                    // You could show a custom install button here
+                });
+            });
+        }
+    </script>
     
     {% block extra_scripts %}{% endblock %}
 </body>
