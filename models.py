@@ -1,4 +1,4 @@
-# models.py - Complete System Models
+# models.py - Complete System Models (CORRECTED)
 from extensions import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
@@ -187,7 +187,7 @@ class Organization(db.Model):
     # Organization details
     company_name = db.Column(db.String(200), nullable=False)
     registration_number = db.Column(db.String(100), nullable=False)
-    industry = db.Column.db.Column(db.String(100), nullable=True)
+    industry = db.Column(db.String(100), nullable=True)  # FIXED: Removed extra '.db'
     company_size = db.Column(db.Integer, default=0)  # Number of employees
     
     # Registration code for employees
