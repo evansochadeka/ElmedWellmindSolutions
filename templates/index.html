@@ -1,33 +1,739 @@
-<!-- templates/index.html -->
+<!-- templates/index.html - Lean & Beautiful Homepage -->
 {% extends "base.html" %}
 
-{% block title %}Elmed Wellmind Solutions | Mental Wellness Kenya - Home{% endblock %}
+{% block title %}Elmed Wellmind Solutions | Mental Wellness in Kenya{% endblock %}
 
 {% block content %}
-    <!-- Include Hero Section -->
-    {% include 'hero.html' %}
-    
-    <!-- Include Services Section -->
-    {% include 'services.html' %}
-    
-    <!-- Include AI Chat Section -->
-    {% include 'ai-chat.html' %}
-    
-    <!-- Include Community Section -->
-    {% include 'community.html' %}
-    
-    <!-- Include Payment Section -->
-    {% include 'payment.html' %}
-    
-    <!-- Include Contact Section -->
-    {% include 'contact.html' %}
-{% endblock %}
+<!-- Minimal Navigation -->
+<nav class="minimal-nav">
+    <div class="nav-container">
+        <div class="nav-logo">
+            <img src="{{ url_for('static', filename='images/wellmed.jpg') }}" alt="Elmed Wellmind">
+            <span>Elmed Wellmind</span>
+        </div>
+        
+        <div class="nav-menu">
+            <button class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="#home" class="active">Home</a>
+                
+                <!-- Services Dropdown -->
+                <div class="dropdown">
+                    <a href="#services" class="dropdown-toggle">Services <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <a href="#school-services">🏫 School Services</a>
+                        <a href="#individual">🧑 Individual Counseling</a>
+                        <a href="#group">👥 Group Therapy</a>
+                        <a href="#training">📚 Mental Health Training</a>
+                        <a href="#school-programs">🎓 School Programs</a>
+                        <a href="#crisis">🚨 Crisis Intervention</a>
+                        <a href="#community">🌍 Community Mental Health</a>
+                    </div>
+                </div>
+                
+                <a href="#resources">Resources</a>
+                <a href="{{ url_for('auth.register_page') }}">Register</a>
+                <a href="#about">About Us</a>
+                <a href="{{ url_for('auth.login_page') }}" class="login-link">Login</a>
+                <a href="#contact">Contact</a>
+                
+                <a href="{{ url_for('auth.get_started') }}" class="get-started-btn">
+                    Get Started
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
 
-{% block extra_scripts %}
+<!-- Main Content Sections with Expand/Collapse Arrows -->
+<main class="main-content">
+    <!-- Hero Section -->
+    <section class="section hero" id="home">
+        <div class="section-header">
+            <h1>Your Journey to <span class="gradient-text">Mental Wellness</span></h1>
+            <p>Professional, confidential mental health support tailored to Kenya</p>
+            <div class="hero-cta">
+                <a href="{{ url_for('auth.get_started') }}" class="btn-primary">
+                    Get Started
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="#how-it-works" class="btn-outline">Learn More</a>
+            </div>
+        </div>
+        <button class="section-expand" onclick="toggleSection('home-content')">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="section-content" id="home-content">
+            <!-- Hidden until expanded -->
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section services" id="services">
+        <div class="section-header">
+            <h2>Our <span>Services</span></h2>
+            <p>Comprehensive mental health solutions</p>
+        </div>
+        <button class="section-expand" onclick="toggleSection('services-content')">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        
+        <div class="section-content expanded" id="services-content">
+            <div class="services-grid">
+                <!-- School Services -->
+                <div class="service-item" onclick="window.location.href='#school-services'">
+                    <div class="service-icon">🏫</div>
+                    <h3>School Services</h3>
+                    <p>Comprehensive mental health support for educational institutions</p>
+                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                </div>
+                
+                <!-- Individual Counseling -->
+                <div class="service-item" onclick="window.location.href='#individual'">
+                    <div class="service-icon">🧑</div>
+                    <h3>Individual Counseling</h3>
+                    <p>One-on-one sessions with licensed therapists</p>
+                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                </div>
+                
+                <!-- Group Therapy -->
+                <div class="service-item" onclick="window.location.href='#group'">
+                    <div class="service-icon">👥</div>
+                    <h3>Group Therapy</h3>
+                    <p>Support groups for shared experiences</p>
+                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                </div>
+                
+                <!-- Mental Health Training -->
+                <div class="service-item" onclick="window.location.href='#training'">
+                    <div class="service-icon">📚</div>
+                    <h3>Mental Health Training</h3>
+                    <p>Workshops and certification programs</p>
+                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                </div>
+                
+                <!-- School Programs -->
+                <div class="service-item" onclick="window.location.href='#school-programs'">
+                    <div class="service-icon">🎓</div>
+                    <h3>School Programs</h3>
+                    <p>Student wellness initiatives</p>
+                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                </div>
+                
+                <!-- Crisis Intervention -->
+                <div class="service-item" onclick="window.location.href='#crisis'">
+                    <div class="service-icon">🚨</div>
+                    <h3>Crisis Intervention</h3>
+                    <p>24/7 emergency support</p>
+                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                </div>
+                
+                <!-- Community Mental Health -->
+                <div class="service-item" onclick="window.location.href='#community'">
+                    <div class="service-icon">🌍</div>
+                    <h3>Community Mental Health</h3>
+                    <p>Grassroots wellness programs</p>
+                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section how-it-works" id="how-it-works">
+        <div class="section-header">
+            <h2>How It <span>Works</span></h2>
+            <p>Simple steps to better mental health</p>
+        </div>
+        <button class="section-expand" onclick="toggleSection('how-content')">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        
+        <div class="section-content expanded" id="how-content">
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Sign Up</h3>
+                    <p>Choose your role: Client, Professional, or Organization</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Get Matched</h3>
+                    <p>Our AI matches you with the right professional</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Start Healing</h3>
+                    <p>Begin your journey to wellness</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section class="section resources" id="resources">
+        <div class="section-header">
+            <h2>Mental Health <span>Resources</span></h2>
+            <p>Tools and information for your journey</p>
+        </div>
+        <button class="section-expand" onclick="toggleSection('resources-content')">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        
+        <div class="section-content" id="resources-content">
+            <!-- Resources content (hidden initially) -->
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="section about" id="about">
+        <div class="section-header">
+            <h2>About <span>Us</span></h2>
+            <p>Your trusted mental health partner in Kenya</p>
+        </div>
+        <button class="section-expand" onclick="toggleSection('about-content')">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        
+        <div class="section-content" id="about-content">
+            <!-- About content (hidden initially) -->
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="section-header">
+            <h2>Get In <span>Touch</span></h2>
+            <p>We're here to help 24/7</p>
+        </div>
+        <button class="section-expand" onclick="toggleSection('contact-content')">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        
+        <div class="section-content" id="contact-content">
+            <!-- Contact content (hidden initially) -->
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> +254 759 226354</p>
+                <p><i class="fas fa-envelope"></i> elijahokware@gmail.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Kahawa Wendani, Thika Road</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<style>
+/* Minimal & Beautiful CSS */
+:root {
+    --primary: #6C63FF;
+    --secondary: #FF6584;
+    --dark: #2D2B5E;
+    --light: #F8F9FF;
+    --gray: #6B7280;
+    --white: #FFFFFF;
+    --shadow: 0 10px 40px rgba(108, 99, 255, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    color: var(--dark);
+    line-height: 1.6;
+    background: var(--light);
+}
+
+/* Minimal Navigation */
+.minimal-nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.nav-logo span {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    width: 30px;
+    height: 3px;
+    background: var(--primary);
+    transition: var(--transition);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--dark);
+    font-weight: 500;
+    transition: var(--transition);
+    position: relative;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--primary);
+}
+
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary);
+}
+
+/* Dropdown */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    min-width: 250px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: var(--transition);
+    z-index: 100;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+/* Get Started Button */
+.get-started-btn {
+    background: linear-gradient(135deg, var(--primary), #36D1DC);
+    color: white !important;
+    padding: 10px 25px !important;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.get-started-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+/* Login Link */
+.login-link {
+    border: 2px solid var(--primary);
+    padding: 8px 20px !important;
+    border-radius: 50px;
+}
+
+.login-link:hover {
+    background: var(--primary);
+    color: white !important;
+}
+
+/* Main Content */
+.main-content {
+    margin-top: 80px;
+}
+
+/* Sections */
+.section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 2rem;
+    position: relative;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.section:last-child {
+    border-bottom: none;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary), #36D1DC);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.section-header p {
+    font-size: 1.2rem;
+    color: var(--gray);
+}
+
+/* Expand Button */
+.section-expand {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--primary);
+    z-index: 10;
+}
+
+.section-expand:hover {
+    transform: translateX(-50%) translateY(5px);
+    background: var(--primary);
+    color: white;
+}
+
+/* Section Content */
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.section-content.expanded {
+    max-height: 2000px;
+}
+
+/* Hero CTA */
+.hero-cta {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.btn-primary, .btn-outline {
+    padding: 15px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), #36D1DC);
+    color: white;
+    box-shadow: var(--shadow);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(108, 99, 255, 0.3);
+}
+
+.btn-outline {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* Services Grid */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.service-item {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-item:hover {
+    transform: translateY(-10px);
+}
+
+.service-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.service-item h3 {
+    margin-bottom: 10px;
+}
+
+.service-item p {
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+.service-arrow {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    opacity: 0;
+    transition: var(--transition);
+    color: var(--primary);
+}
+
+.service-item:hover .service-arrow {
+    opacity: 1;
+    transform: translateX(5px);
+}
+
+/* Steps */
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.step {
+    text-align: center;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary), #36D1DC);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 auto 20px;
+}
+
+.step h3 {
+    margin-bottom: 10px;
+}
+
+.step p {
+    color: var(--gray);
+}
+
+/* Contact Info */
+.contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.contact-info p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gray);
+}
+
+.contact-info i {
+    color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+    
+    .nav-links {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1rem;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+    }
+    
+    .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .dropdown-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        display: none;
+    }
+    
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+    
+    .section-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .steps {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-cta {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-primary, .btn-outline {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .contact-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+}
+</style>
+
 <script>
-    // Additional initialization that needs to run after all sections are loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        // Any additional page-specific code here
+function toggleSection(id) {
+    const content = document.getElementById(id);
+    content.classList.toggle('expanded');
+    
+    const button = event.currentTarget;
+    const icon = button.querySelector('i');
+    
+    if (content.classList.contains('expanded')) {
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+    } else {
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+    }
+}
+
+// Mobile menu toggle
+document.getElementById('menuToggle').addEventListener('click', function() {
+    document.getElementById('navLinks').classList.toggle('active');
+    
+    const spans = this.querySelectorAll('span');
+    if (document.getElementById('navLinks').classList.contains('active')) {
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+    } else {
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+});
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+            // Close mobile menu if open
+            document.getElementById('navLinks').classList.remove('active');
+        }
     });
+});
 </script>
 {% endblock %}
