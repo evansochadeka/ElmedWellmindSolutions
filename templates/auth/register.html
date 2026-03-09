@@ -1,0 +1,540 @@
+<!-- templates/auth/register.html -->
+{% extends "base.html" %}
+
+{% block title %}Get Started | Elmed Wellmind{% endblock %}
+
+{% block content %}
+<style>
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 20px 60px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
+}
+
+.register-card {
+    background: white;
+    border-radius: 30px;
+    padding: 50px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 30px 70px rgba(108, 99, 255, 0.15);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.register-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.register-header p {
+    color: #6B7280;
+}
+
+.role-selector {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.role-btn {
+    flex: 1;
+    min-width: 150px;
+    padding: 20px;
+    border: 2px solid #e0e2ff;
+    border-radius: 15px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.role-btn:hover {
+    border-color: #6C63FF;
+    transform: translateY(-3px);
+}
+
+.role-btn.active {
+    background: linear-gradient(135deg, #6C63FF, #36D1DC);
+    border-color: transparent;
+    color: white;
+}
+
+.role-btn .icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.role-btn .title {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.role-btn .desc {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.registration-forms {
+    position: relative;
+    min-height: 400px;
+}
+
+.registration-form {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.registration-form.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2D2B5E;
+}
+
+.form-control {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e2ff;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #6C63FF;
+    box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #6C63FF, #36D1DC);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 20px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(108, 99, 255, 0.3);
+}
+
+.organization-code-note {
+    background: #f0f2ff;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 0.95rem;
+    color: #6C63FF;
+    text-align: center;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 30px;
+    color: #6B7280;
+}
+
+.login-link a {
+    color: #6C63FF;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .register-card {
+        padding: 30px 20px;
+    }
+    
+    .role-selector {
+        flex-direction: column;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-header">
+            <h1>Get <span class="gradient-text">Started</span></h1>
+            <p>Choose how you want to use Elmed Wellmind</p>
+        </div>
+
+        <!-- Role Selection -->
+        <div class="role-selector">
+            <div class="role-btn active" onclick="selectRole('client')">
+                <span class="icon">🧑</span>
+                <span class="title">Client</span>
+                <span class="desc">Seek mental health support</span>
+            </div>
+            <div class="role-btn" onclick="selectRole('organization')">
+                <span class="icon">🏢</span>
+                <span class="title">Organization</span>
+                <span class="desc">Support your employees</span>
+            </div>
+            <div class="role-btn" onclick="selectRole('professional')">
+                <span class="icon">👨‍⚕️</span>
+                <span class="title">Professional</span>
+                <span class="desc">Offer your services</span>
+            </div>
+        </div>
+
+        <!-- Registration Forms -->
+        <div class="registration-forms">
+            <!-- Client Form -->
+            <form class="registration-form active" id="clientForm" onsubmit="registerClient(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="form-row">
+                        <input type="text" class="form-control" placeholder="First Name" id="clientFirstName" required>
+                        <input type="text" class="form-control" placeholder="Last Name" id="clientLastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="clientEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" class="form-control" id="clientPhone" placeholder="+254...">
+                </div>
+                
+                <div class="form-group">
+                    <label>Briefly describe your concern</label>
+                    <textarea class="form-control" id="clientIssue" rows="3" placeholder="What brings you here?"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Organization Code (if applicable)</label>
+                    <input type="text" class="form-control" id="orgCode" placeholder="Enter code from your employer">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" id="clientPassword" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" class="form-control" id="clientConfirmPassword" required>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    Create Client Account
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <!-- Organization Form -->
+            <form class="registration-form" id="organizationForm" onsubmit="registerOrganization(event)">
+                <div class="organization-code-note">
+                    <i class="fas fa-lock"></i>
+                    Registration Code: <strong>Papai123</strong>
+                </div>
+                
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" class="form-control" id="orgCompanyName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Registration Number</label>
+                    <input type="text" class="form-control" id="orgRegNumber" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Industry</label>
+                    <input type="text" class="form-control" id="orgIndustry">
+                </div>
+                
+                <div class="form-group">
+                    <label>Number of Employees</label>
+                    <input type="number" class="form-control" id="orgEmployeeCount" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Contact Person Name</label>
+                    <input type="text" class="form-control" id="orgContactName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Contact Email</label>
+                    <input type="email" class="form-control" id="orgEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Contact Phone</label>
+                    <input type="tel" class="form-control" id="orgPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Registration Code</label>
+                    <input type="text" class="form-control" id="orgRegCode" placeholder="Enter Papai123" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" id="orgPassword" required>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    Register Organization
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <!-- Professional Form -->
+            <form class="registration-form" id="professionalForm" onsubmit="registerProfessional(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="form-row">
+                        <input type="text" class="form-control" placeholder="First Name" id="profFirstName" required>
+                        <input type="text" class="form-control" placeholder="Last Name" id="profLastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Professional Type</label>
+                    <select class="form-control" id="profType" required>
+                        <option value="">Select type</option>
+                        <option value="counselor">Counselor</option>
+                        <option value="psychologist">Psychologist</option>
+                        <option value="psychiatrist">Psychiatrist</option>
+                        <option value="therapist">Therapist</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>License Number</label>
+                    <input type="text" class="form-control" id="profLicense" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Years of Experience</label>
+                    <input type="number" class="form-control" id="profExperience">
+                </div>
+                
+                <div class="form-group">
+                    <label>Specializations (comma separated)</label>
+                    <input type="text" class="form-control" id="profSpecializations" placeholder="e.g., Anxiety, Depression, Trauma">
+                </div>
+                
+                <div class="form-group">
+                    <label>Session Fee (KES)</label>
+                    <input type="number" class="form-control" id="profFee" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="profEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" class="form-control" id="profPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Upload Documents (License, Certificates)</label>
+                    <input type="file" class="form-control" id="profDocuments" multiple accept=".pdf,.jpg,.png">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" id="profPassword" required>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    Register as Professional
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                
+                <p style="text-align: center; margin-top: 15px; color: #6B7280; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i>
+                    Your account will be verified by admin before you can start offering services
+                </p>
+            </form>
+        </div>
+
+        <div class="login-link">
+            Already have an account? <a href="{{ url_for('auth.login_page') }}">Login here</a>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectRole(role) {
+    // Update active state
+    document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    
+    // Show corresponding form
+    document.querySelectorAll('.registration-form').forEach(form => form.classList.remove('active'));
+    document.getElementById(role + 'Form').classList.add('active');
+}
+
+async function registerClient(event) {
+    event.preventDefault();
+    
+    const password = document.getElementById('clientPassword').value;
+    const confirm = document.getElementById('clientConfirmPassword').value;
+    
+    if (password !== confirm) {
+        alert('Passwords do not match');
+        return;
+    }
+    
+    const data = {
+        first_name: document.getElementById('clientFirstName').value,
+        last_name: document.getElementById('clientLastName').value,
+        email: document.getElementById('clientEmail').value,
+        phone: document.getElementById('clientPhone').value,
+        brief_issue: document.getElementById('clientIssue').value,
+        organization_code: document.getElementById('orgCode').value,
+        password: password
+    };
+    
+    try {
+        const response = await fetch('/auth/api/register/client', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Registration successful! Please login.');
+            window.location.href = result.redirect;
+        } else {
+            alert(result.message);
+        }
+    } catch (error) {
+        alert('Registration failed. Please try again.');
+    }
+}
+
+async function registerOrganization(event) {
+    event.preventDefault();
+    
+    const data = {
+        company_name: document.getElementById('orgCompanyName').value,
+        registration_number: document.getElementById('orgRegNumber').value,
+        industry: document.getElementById('orgIndustry').value,
+        employee_count: parseInt(document.getElementById('orgEmployeeCount').value),
+        contact_person: document.getElementById('orgContactName').value,
+        email: document.getElementById('orgEmail').value,
+        phone: document.getElementById('orgPhone').value,
+        registration_code: document.getElementById('orgRegCode').value,
+        password: document.getElementById('orgPassword').value
+    };
+    
+    try {
+        const response = await fetch('/auth/api/register/organization', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert(`Registration successful! Your employee registration code is: ${result.employee_code}\n\nPlease save this code.`);
+            window.location.href = result.redirect;
+        } else {
+            alert(result.message);
+        }
+    } catch (error) {
+        alert('Registration failed. Please try again.');
+    }
+}
+
+async function registerProfessional(event) {
+    event.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('first_name', document.getElementById('profFirstName').value);
+    formData.append('last_name', document.getElementById('profLastName').value);
+    formData.append('professional_type', document.getElementById('profType').value);
+    formData.append('license_number', document.getElementById('profLicense').value);
+    formData.append('years_experience', document.getElementById('profExperience').value);
+    
+    const specializations = document.getElementById('profSpecializations').value.split(',').map(s => s.trim());
+    formData.append('specializations', JSON.stringify(specializations));
+    
+    formData.append('session_fee', document.getElementById('profFee').value);
+    formData.append('email', document.getElementById('profEmail').value);
+    formData.append('phone', document.getElementById('profPhone').value);
+    formData.append('password', document.getElementById('profPassword').value);
+    
+    // Add documents
+    const files = document.getElementById('profDocuments').files;
+    for (let i = 0; i < files.length; i++) {
+        formData.append('documents', files[i]);
+    }
+    
+    try {
+        const response = await fetch('/auth/api/register/professional', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Registration successful! Your account will be verified by admin.');
+            window.location.href = result.redirect;
+        } else {
+            alert(result.message);
+        }
+    } catch (error) {
+        alert('Registration failed. Please try again.');
+    }
+}
+</script>
+{% endblock %}
