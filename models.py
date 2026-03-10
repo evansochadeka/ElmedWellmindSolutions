@@ -1,4 +1,4 @@
-# models.py - COMPLETE WITH ALL ORIGINAL AND NEW FEATURES - RELATIONSHIPS FIXED
+# models.py - COMPLETE WITH ALL ORIGINAL AND NEW FEATURES - ALL RELATIONSHIPS FIXED
 from extensions import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
@@ -63,10 +63,13 @@ class User(UserMixin, db.Model):
                                    back_populates='user', 
                                    cascade='all, delete-orphan')
     
-    # FIXED: Add relationship for impersonation
-    impersonated_users = db.relationship('User', 
-                                        foreign_keys='User.impersonated_by', 
-                                        backref='impersonator')
+    # FIXED: impersonation relationship with proper remote_side and backref
+    # This resolves the "both of the same direction" error
+    impersonated_users = db.relationship('User',
+                                        foreign_keys='User.impersonated_by',
+                                        remote_side='User.id',
+                                        backref=db.backref('impersonator', 
+                                                          remote_side='User.impersonated_by'))
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
