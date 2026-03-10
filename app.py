@@ -11,7 +11,6 @@ from flask import Flask, render_template, jsonify, request, send_from_directory,
 from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
-from organization_routes import organization_bp  # This should work now
 # Load environment variables
 load_dotenv()
 
