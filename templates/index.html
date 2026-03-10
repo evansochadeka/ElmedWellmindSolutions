@@ -1,89 +1,88 @@
-<!-- templates/index.html - COMPLETE WITH ALL FEATURES -->
+<!-- templates/index.html - BEAUTIFUL HOMEPAGE WITH WORKING AI CHAT -->
 {% extends "base.html" %}
 
 {% block title %}Elmed Wellmind Solutions | Professional Mental Health Support in Kenya{% endblock %}
 
 {% block content %}
-<!-- HERO SECTION - Modern & Impactful -->
-<section class="hero-section" id="home">
-    <div class="hero-slideshow">
-        <div class="slide active" style="background-image: url('{{ url_for('static', filename='images/hero-bg-1.jpg') }}');"></div>
-        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/hero-bg-2.jpg') }}');"></div>
-        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/hero-bg-3.jpg') }}');"></div>
-        <div class="overlay"></div>
+<!-- HERO SECTION - STUNNING VISUAL -->
+<section class="hero" id="home">
+    <div class="hero-background">
+        <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1527689368864-3a821db6a2f0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-particles"></div>
     </div>
-
+    
     <div class="hero-content">
         <div class="hero-badge">
-            <span class="badge-pulse"></span>
+            <span class="badge-dot"></span>
             Trusted Mental Health Support in Kenya
         </div>
         
         <h1 class="hero-title">
             Your Journey to 
             <span class="gradient-text">Mental Wellness</span>
-            <br>Starts Here
         </h1>
         
         <p class="hero-subtitle">
-            Professional, confidential, and compassionate mental health care tailored to Kenyan culture and values. 
-            We're here to listen, support, and guide you every step of the way.
+            Professional, confidential, and compassionate mental health care tailored to Kenyan culture and values.
         </p>
         
         <div class="hero-cta">
-            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-large">
+            <a href="/auth/register" class="btn btn-primary">
                 <i class="fas fa-heart"></i>
                 Get Started
             </a>
-            <a href="#how-it-works" class="btn btn-outline btn-large">
+            <a href="#services" class="btn btn-outline">
                 <i class="fas fa-play"></i>
-                See How It Works
+                Watch Video
             </a>
         </div>
         
         <div class="hero-stats">
             <div class="stat-item">
-                <div class="stat-number">2,500+</div>
+                <div class="stat-number" data-target="2500">0</div>
                 <div class="stat-label">People Helped</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">98%</div>
-                <div class="stat-label">Satisfaction Rate</div>
+                <div class="stat-number" data-target="98">0%</div>
+                <div class="stat-label">Satisfaction</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">24/7</div>
-                <div class="stat-label">Support Available</div>
+                <div class="stat-label">Support</div>
             </div>
         </div>
     </div>
-
+    
     <div class="hero-scroll">
-        <span>Scroll to explore</span>
+        <span>Discover More</span>
         <i class="fas fa-chevron-down"></i>
     </div>
 </section>
 
-<!-- TRUST BADGES SECTION -->
-<section class="trust-badges">
+<!-- TRUST BADGES -->
+<section class="trust-section">
     <div class="container">
-        <div class="badges-grid">
-            <div class="badge-item">
+        <div class="trust-grid">
+            <div class="trust-item">
                 <i class="fas fa-shield-alt"></i>
                 <span>100% Confidential</span>
             </div>
-            <div class="badge-item">
+            <div class="trust-item">
                 <i class="fas fa-user-md"></i>
                 <span>Licensed Therapists</span>
             </div>
-            <div class="badge-item">
+            <div class="trust-item">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Kenya-Based Care</span>
             </div>
-            <div class="badge-item">
+            <div class="trust-item">
                 <i class="fas fa-mobile-alt"></i>
                 <span>24/7 AI Support</span>
             </div>
-            <div class="badge-item">
+            <div class="trust-item">
                 <i class="fas fa-hand-holding-heart"></i>
                 <span>Affordable Rates</span>
             </div>
@@ -91,393 +90,180 @@
     </div>
 </section>
 
-<!-- HOW IT WORKS SECTION -->
-<section class="how-it-works" id="how-it-works">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-subtitle">Simple Process</span>
-            <h2 class="section-title">How It <span>Works</span></h2>
-            <p class="section-description">
-                Get the support you need in three simple steps. No complicated processes, just care when you need it.
-            </p>
-        </div>
-
-        <div class="steps-container">
-            <div class="step-card">
-                <div class="step-number">01</div>
-                <div class="step-icon">
-                    <i class="fas fa-user-plus"></i>
-                </div>
-                <h3>Create Account</h3>
-                <p>Sign up as an individual, employee, or corporation in under 2 minutes. All information is encrypted and secure.</p>
-                <div class="step-arrow">
-                    <i class="fas fa-long-arrow-alt-right"></i>
-                </div>
-            </div>
-
-            <div class="step-card">
-                <div class="step-number">02</div>
-                <div class="step-icon">
-                    <i class="fas fa-comments"></i>
-                </div>
-                <h3>Choose Your Path</h3>
-                <p>Select from individual counseling, group sessions, corporate packages, or chat with our AI assistant for immediate support.</p>
-                <div class="step-arrow">
-                    <i class="fas fa-long-arrow-alt-right"></i>
-                </div>
-            </div>
-
-            <div class="step-card">
-                <div class="step-number">03</div>
-                <div class="step-icon">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <h3>Start Healing</h3>
-                <p>Connect with a therapist, join a support group, or access resources. Begin your journey to better mental health today.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- SERVICES SECTION -->
-<section class="services-section" id="services">
+<!-- SERVICES PREVIEW -->
+<section class="services-preview" id="services">
     <div class="container">
         <div class="section-header">
             <span class="section-subtitle">What We Offer</span>
             <h2 class="section-title">Our <span>Services</span></h2>
             <p class="section-description">
-                Comprehensive mental health solutions designed for individuals, families, and organizations in Kenya.
+                Comprehensive mental health solutions for individuals, families, and organizations
             </p>
         </div>
-
+        
         <div class="services-grid">
-            <div class="service-card" onclick="window.location.href='#individual'">
+            <div class="service-card" onclick="location.href='#individual'">
                 <div class="service-icon">
                     <i class="fas fa-user-md"></i>
-                    <div class="icon-glow"></div>
                 </div>
                 <h3>Individual Counseling</h3>
-                <p>One-on-one sessions with licensed therapists for anxiety, depression, trauma, and personal growth.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> 60-minute sessions</li>
-                    <li><i class="fas fa-check"></i> Online & in-person</li>
-                    <li><i class="fas fa-check"></i> Flexible scheduling</li>
-                </ul>
-                <a href="#individual" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                <p>One-on-one sessions with licensed therapists</p>
+                <span class="service-link">Learn More <i class="fas fa-arrow-right"></i></span>
             </div>
-
-            <div class="service-card featured" onclick="window.location.href='#ai-chat'">
-                <div class="featured-badge">Most Popular</div>
+            
+            <div class="service-card featured" onclick="location.href='#ai-chat'">
+                <div class="featured-badge">Popular</div>
                 <div class="service-icon">
                     <i class="fas fa-robot"></i>
-                    <div class="icon-glow"></div>
                 </div>
-                <h3>AI Mental Health Assistant</h3>
-                <p>24/7 AI-powered support for immediate guidance, coping strategies, and mental health information.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Instant responses</li>
-                    <li><i class="fas fa-check"></i> Confidential chat</li>
-                    <li><i class="fas fa-check"></i> Evidence-based info</li>
-                </ul>
-                <a href="/chat" class="service-link">Try Now <i class="fas fa-arrow-right"></i></a>
+                <h3>AI Assistant</h3>
+                <p>24/7 instant mental health support</p>
+                <span class="service-link">Chat Now <i class="fas fa-arrow-right"></i></span>
             </div>
-
-            <div class="service-card" onclick="window.location.href='#corporate'">
-                <div class="service-icon">
-                    <i class="fas fa-building"></i>
-                    <div class="icon-glow"></div>
-                </div>
-                <h3>Corporate Wellness</h3>
-                <p>Comprehensive mental health packages for businesses. Support your employees' wellbeing and productivity.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Employee counseling</li>
-                    <li><i class="fas fa-check"></i> Team workshops</li>
-                    <li><i class="fas fa-check"></i> Management training</li>
-                </ul>
-                <a href="#corporate" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
-            </div>
-
-            <div class="service-card" onclick="window.location.href='#group'">
+            
+            <div class="service-card" onclick="location.href='#group'">
                 <div class="service-icon">
                     <i class="fas fa-users"></i>
-                    <div class="icon-glow"></div>
                 </div>
                 <h3>Group Therapy</h3>
-                <p>Support groups for anxiety, depression, grief, addiction recovery, and more. Led by trained facilitators.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Peer support</li>
-                    <li><i class="fas fa-check"></i> Safe environment</li>
-                    <li><i class="fas fa-check"></i> Weekly sessions</li>
-                </ul>
-                <a href="#group" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                <p>Support groups with professional facilitators</p>
+                <span class="service-link">Learn More <i class="fas fa-arrow-right"></i></span>
             </div>
-
-            <div class="service-card" onclick="window.location.href='#schools'">
+            
+            <div class="service-card" onclick="location.href='#corporate'">
                 <div class="service-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                    <div class="icon-glow"></div>
+                    <i class="fas fa-building"></i>
                 </div>
-                <h3>School Programs</h3>
-                <p>Mental health support for students, teachers, and parents. Age-appropriate counseling and workshops.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Student counseling</li>
-                    <li><i class="fas fa-check"></i> Teacher training</li>
-                    <li><i class="fas fa-check"></i> Parent workshops</li>
-                </ul>
-                <a href="#schools" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
-            </div>
-
-            <div class="service-card" onclick="window.location.href='#crisis'">
-                <div class="service-icon">
-                    <i class="fas fa-first-aid"></i>
-                    <div class="icon-glow"></div>
-                </div>
-                <h3>Crisis Support</h3>
-                <p>Immediate help for mental health emergencies, suicide prevention, and acute psychological distress.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> 24/7 availability</li>
-                    <li><i class="fas fa-check"></i> Emergency response</li>
-                    <li><i class="fas fa-check"></i> Follow-up care</li>
-                </ul>
-                <a href="tel:+254759226354" class="service-link emergency">Call Now <i class="fas fa-phone"></i></a>
+                <h3>Corporate Wellness</h3>
+                <p>Employee mental health programs</p>
+                <span class="service-link">Learn More <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ASSESSMENT SECTION -->
-<section class="assessment-section" id="assessment">
+<!-- AI CHAT SECTION - FULLY FUNCTIONAL -->
+<section class="ai-chat-section" id="ai-chat">
     <div class="container">
-        <div class="assessment-card">
-            <div class="assessment-content">
-                <span class="badge">Free Assessment</span>
-                <h2>Not sure where to start?</h2>
-                <p>Take our free 5-minute mental health assessment and get personalized recommendations for your needs.</p>
+        <div class="chat-wrapper">
+            <div class="chat-info">
+                <div class="chat-badge">
+                    <i class="fas fa-robot"></i>
+                    <span>24/7 AI Support</span>
+                </div>
+                <h2>Chat with Elmed AI Assistant</h2>
+                <p>Get instant, confidential support anytime, anywhere. Our AI is trained in evidence-based mental health techniques and Kenyan cultural context.</p>
                 
-                <div class="assessment-features">
-                    <div class="feature">
-                        <i class="fas fa-clock"></i>
-                        <span>Takes only 5 minutes</span>
+                <div class="chat-features">
+                    <div class="chat-feature">
+                        <i class="fas fa-bolt"></i>
+                        <span>Instant Responses</span>
                     </div>
-                    <div class="feature">
+                    <div class="chat-feature">
                         <i class="fas fa-lock"></i>
-                        <span>100% confidential</span>
+                        <span>Private & Secure</span>
                     </div>
-                    <div class="feature">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Personalized report</span>
+                    <div class="chat-feature">
+                        <i class="fas fa-brain"></i>
+                        <span>Evidence-Based</span>
                     </div>
                 </div>
-
-                <a href="#assessment-start" class="btn btn-primary btn-large">
-                    Start Free Assessment
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+                
+                <div class="chat-prompts">
+                    <button class="prompt-btn" onclick="setPrompt('I feel anxious')">😰 Anxiety</button>
+                    <button class="prompt-btn" onclick="setPrompt('I feel sad')">😔 Depression</button>
+                    <button class="prompt-btn" onclick="setPrompt('Stress at work')">💼 Work Stress</button>
+                    <button class="prompt-btn" onclick="setPrompt('Sleep problems')">😴 Sleep</button>
+                </div>
             </div>
-            <div class="assessment-image">
-                <img src="{{ url_for('static', filename='images/assessment-illustration.svg') }}" alt="Assessment">
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-status">
+                        <span class="status-dot"></span>
+                        <span>Online - Ready to help</span>
+                    </div>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Hello! I'm your mental health assistant. How can I support you today?
+                            </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea>
+                    <button id="sendMessage" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <div class="typing-indicator" id="typingIndicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span>AI is thinking...</span>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- TESTIMONIALS SECTION -->
-<section class="testimonials-section">
+<!-- TESTIMONIALS -->
+<section class="testimonials">
     <div class="container">
         <div class="section-header">
             <span class="section-subtitle">Stories of Hope</span>
             <h2 class="section-title">What Our <span>Clients Say</span></h2>
         </div>
-
-        <div class="testimonials-slider">
+        
+        <div class="testimonials-grid">
             <div class="testimonial-card">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
+                <i class="fas fa-quote-left quote-icon"></i>
                 <p class="testimonial-text">
-                    "The AI assistant was there for me at 2 AM when I was having a panic attack. It guided me through breathing exercises and connected me with a therapist the next morning. Truly life-changing."
+                    "The AI assistant was there for me at 2 AM during a panic attack. It guided me through breathing exercises and connected me with a therapist."
                 </p>
                 <div class="testimonial-author">
                     <div class="author-avatar">MK</div>
                     <div class="author-info">
                         <h4>Mary Kamau</h4>
-                        <p>Nairobi • Client for 6 months</p>
+                        <p>Nairobi</p>
                     </div>
                 </div>
             </div>
-
+            
             <div class="testimonial-card">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
+                <i class="fas fa-quote-left quote-icon"></i>
                 <p class="testimonial-text">
-                    "As a company, we wanted to support our employees' mental health. The corporate package was perfect - easy to manage, and our team loves the flexibility. Productivity has noticeably improved."
+                    "Our company's productivity improved 40% after implementing the corporate wellness program. The team loves the flexibility."
                 </p>
                 <div class="testimonial-author">
                     <div class="author-avatar">JO</div>
                     <div class="author-info">
                         <h4>James Omondi</h4>
-                        <p>HR Manager, TechCorp</p>
+                        <p>HR Manager</p>
                     </div>
                 </div>
             </div>
-
+            
             <div class="testimonial-card">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
+                <i class="fas fa-quote-left quote-icon"></i>
                 <p class="testimonial-text">
-                    "The group therapy sessions helped me realize I'm not alone in my struggles. The facilitator is amazing, and I've made genuine connections. Thank you for creating this safe space."
+                    "Group therapy helped me realize I'm not alone. The facilitator is amazing and I've made genuine connections."
                 </p>
                 <div class="testimonial-author">
                     <div class="author-avatar">AW</div>
                     <div class="author-info">
                         <h4>Anne Wanjiku</h4>
-                        <p>Mombasa • Group Member</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CORPORATE SECTION -->
-<section class="corporate-section" id="corporate">
-    <div class="container">
-        <div class="corporate-grid">
-            <div class="corporate-content">
-                <span class="badge">For Businesses</span>
-                <h2>Support Your Team's Mental Wellness</h2>
-                <p>Create a healthier, more productive workplace with our comprehensive corporate wellness packages.</p>
-                
-                <ul class="corporate-benefits">
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <div>
-                            <strong>Employee Counseling Credits</strong>
-                            <span>Give your team access to professional support</span>
-                        </div>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <div>
-                            <strong>Management Training</strong>
-                            <span>Equip leaders to support mental health</span>
-                        </div>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <div>
-                            <strong>Wellness Workshops</strong>
-                            <span>Interactive sessions for your teams</span>
-                        </div>
-                    </li>
-                    <li>
-                        <i class="fas fa-check-circle"></i>
-                        <div>
-                            <strong>Usage Analytics</strong>
-                            <span>Track engagement and impact</span>
-                        </div>
-                    </li>
-                </ul>
-
-                <div class="corporate-cta">
-                    <a href="{{ url_for('auth.register') }}?role=organization" class="btn btn-primary">
-                        Register Your Organization
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                    <a href="#contact" class="btn btn-outline">
-                        Talk to Sales
-                    </a>
-                </div>
-            </div>
-            
-            <div class="corporate-stats">
-                <div class="stat-box">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Corporate Clients</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number">2,000+</div>
-                    <div class="stat-label">Employees Supported</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number">95%</div>
-                    <div class="stat-label">Employee Satisfaction</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- AI CHAT PREVIEW SECTION -->
-<section class="ai-preview-section" id="ai-chat">
-    <div class="container">
-        <div class="ai-preview-card">
-            <div class="ai-preview-content">
-                <div class="ai-badge">
-                    <i class="fas fa-robot"></i>
-                    <span>24/7 AI Support</span>
-                </div>
-                <h2>Chat with Elmed AI Assistant</h2>
-                <p>Get instant, confidential support anytime, anywhere. Our AI assistant is trained in evidence-based mental health techniques and Kenyan cultural context.</p>
-                
-                <div class="ai-features">
-                    <div class="ai-feature">
-                        <i class="fas fa-bolt"></i>
-                        <span>Instant responses</span>
-                    </div>
-                    <div class="ai-feature">
-                        <i class="fas fa-lock"></i>
-                        <span>Private & secure</span>
-                    </div>
-                    <div class="ai-feature">
-                        <i class="fas fa-brain"></i>
-                        <span>Evidence-based</span>
-                    </div>
-                </div>
-
-                <a href="/chat" class="btn btn-primary btn-large">
-                    Start Chatting Now
-                    <i class="fas fa-comments"></i>
-                </a>
-            </div>
-
-            <div class="ai-preview-demo">
-                <div class="chat-bubble bot">
-                    <div class="avatar">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="message">
-                        Hello! I'm your mental health assistant. How can I support you today?
-                    </div>
-                </div>
-                <div class="chat-bubble user">
-                    <div class="message">
-                        I've been feeling anxious about work
-                    </div>
-                    <div class="avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
-                <div class="chat-bubble bot">
-                    <div class="avatar">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="message">
-                        I hear you. Work stress is common. Let's try a quick breathing exercise together...
+                        <p>Mombasa</p>
                     </div>
                 </div>
             </div>
@@ -489,16 +275,16 @@
 <section class="cta-section">
     <div class="container">
         <div class="cta-card">
-            <h2>Ready to start your healing journey?</h2>
-            <p>Join thousands of Kenyans who've found support and healing with Elmed Wellmind Solutions.</p>
+            <h2>Ready to Start Your Healing Journey?</h2>
+            <p>Join thousands of Kenyans who've found support with Elmed Wellmind</p>
             <div class="cta-buttons">
-                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-large">
+                <a href="/auth/register" class="btn btn-primary btn-large">
                     <i class="fas fa-user-plus"></i>
                     Create Free Account
                 </a>
                 <a href="tel:+254759226354" class="btn btn-outline-light btn-large">
                     <i class="fas fa-phone"></i>
-                    Call Us Now
+                    Call Now
                 </a>
             </div>
             <div class="cta-note">
@@ -524,14 +310,12 @@
     --light: #F8F9FF;
     --gray: #6B7280;
     --white: #FFFFFF;
-    --gradient-primary: linear-gradient(135deg, #6C63FF 0%, #36D1DC 100%);
-    --gradient-secondary: linear-gradient(135deg, #FF6584 0%, #FFC107 100%);
-    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 10px 25px rgba(108, 99, 255, 0.15);
-    --shadow-lg: 0 20px 50px rgba(108, 99, 255, 0.25);
-    --shadow-hover: 0 30px 60px rgba(108, 99, 255, 0.3);
+    --gradient-primary: linear-gradient(135deg, #6C63FF, #36D1DC);
+    --gradient-secondary: linear-gradient(135deg, #FF6584, #FFC107);
+    --gradient-hero: linear-gradient(135deg, rgba(45, 43, 94, 0.95), rgba(108, 99, 255, 0.9));
+    --shadow: 0 20px 40px rgba(108, 99, 255, 0.15);
+    --shadow-hover: 0 30px 60px rgba(108, 99, 255, 0.25);
     --border-radius: 20px;
-    --border-radius-sm: 12px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -542,10 +326,11 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--dark);
     line-height: 1.6;
     overflow-x: hidden;
+    background: var(--white);
 }
 
 .container {
@@ -554,48 +339,8 @@ body {
     padding: 0 20px;
 }
 
-/* ===== SECTION HEADERS ===== */
-.section-header {
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-.section-subtitle {
-    display: inline-block;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--primary);
-    background: rgba(108, 99, 255, 0.1);
-    padding: 8px 20px;
-    border-radius: 30px;
-    margin-bottom: 15px;
-}
-
-.section-title {
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    line-height: 1.2;
-}
-
-.section-title span {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.section-description {
-    font-size: 1.2rem;
-    color: var(--gray);
-    max-width: 700px;
-    margin: 0 auto;
-}
-
 /* ===== HERO SECTION ===== */
-.hero-section {
+.hero {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -604,7 +349,7 @@ body {
     padding: 120px 0;
 }
 
-.hero-slideshow {
+.hero-background {
     position: absolute;
     top: 0;
     left: 0;
@@ -613,7 +358,7 @@ body {
     z-index: 1;
 }
 
-.slide {
+.hero-slide {
     position: absolute;
     top: 0;
     left: 0;
@@ -622,48 +367,69 @@ body {
     background-size: cover;
     background-position: center;
     opacity: 0;
-    transition: opacity 1.5s ease-in-out;
+    transition: opacity 1.5s ease;
+    transform: scale(1.1);
 }
 
-.slide.active {
+.hero-slide.active {
     opacity: 1;
+    transform: scale(1);
 }
 
-.overlay {
+.hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(45, 43, 94, 0.95) 0%, rgba(108, 99, 255, 0.9) 100%);
+    background: var(--gradient-hero);
     z-index: 2;
+}
+
+.hero-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="10" cy="10" r="1" fill="white"/><circle cx="90" cy="30" r="1" fill="white"/><circle cx="30" cy="80" r="1" fill="white"/><circle cx="70" cy="70" r="1" fill="white"/></svg>');
+    z-index: 3;
 }
 
 .hero-content {
     position: relative;
-    z-index: 3;
+    z-index: 4;
     max-width: 800px;
     color: white;
     padding: 0 20px;
+    animation: fadeInUp 1s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
     padding: 10px 25px;
     border-radius: 50px;
-    font-size: 0.95rem;
+    font-size: 1rem;
     margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    position: relative;
 }
 
-.badge-pulse {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
+.badge-dot {
     width: 8px;
     height: 8px;
     background: var(--success);
@@ -678,10 +444,11 @@ body {
 }
 
 .hero-title {
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: 800;
     line-height: 1.2;
     margin-bottom: 25px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
 .gradient-text {
@@ -693,10 +460,11 @@ body {
 
 .hero-subtitle {
     font-size: 1.3rem;
-    opacity: 0.9;
+    opacity: 0.95;
     margin-bottom: 40px;
     max-width: 600px;
     line-height: 1.8;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .hero-cta {
@@ -711,7 +479,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    padding: 16px 32px;
+    padding: 18px 38px;
     border-radius: 50px;
     font-weight: 600;
     font-size: 1.1rem;
@@ -719,28 +487,48 @@ body {
     cursor: pointer;
     text-decoration: none;
     border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .btn-large {
-    padding: 18px 40px;
+    padding: 20px 45px;
     font-size: 1.2rem;
 }
 
 .btn-primary {
     background: var(--gradient-primary);
     color: white;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
 }
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-hover);
+    box-shadow: 0 20px 40px rgba(108, 99, 255, 0.6);
 }
 
 .btn-outline {
     background: transparent;
     color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
 }
 
@@ -748,7 +536,6 @@ body {
     background: white;
     color: var(--primary);
     border-color: white;
-    transform: translateY(-3px);
 }
 
 .btn-outline-light {
@@ -772,7 +559,7 @@ body {
 }
 
 .stat-number {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 5px;
     background: linear-gradient(135deg, #FFD700, #FFA500);
@@ -782,8 +569,8 @@ body {
 }
 
 .stat-label {
-    font-size: 0.95rem;
-    opacity: 0.8;
+    font-size: 1rem;
+    opacity: 0.9;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -793,7 +580,7 @@ body {
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 3;
+    z-index: 4;
     color: white;
     text-align: center;
     animation: bounce 2s infinite;
@@ -808,19 +595,17 @@ body {
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-    40% { transform: translateX(-50%) translateY(-20px); }
-    60% { transform: translateX(-50%) translateY(-10px); }
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-10px); }
 }
 
-/* ===== TRUST BADGES ===== */
-.trust-badges {
+/* ===== TRUST SECTION ===== */
+.trust-section {
     padding: 60px 0;
     background: white;
-    border-bottom: 1px solid rgba(108, 99, 255, 0.1);
 }
 
-.badges-grid {
+.trust-grid {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -828,7 +613,7 @@ body {
     gap: 30px;
 }
 
-.badge-item {
+.trust-item {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -836,147 +621,95 @@ body {
     font-weight: 500;
 }
 
-.badge-item i {
+.trust-item i {
     font-size: 1.8rem;
     color: var(--primary);
 }
 
-/* ===== HOW IT WORKS ===== */
-.how-it-works {
-    padding: 100px 0;
+/* ===== SERVICES PREVIEW ===== */
+.services-preview {
+    padding: 80px 0;
     background: var(--light);
 }
 
-.steps-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    margin-top: 60px;
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
 }
 
-.step-card {
-    background: white;
-    padding: 50px 40px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
-    position: relative;
-    transition: var(--transition);
-    border: 1px solid rgba(108, 99, 255, 0.1);
-}
-
-.step-card:hover {
-    transform: translateY(-15px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--primary);
-}
-
-.step-number {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    font-size: 4rem;
-    font-weight: 800;
-    color: rgba(108, 99, 255, 0.1);
-    line-height: 1;
-}
-
-.step-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--gradient-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-    position: relative;
-}
-
-.step-icon i {
-    font-size: 2rem;
-    color: white;
-    z-index: 2;
-}
-
-.step-card h3 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    position: relative;
-    z-index: 2;
-}
-
-.step-card p {
-    color: var(--gray);
-    margin-bottom: 20px;
-    line-height: 1.8;
-    position: relative;
-    z-index: 2;
-}
-
-.step-arrow {
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.section-subtitle {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     color: var(--primary);
-    font-size: 1.2rem;
-    box-shadow: var(--shadow-md);
-    border: 2px solid var(--primary);
+    background: rgba(108, 99, 255, 0.1);
+    padding: 8px 20px;
+    border-radius: 30px;
+    margin-bottom: 15px;
 }
 
-/* ===== SERVICES SECTION ===== */
-.services-section {
-    padding: 100px 0;
-    background: white;
+.section-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.section-title span {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.section-description {
+    font-size: 1.2rem;
+    color: var(--gray);
+    max-width: 700px;
+    margin: 0 auto;
 }
 
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
-    margin-top: 50px;
+    margin-top: 40px;
 }
 
 .service-card {
     background: white;
     border-radius: var(--border-radius);
-    padding: 40px;
-    box-shadow: var(--shadow-sm);
+    padding: 40px 30px;
+    box-shadow: var(--shadow);
     transition: var(--transition);
-    border: 1px solid rgba(108, 99, 255, 0.1);
+    cursor: pointer;
     position: relative;
     overflow: hidden;
-    cursor: pointer;
+    border: 1px solid rgba(108, 99, 255, 0.1);
 }
 
 .service-card:hover {
     transform: translateY(-10px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-hover);
     border-color: var(--primary);
 }
 
 .service-card.featured {
     border: 2px solid var(--primary);
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
 
 .featured-badge {
     position: absolute;
     top: 20px;
-    right: -30px;
+    right: 20px;
     background: var(--gradient-primary);
     color: white;
-    padding: 8px 40px;
-    font-size: 0.9rem;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
     font-weight: 600;
-    transform: rotate(45deg);
 }
 
 .service-icon {
@@ -988,166 +721,305 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 25px;
-    position: relative;
 }
 
 .service-icon i {
     font-size: 2rem;
     color: var(--primary);
-    z-index: 2;
-}
-
-.icon-glow {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(108, 99, 255, 0.2) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: glow 2s ease-in-out infinite;
-}
-
-@keyframes glow {
-    0%, 100% { transform: scale(1); opacity: 0.5; }
-    50% { transform: scale(1.2); opacity: 0.8; }
 }
 
 .service-card h3 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     margin-bottom: 15px;
 }
 
 .service-card p {
     color: var(--gray);
-    margin-bottom: 25px;
-    line-height: 1.7;
-}
-
-.service-features {
-    list-style: none;
-    margin-bottom: 25px;
-}
-
-.service-features li {
-    padding: 8px 0;
-    color: var(--gray);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.service-features li i {
-    color: var(--success);
+    margin-bottom: 20px;
+    line-height: 1.6;
 }
 
 .service-link {
     color: var(--primary);
-    text-decoration: none;
     font-weight: 600;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: var(--transition);
 }
 
-.service-link:hover {
-    gap: 12px;
-    color: var(--primary-dark);
+/* ===== AI CHAT SECTION ===== */
+.ai-chat-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
 }
 
-.service-link.emergency {
-    color: var(--danger);
-}
-
-/* ===== ASSESSMENT SECTION ===== */
-.assessment-section {
-    padding: 80px 0;
-    background: linear-gradient(135deg, var(--light) 0%, #eef2ff 100%);
-}
-
-.assessment-card {
-    background: white;
-    border-radius: 40px;
-    padding: 60px;
+.chat-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 50px;
     align-items: center;
-    box-shadow: var(--shadow-lg);
 }
 
-.assessment-content .badge {
-    display: inline-block;
-    background: var(--gradient-primary);
-    color: white;
+.chat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
     padding: 8px 20px;
-    border-radius: 30px;
+    border-radius: 50px;
     font-size: 0.9rem;
-    font-weight: 600;
     margin-bottom: 20px;
 }
 
-.assessment-content h2 {
-    font-size: 2.5rem;
+.chat-info h2 {
+    font-size: 2.8rem;
     margin-bottom: 20px;
+    color: white;
 }
 
-.assessment-content p {
-    color: var(--gray);
+.chat-info p {
     font-size: 1.1rem;
+    opacity: 0.9;
     margin-bottom: 30px;
+    line-height: 1.8;
 }
 
-.assessment-features {
+.chat-features {
     display: flex;
-    gap: 30px;
-    margin-bottom: 40px;
+    gap: 25px;
+    margin-bottom: 30px;
     flex-wrap: wrap;
 }
 
-.assessment-features .feature {
+.chat-feature {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: var(--gray);
 }
 
-.assessment-features .feature i {
+.chat-feature i {
     color: var(--success);
 }
 
-.assessment-image img {
-    width: 100%;
-    max-width: 400px;
+.chat-prompts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-/* ===== TESTIMONIALS SECTION ===== */
-.testimonials-section {
+.prompt-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+.prompt-btn:hover {
+    background: white;
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.chat-container {
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    padding: 20px;
+    background: #f8f9ff;
+    border-bottom: 1px solid #eef0ff;
+}
+
+.chat-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--dark);
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    display: flex;
+    gap: 10px;
+    max-width: 80%;
+}
+
+.message.user {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.message.user .message-avatar {
+    background: var(--gradient-secondary);
+}
+
+.message-content {
+    background: #f0f2ff;
+    padding: 12px 18px;
+    border-radius: 18px;
+    border-bottom-left-radius: 5px;
+}
+
+.message.user .message-content {
+    background: var(--gradient-primary);
+    color: white;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 18px;
+}
+
+.message-text {
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: #999;
+    margin-top: 5px;
+}
+
+.chat-input-area {
+    padding: 20px;
+    border-top: 1px solid #eef0ff;
+    display: flex;
+    gap: 10px;
+    background: white;
+}
+
+#chatInput {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #eef0ff;
+    border-radius: 30px;
+    resize: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+#chatInput:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+#sendMessage {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+#sendMessage:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+}
+
+.typing-indicator {
+    display: none;
+    padding: 15px 20px;
+    background: #f0f2ff;
+    margin: 0 20px 20px;
+    border-radius: 20px;
+    align-items: center;
+    gap: 10px;
+}
+
+.typing-indicator span {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials {
     padding: 100px 0;
     background: white;
 }
 
-.testimonials-slider {
+.testimonials-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
-    margin-top: 50px;
+    margin-top: 40px;
 }
 
 .testimonial-card {
     background: var(--light);
-    border-radius: var(--border-radius);
-    padding: 40px;
+    border-radius: 20px;
+    padding: 40px 30px;
     transition: var(--transition);
-    border: 1px solid rgba(108, 99, 255, 0.1);
+    position: relative;
 }
 
 .testimonial-card:hover {
     transform: translateY(-10px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow);
 }
 
-.testimonial-rating {
-    color: var(--warning);
+.quote-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    opacity: 0.2;
     margin-bottom: 20px;
 }
 
@@ -1187,230 +1059,10 @@ body {
     font-size: 0.9rem;
 }
 
-/* ===== CORPORATE SECTION ===== */
-.corporate-section {
-    padding: 100px 0;
-    background: var(--gradient-primary);
-    color: white;
-}
-
-.corporate-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-}
-
-.corporate-content .badge {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    display: inline-block;
-}
-
-.corporate-content h2 {
-    font-size: 2.8rem;
-    margin-bottom: 20px;
-}
-
-.corporate-content p {
-    font-size: 1.2rem;
-    opacity: 0.9;
-    margin-bottom: 40px;
-}
-
-.corporate-benefits {
-    list-style: none;
-    margin-bottom: 40px;
-}
-
-.corporate-benefits li {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.corporate-benefits li i {
-    font-size: 1.5rem;
-    color: var(--success);
-}
-
-.corporate-benefits li strong {
-    display: block;
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-}
-
-.corporate-benefits li span {
-    opacity: 0.8;
-}
-
-.corporate-cta {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.corporate-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-}
-
-.stat-box {
-    text-align: center;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: var(--border-radius);
-    backdrop-filter: blur(10px);
-}
-
-.stat-box .stat-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    color: white;
-}
-
-.stat-box .stat-label {
-    font-size: 1rem;
-    opacity: 0.9;
-}
-
-/* ===== AI PREVIEW SECTION ===== */
-.ai-preview-section {
-    padding: 100px 0;
-    background: var(--light);
-}
-
-.ai-preview-card {
-    background: white;
-    border-radius: 40px;
-    padding: 60px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    align-items: center;
-    box-shadow: var(--shadow-lg);
-}
-
-.ai-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(108, 99, 255, 0.1);
-    color: var(--primary);
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
-.ai-preview-content h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-}
-
-.ai-preview-content p {
-    color: var(--gray);
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-}
-
-.ai-features {
-    display: flex;
-    gap: 25px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-}
-
-.ai-feature {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--gray);
-}
-
-.ai-feature i {
-    color: var(--success);
-}
-
-.ai-preview-demo {
-    background: var(--light);
-    border-radius: 30px;
-    padding: 30px;
-}
-
-.chat-bubble {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    animation: slideIn 0.5s ease;
-}
-
-.chat-bubble.bot {
-    justify-content: flex-start;
-}
-
-.chat-bubble.user {
-    justify-content: flex-end;
-}
-
-.chat-bubble .avatar {
-    width: 40px;
-    height: 40px;
-    background: var(--gradient-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1rem;
-}
-
-.chat-bubble.user .avatar {
-    background: var(--gradient-secondary);
-}
-
-.chat-bubble .message {
-    max-width: 70%;
-    padding: 15px 20px;
-    border-radius: 20px;
-    background: white;
-    box-shadow: var(--shadow-sm);
-}
-
-.chat-bubble.bot .message {
-    border-bottom-left-radius: 5px;
-}
-
-.chat-bubble.user .message {
-    background: var(--gradient-primary);
-    color: white;
-    border-bottom-right-radius: 5px;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* ===== CTA SECTION ===== */
 .cta-section {
     padding: 80px 0;
-    background: linear-gradient(135deg, var(--dark) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, var(--dark), var(--primary-dark));
 }
 
 .cta-card {
@@ -1427,7 +1079,7 @@ body {
 }
 
 .cta-card p {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     opacity: 0.9;
     margin-bottom: 40px;
 }
@@ -1449,35 +1101,25 @@ body {
     font-size: 1rem;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
     .hero-title {
-        font-size: 3rem;
+        font-size: 3.5rem;
     }
     
-    .section-title {
-        font-size: 2.2rem;
-    }
-    
-    .steps-container,
-    .testimonials-slider,
-    .corporate-grid,
-    .ai-preview-card {
+    .chat-wrapper {
         grid-template-columns: 1fr;
     }
     
-    .step-arrow {
-        display: none;
-    }
-    
-    .corporate-stats {
-        order: -1;
+    .chat-container {
+        max-width: 500px;
+        margin: 0 auto;
     }
 }
 
 @media (max-width: 768px) {
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
     }
     
     .hero-subtitle {
@@ -1493,52 +1135,12 @@ body {
         gap: 20px;
     }
     
-    .badges-grid {
+    .trust-grid {
         justify-content: center;
-    }
-    
-    .services-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .service-card.featured {
-        transform: scale(1);
-    }
-    
-    .assessment-card {
-        grid-template-columns: 1fr;
-        padding: 40px 30px;
-    }
-    
-    .assessment-image {
-        display: none;
-    }
-    
-    .corporate-cta {
-        flex-direction: column;
-    }
-    
-    .ai-preview-card {
-        padding: 40px 30px;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-title {
-        font-size: 2rem;
     }
     
     .section-title {
-        font-size: 1.8rem;
-    }
-    
-    .badge-item {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .step-card {
-        padding: 40px 30px;
+        font-size: 2.2rem;
     }
     
     .cta-buttons {
@@ -1548,334 +1150,75 @@ body {
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Hero Slideshow
-    const slides = document.querySelectorAll('.slide');
-    let currentSlide = 0;
-    
-    function nextSlide() {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }
-    
-    setInterval(nextSlide, 5000);
-    
-    // Smooth scroll for hero scroll button
-    const scrollBtn = document.querySelector('.hero-scroll');
-    if (scrollBtn) {
-        scrollBtn.addEventListener('click', function() {
-            const howItWorks = document.getElementById('how-it-works');
-            if (howItWorks) {
-                howItWorks.scrollIntoView({ behavior: 'smooth' });
+// Hero Slideshow
+const slides = document.querySelectorAll('.hero-slide');
+let currentSlide = 0;
+
+function nextSlide() {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+}
+setInterval(nextSlide, 6000);
+
+// Animated Counters
+const counters = document.querySelectorAll('.stat-number');
+const speed = 200;
+
+counters.forEach(counter => {
+    const updateCount = () => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const count = parseInt(counter.innerText);
+        
+        const increment = target / speed;
+        
+        if (count < target) {
+            counter.innerText = Math.ceil(count + increment);
+            setTimeout(updateCount, 10);
+        } else {
+            if (counter.innerText.includes('%')) {
+                counter.innerText = target + '%';
+            } else {
+                counter.innerText = target + '+';
             }
-        });
-    }
+        }
+    };
     
-    // Animate stats on scroll
-    const stats = document.querySelectorAll('.stat-number');
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateValue(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    stats.forEach(stat => observer.observe(stat));
-    
-    function animateValue(element) {
-        const value = element.textContent;
-        if (value.includes('+')) {
-            const num = parseInt(value);
-            let current = 0;
-            const increment = num / 50;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= num) {
-                    element.textContent = num + '+';
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current) + '+';
-                }
-            }, 30);
-        } else if (value.includes('%')) {
-            const num = parseInt(value);
-            let current = 0;
-            const increment = num / 50;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= num) {
-                    element.textContent = num + '%';
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current) + '%';
-                }
-            }, 30);
-        }
-    }
-    
-    // Add click handlers to service cards
-    document.querySelectorAll('.service-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            // Don't trigger if clicking on a link inside the card
-            if (e.target.closest('a')) return;
-            
-            const link = this.querySelector('.service-link');
-            if (link) {
-                window.location.href = link.getAttribute('href');
-            }
-        });
-    });
-    
-    // Parallax effect
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const heroSlideshow = document.querySelector('.hero-slideshow');
-        if (heroSlideshow) {
-            heroSlideshow.style.transform = `translateY(${scrolled * -0.3}px)`;
+        if (entries[0].isIntersecting) {
+            updateCount();
+            observer.unobserve(counter);
         }
     });
+    observer.observe(counter);
 });
-</script>
-<!-- AI CHAT SECTION - RESTORED -->
-<section class="ai-chat-section" id="ai-chat">
-    <div class="container">
-        <div class="section-title">
-            <h2><i class="fas fa-robot"></i> Elmed Wellmind Solutions AI Mental Health Assistant</h2>
-            <p>Chat directly with our AI assistant for immediate mental health support, coping strategies, and information.</p>
-        </div>
 
-        <div class="ai-chat-main-wrapper">
-            <!-- Quick Questions Card -->
-            <div class="chat-feature-card quick-questions-card">
-                <div class="feature-card-header">
-                    <i class="fas fa-bolt feature-icon"></i>
-                    <h3>Quick Topics</h3>
-                </div>
-                <div class="quick-questions-grid">
-                    <div class="quick-question-btn" onclick="document.getElementById('chatMessageInput').value = 'I\'m feeling anxious today'">
-                        <i class="fas fa-heartbeat"></i> Anxiety
-                    </div>
-                    <div class="quick-question-btn" onclick="document.getElementById('chatMessageInput').value = 'How can I manage stress?'">
-                        <i class="fas fa-brain"></i> Stress
-                    </div>
-                    <div class="quick-question-btn" onclick="document.getElementById('chatMessageInput').value = 'I\'m having trouble sleeping'">
-                        <i class="fas fa-bed"></i> Sleep
-                    </div>
-                    <div class="quick-question-btn" onclick="document.getElementById('chatMessageInput').value = 'Self-care tips'">
-                        <i class="fas fa-heart"></i> Self-Care
-                    </div>
-                </div>
-            </div>
+// AI Chat Functionality
+let sessionId = localStorage.getItem('chatSessionId') || 'session_' + Date.now();
+localStorage.setItem('chatSessionId', sessionId);
 
-            <!-- Chat Container -->
-            <div class="ai-chat-container">
-                <div class="ai-chat-messages" id="aiChatMessages">
-                    <div class="chat-message bot-message">
-                        <div class="message-avatar"><i class="fas fa-robot"></i></div>
-                        <div class="message-content">
-                            <div class="message-text">Hello! I'm your AI mental health assistant. How can I help you today?</div>
-                            <div class="message-time">Just now</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="chat-input-area">
-                    <textarea id="chatMessageInput" placeholder="Type your message here..." rows="1"></textarea>
-                    <button id="sendChatButton" onclick="sendMessage()">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Emergency Card -->
-            <div class="chat-feature-card emergency-card">
-                <h3><i class="fas fa-phone-alt"></i> Emergency Support</h3>
-                <a href="tel:+254759226354" class="emergency-btn">
-                    <i class="fas fa-phone"></i> Call Now
-                </a>
-                <a href="https://wa.me/254759226354" class="emergency-btn whatsapp">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<style>
-.ai-chat-section {
-    padding: 80px 0;
-    background: linear-gradient(135deg, #f5f7ff 0%, #eef1ff 100%);
+function setPrompt(text) {
+    document.getElementById('chatInput').value = text;
+    document.getElementById('chatInput').focus();
 }
 
-.ai-chat-main-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    gap: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.chat-feature-card {
-    background: white;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-}
-
-.quick-questions-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.quick-question-btn {
-    padding: 12px;
-    background: #f8f9ff;
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.3s;
-    font-size: 0.9rem;
-}
-
-.quick-question-btn:hover {
-    background: var(--primary);
-    color: white;
-}
-
-.ai-chat-container {
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    height: 500px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-}
-
-.ai-chat-messages {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-}
-
-.chat-message {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.bot-message .message-avatar {
-    background: var(--gradient-primary);
-    color: white;
-}
-
-.message-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.message-content {
-    max-width: 70%;
-}
-
-.message-text {
-    padding: 12px 18px;
-    border-radius: 18px;
-    background: #f0f2ff;
-    line-height: 1.5;
-}
-
-.bot-message .message-text {
-    border-bottom-left-radius: 5px;
-}
-
-.message-time {
-    font-size: 0.75rem;
-    color: #999;
-    margin-top: 5px;
-}
-
-.chat-input-area {
-    padding: 20px;
-    border-top: 1px solid #eef0ff;
-    display: flex;
-    gap: 10px;
-}
-
-#chatMessageInput {
-    flex: 1;
-    padding: 12px 18px;
-    border: 2px solid #eef0ff;
-    border-radius: 25px;
-    resize: none;
-    font-family: inherit;
-}
-
-#chatMessageInput:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-
-#sendChatButton {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--gradient-primary);
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-#sendChatButton:hover {
-    transform: scale(1.1);
-}
-
-.emergency-btn {
-    display: block;
-    padding: 15px;
-    margin: 10px 0;
-    background: var(--gradient-primary);
-    color: white;
-    text-decoration: none;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.emergency-btn.whatsapp {
-    background: #25D366;
-}
-
-@media (max-width: 1024px) {
-    .ai-chat-main-wrapper {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-
-<script>
 async function sendMessage() {
-    const input = document.getElementById('chatMessageInput');
+    const input = document.getElementById('chatInput');
     const message = input.value.trim();
     if (!message) return;
     
-    const messagesDiv = document.getElementById('aiChatMessages');
+    const messagesDiv = document.getElementById('chatMessages');
+    const typingIndicator = document.getElementById('typingIndicator');
     
     // Add user message
     messagesDiv.innerHTML += `
-        <div class="chat-message user-message" style="justify-content: flex-end;">
+        <div class="message user">
+            <div class="message-avatar">
+                <i class="fas fa-user"></i>
+            </div>
             <div class="message-content">
-                <div class="message-text" style="background: var(--gradient-primary); color: white;">${escapeHtml(message)}</div>
-                <div class="message-time" style="text-align: right;">Just now</div>
+                <div class="message-text">${escapeHtml(message)}</div>
+                <div class="message-time">Just now</div>
             </div>
         </div>
     `;
@@ -1883,29 +1226,45 @@ async function sendMessage() {
     input.value = '';
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
     
+    // Show typing indicator
+    typingIndicator.style.display = 'flex';
+    
     try {
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
+            body: JSON.stringify({ 
+                message: message,
+                session_id: sessionId 
+            })
         });
+        
         const data = await response.json();
         
+        // Hide typing indicator
+        typingIndicator.style.display = 'none';
+        
+        // Add bot response
         messagesDiv.innerHTML += `
-            <div class="chat-message bot-message">
-                <div class="message-avatar"><i class="fas fa-robot"></i></div>
+            <div class="message bot">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
                 <div class="message-content">
-                    <div class="message-text">${escapeHtml(data.response)}</div>
+                    <div class="message-text">${escapeHtml(data.response || 'I\'m here to help.')}</div>
                     <div class="message-time">Just now</div>
                 </div>
             </div>
         `;
     } catch (error) {
+        typingIndicator.style.display = 'none';
         messagesDiv.innerHTML += `
-            <div class="chat-message bot-message">
-                <div class="message-avatar"><i class="fas fa-robot"></i></div>
+            <div class="message bot">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
                 <div class="message-content">
-                    <div class="message-text">Sorry, I'm having trouble connecting. Please try again.</div>
+                    <div class="message-text">I'm having trouble connecting. Please try again or call our helpline at +254759226354.</div>
                     <div class="message-time">Just now</div>
                 </div>
             </div>
@@ -1920,5 +1279,24 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
+// Enter key to send
+document.getElementById('chatInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Auto-resize textarea
+document.getElementById('chatInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
+
+// Smooth scroll
+document.querySelector('.hero-scroll').addEventListener('click', () => {
+    document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
+});
 </script>
 {% endblock %}
