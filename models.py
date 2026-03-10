@@ -1,4 +1,4 @@
-# models.py - Complete with Enhanced Roles and Permissions
+# models.py - COMPLETE WITH ALL ORIGINAL AND NEW FEATURES
 from extensions import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
@@ -18,8 +18,8 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(20), nullable=True)
     
-    # Enhanced Role System
-    role = db.Column(db.String(50), default='client')  # superadmin, admin, organization_admin, department_head, professional, client, employee
+    # Role-based access - ENHANCED
+    role = db.Column(db.String(50), default='client')  # client, professional, organization_admin, department_head, admin, superadmin
     permissions = db.Column(db.Text, default='{}')  # JSON of additional permissions
     
     # Profile
@@ -41,7 +41,13 @@ class User(UserMixin, db.Model):
     last_login = db.Column(db.DateTime, nullable=True)
     last_active = db.Column(db.DateTime, nullable=True)
     
-    # Relationships
+    # Security
+    reset_token = db.Column(db.String(100), nullable=True)
+    reset_token_expiry = db.Column(db.DateTime, nullable=True)
+    verification_token = db.Column(db.String(100), nullable=True)
+    impersonated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # For admin impersonation
+    
+    # Relationships - FIXED with explicit foreign_keys
     client_profile = db.relationship('Client', foreign_keys='Client.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
     professional_profile = db.relationship('Professional', foreign_keys='Professional.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
     organization_profile = db.relationship('Organization', foreign_keys='Organization.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
@@ -51,12 +57,6 @@ class User(UserMixin, db.Model):
     reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', back_populates='reviewee')
     chat_messages = db.relationship('ChatMessage', back_populates='user', cascade='all, delete-orphan')
     activity_logs = db.relationship('ActivityLog', back_populates='user', cascade='all, delete-orphan')
-    
-    # Security tokens
-    reset_token = db.Column(db.String(100), nullable=True)
-    reset_token_expiry = db.Column(db.DateTime, nullable=True)
-    verification_token = db.Column(db.String(100), nullable=True)
-    impersonated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # For admin impersonation
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -76,12 +76,10 @@ class User(UserMixin, db.Model):
         return f"{self.first_name} {self.last_name}"
     
     def has_permission(self, permission):
-        """Check if user has specific permission"""
         perms = json.loads(self.permissions) if self.permissions else {}
         return perms.get(permission, False)
     
     def add_permission(self, permission):
-        """Add permission to user"""
         perms = json.loads(self.permissions) if self.permissions else {}
         perms[permission] = True
         self.permissions = json.dumps(perms)
@@ -131,11 +129,11 @@ class Client(db.Model):
     
     # Organization association (if they belong to one)
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=True)
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=True)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=True)  # FIXED: Added foreign key
     employee_id = db.Column(db.String(100), nullable=True)
     
-    # Privacy settings - ANONYMIZED for organization views
-    hide_profile = db.Column(db.Boolean, default=True)  # Hidden by default for privacy
+    # Privacy settings
+    hide_profile = db.Column(db.Boolean, default=True)
     allow_contact = db.Column(db.Boolean, default=False)
     
     # Wellness tracking
@@ -150,7 +148,7 @@ class Client(db.Model):
     # Relationships
     user = db.relationship('User', foreign_keys=[user_id], back_populates='client_profile')
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='employees')
-    department = db.relationship('Department', foreign_keys=[department_id], back_populates='employees')
+    department = db.relationship('Department', foreign_keys=[department_id], back_populates='employees_list')  # FIXED: Added relationship
     sessions = db.relationship('Session', back_populates='client')
     session_requests = db.relationship('SessionRequest', back_populates='client')
     assessments = db.relationship('WellnessAssessment', back_populates='client')
@@ -158,7 +156,6 @@ class Client(db.Model):
     post_comments = db.relationship('PostComment', back_populates='author', cascade='all, delete-orphan')
     
     def get_anonymized_data(self):
-        """Return anonymized data for organization viewing"""
         return {
             'id': self.id,
             'department_id': self.department_id,
@@ -246,7 +243,7 @@ class Organization(db.Model):
     employee_registration_code = db.Column(db.String(50), unique=True, nullable=True)
     
     # Privacy settings
-    anonymize_employee_data = db.Column(db.Boolean, default=True)  # Hide personal info from org admins
+    anonymize_employee_data = db.Column(db.Boolean, default=True)
     
     # Statistics
     total_employees = db.Column(db.Integer, default=0)
@@ -276,7 +273,6 @@ class Organization(db.Model):
         return self.employee_registration_code
     
     def update_risk_counts(self):
-        """Update risk level counts"""
         self.high_risk_employees = Client.query.filter_by(organization_id=self.id, risk_level='high').count()
         self.medium_risk_employees = Client.query.filter_by(organization_id=self.id, risk_level='medium').count()
         self.low_risk_employees = Client.query.filter_by(organization_id=self.id, risk_level='low').count()
@@ -302,13 +298,12 @@ class Department(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships
+    # Relationships - FIXED: Simplified relationships
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='departments')
     head = db.relationship('DepartmentHead', foreign_keys=[head_id], back_populates='department')
-    employees = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')
+    employees_list = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')  # FIXED: Added relationship
     
     def update_stats(self):
-        """Update department statistics"""
         employees = Client.query.filter_by(department_id=self.id).all()
         self.employee_count = len(employees)
         
@@ -340,7 +335,6 @@ class DepartmentHead(db.Model):
     department = db.relationship('Department', foreign_keys=[department_id], back_populates='head')
     
     def get_department_stats(self):
-        """Get anonymized department statistics"""
         if not self.department:
             return None
         
@@ -359,112 +353,18 @@ class DepartmentHead(db.Model):
                                e.user.last_active > datetime.utcnow() - timedelta(days=30))
         }
 
-class SessionRequest(db.Model):
-    __tablename__ = 'session_requests'
-    id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
-    professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=True)
-    
-    # Request details
-    issue_description = db.Column(db.Text, nullable=False)
-    preferred_date = db.Column(db.Date, nullable=True)
-    preferred_time = db.Column(db.String(20), nullable=True)
-    session_type = db.Column(db.String(50), default='video')
-    
-    # Matching
-    is_auto_matched = db.Column(db.Boolean, default=False)
-    matched_professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=True)
-    matched_at = db.Column(db.DateTime, nullable=True)
-    matched_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Who matched (admin/auto)
-    
-    # Status
-    status = db.Column(db.String(20), default='pending')
-    expires_at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(minutes=10))
-    
-    # Notifications
-    admin_notified = db.Column(db.Boolean, default=False)
-    notification_sent_at = db.Column(db.DateTime, nullable=True)
-    
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
-    client = db.relationship('Client', foreign_keys=[client_id], back_populates='session_requests')
-    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='session_requests')
-    matched_professional = db.relationship('Professional', foreign_keys=[matched_professional_id])
-    matcher = db.relationship('User', foreign_keys=[matched_by])
-    session = db.relationship('Session', back_populates='request', uselist=False)
-
-class WellnessAssessment(db.Model):
-    __tablename__ = 'wellness_assessments'
-    id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
-    
-    # Assessment data
-    responses = db.Column(db.Text, nullable=False)
-    
-    # Scores
-    overall_score = db.Column(db.Float, nullable=False)
-    anxiety_score = db.Column(db.Float, nullable=True)
-    depression_score = db.Column(db.Float, nullable=True)
-    stress_score = db.Column(db.Float, nullable=True)
-    sleep_score = db.Column(db.Float, nullable=True)
-    work_stress_score = db.Column(db.Float, nullable=True)
-    relationship_score = db.Column(db.Float, nullable=True)
-    
-    # Risk assessment
-    risk_level = db.Column(db.String(20), default='low')
-    recommendations = db.Column(db.Text, nullable=True)
-    
-    # Suggested tests (for department heads)
-    suggested_tests = db.Column(db.Text, nullable=True)
-    suggested_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # Relationships
-    client = db.relationship('Client', foreign_keys=[client_id], back_populates='assessments')
-    suggester = db.relationship('User', foreign_keys=[suggested_by])
-
-class ActivityLog(db.Model):
-    __tablename__ = 'activity_logs'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    
-    # Activity details
-    action = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    entity_type = db.Column(db.String(50), nullable=True)
-    entity_id = db.Column(db.Integer, nullable=True)
-    
-    # For impersonation tracking
-    impersonated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    
-    # Metadata
-    ip_address = db.Column(db.String(50), nullable=True)
-    user_agent = db.Column(db.Text, nullable=True)
-    
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # Relationships
-    user = db.relationship('User', foreign_keys=[user_id], back_populates='activity_logs')
-    impersonator = db.relationship('User', foreign_keys=[impersonated_by])
-
-# Keep all other existing models (Session, Webinar, Notification, etc.) from before
-
-# ========== CHAT AND COMMUNITY MODELS ==========
+# ========== ORIGINAL CHAT AND COMMUNITY MODELS ==========
 
 class ChatMessage(db.Model):
     __tablename__ = 'chat_messages'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     session_id = db.Column(db.String(100), nullable=False, index=True)
-    role = db.Column(db.String(20), nullable=False)  # 'user' or 'assistant'
+    role = db.Column(db.String(20), nullable=False)
     content = db.Column(db.Text, nullable=False)
     is_mental_health_related = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships
     user = db.relationship('User', foreign_keys=[user_id], back_populates='chat_messages')
     
     def to_dict(self):
@@ -494,7 +394,6 @@ class CommunityPost(db.Model):
     is_approved = db.Column(db.Boolean, default=True)
     is_featured = db.Column(db.Boolean, default=False)
     
-    # Relationships
     author = db.relationship('Client', foreign_keys=[author_id], back_populates='community_posts')
     comments = db.relationship('PostComment', back_populates='post', cascade='all, delete-orphan')
     
@@ -519,7 +418,6 @@ class PostComment(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships
     post = db.relationship('CommunityPost', foreign_keys=[post_id], back_populates='comments')
     author = db.relationship('Client', foreign_keys=[author_id], back_populates='post_comments')
     
@@ -531,3 +429,271 @@ class PostComment(db.Model):
             'content': self.content,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M') if self.created_at else None
         }
+
+# ========== SESSION AND APPOINTMENT MODELS ==========
+
+class SessionRequest(db.Model):
+    __tablename__ = 'session_requests'
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
+    professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=True)
+    
+    issue_description = db.Column(db.Text, nullable=False)
+    preferred_date = db.Column(db.Date, nullable=True)
+    preferred_time = db.Column(db.String(20), nullable=True)
+    session_type = db.Column(db.String(50), default='video')
+    
+    is_auto_matched = db.Column(db.Boolean, default=False)
+    matched_professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=True)
+    matched_at = db.Column(db.DateTime, nullable=True)
+    matched_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    
+    status = db.Column(db.String(20), default='pending')
+    expires_at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(minutes=10))
+    
+    admin_notified = db.Column(db.Boolean, default=False)
+    notification_sent_at = db.Column(db.DateTime, nullable=True)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    client = db.relationship('Client', foreign_keys=[client_id], back_populates='session_requests')
+    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='session_requests')
+    matched_professional = db.relationship('Professional', foreign_keys=[matched_professional_id])
+    matcher = db.relationship('User', foreign_keys=[matched_by])
+    session = db.relationship('Session', back_populates='request', uselist=False)
+
+class Session(db.Model):
+    __tablename__ = 'sessions'
+    id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey('session_requests.id'), nullable=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
+    professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=False)
+    
+    session_type = db.Column(db.String(50), nullable=False)
+    title = db.Column(db.String(200), nullable=True)
+    description = db.Column(db.Text, nullable=True)
+    
+    scheduled_date = db.Column(db.Date, nullable=False)
+    scheduled_time = db.Column(db.String(20), nullable=False)
+    duration_minutes = db.Column(db.Integer, default=60)
+    
+    professional_fee = db.Column(db.Float, nullable=False)
+    platform_fee = db.Column(db.Float, nullable=False)
+    total_fee = db.Column(db.Float, nullable=False)
+    
+    meeting_link = db.Column(db.String(500), nullable=True)
+    meeting_password = db.Column(db.String(100), nullable=True)
+    
+    status = db.Column(db.String(20), default='scheduled')
+    cancellation_reason = db.Column(db.Text, nullable=True)
+    
+    is_anonymous = db.Column(db.Boolean, default=False)
+    hide_contact = db.Column(db.Boolean, default=True)
+    
+    started_at = db.Column(db.DateTime, nullable=True)
+    completed_at = db.Column(db.DateTime, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    client = db.relationship('Client', foreign_keys=[client_id], back_populates='sessions')
+    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='sessions')
+    request = db.relationship('SessionRequest', foreign_keys=[request_id], back_populates='session')
+    feedback = db.relationship('SessionFeedback', back_populates='session', uselist=False)
+    review = db.relationship('Review', back_populates='session', uselist=False)
+
+class Webinar(db.Model):
+    __tablename__ = 'webinars'
+    id = db.Column(db.Integer, primary_key=True)
+    professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=False)
+    
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    topic = db.Column(db.String(100), nullable=False)
+    
+    scheduled_date = db.Column(db.Date, nullable=False)
+    scheduled_time = db.Column(db.String(20), nullable=False)
+    duration_minutes = db.Column(db.Integer, default=60)
+    
+    max_participants = db.Column(db.Integer, default=50)
+    current_participants = db.Column(db.Integer, default=0)
+    
+    is_free = db.Column(db.Boolean, default=False)
+    fee = db.Column(db.Float, default=0.0)
+    
+    meeting_link = db.Column(db.String(500), nullable=True)
+    recording_link = db.Column(db.String(500), nullable=True)
+    
+    status = db.Column(db.String(20), default='scheduled')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='webinars')
+    participants = db.relationship('WebinarParticipant', back_populates='webinar')
+    
+    @property
+    def available_spots(self):
+        return self.max_participants - self.current_participants
+
+class WebinarParticipant(db.Model):
+    __tablename__ = 'webinar_participants'
+    id = db.Column(db.Integer, primary_key=True)
+    webinar_id = db.Column(db.Integer, db.ForeignKey('webinars.id'), nullable=False)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=True)
+    
+    is_anonymous = db.Column(db.Boolean, default=False)
+    anonymous_name = db.Column(db.String(100), nullable=True)
+    
+    joined_at = db.Column(db.DateTime, default=datetime.utcnow)
+    left_at = db.Column(db.DateTime, nullable=True)
+    
+    webinar = db.relationship('Webinar', back_populates='participants')
+    client = db.relationship('Client', foreign_keys=[client_id])
+    organization = db.relationship('Organization', foreign_keys=[organization_id])
+
+# ========== FEEDBACK AND REVIEW MODELS ==========
+
+class SessionFeedback(db.Model):
+    __tablename__ = 'session_feedback'
+    id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.Integer, db.ForeignKey('sessions.id'), nullable=False)
+    
+    rating = db.Column(db.Integer, nullable=False)
+    comments = db.Column(db.Text, nullable=True)
+    
+    system_rating = db.Column(db.Integer, nullable=True)
+    system_comments = db.Column(db.Text, nullable=True)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    session = db.relationship('Session', foreign_keys=[session_id], back_populates='feedback')
+
+class Review(db.Model):
+    __tablename__ = 'reviews'
+    id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.Integer, db.ForeignKey('sessions.id'), nullable=False)
+    reviewer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    reviewee_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.Text, nullable=True)
+    
+    is_public = db.Column(db.Boolean, default=True)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    session = db.relationship('Session', foreign_keys=[session_id], back_populates='review')
+    reviewer = db.relationship('User', foreign_keys=[reviewer_id], back_populates='reviews_given')
+    reviewee = db.relationship('User', foreign_keys=[reviewee_id], back_populates='reviews_received')
+
+# ========== WELLNESS ASSESSMENT MODELS ==========
+
+class WellnessAssessment(db.Model):
+    __tablename__ = 'wellness_assessments'
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
+    
+    responses = db.Column(db.Text, nullable=False)
+    
+    overall_score = db.Column(db.Float, nullable=False)
+    anxiety_score = db.Column(db.Float, nullable=True)
+    depression_score = db.Column(db.Float, nullable=True)
+    stress_score = db.Column(db.Float, nullable=True)
+    sleep_score = db.Column(db.Float, nullable=True)
+    work_stress_score = db.Column(db.Float, nullable=True)
+    relationship_score = db.Column(db.Float, nullable=True)
+    
+    risk_level = db.Column(db.String(20), default='low')
+    recommendations = db.Column(db.Text, nullable=True)
+    
+    suggested_tests = db.Column(db.Text, nullable=True)
+    suggested_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    client = db.relationship('Client', foreign_keys=[client_id], back_populates='assessments')
+    suggester = db.relationship('User', foreign_keys=[suggested_by])
+
+class OrganizationWellnessData(db.Model):
+    __tablename__ = 'organization_wellness_data'
+    id = db.Column(db.Integer, primary_key=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=False)
+    
+    month = db.Column(db.String(20), nullable=False)
+    total_employees = db.Column(db.Integer, default=0)
+    active_employees = db.Column(db.Integer, default=0)
+    total_sessions = db.Column(db.Integer, default=0)
+    
+    average_wellness_score = db.Column(db.Float, default=0.0)
+    high_risk_count = db.Column(db.Integer, default=0)
+    medium_risk_count = db.Column(db.Integer, default=0)
+    low_risk_count = db.Column(db.Integer, default=0)
+    
+    department_wellness = db.Column(db.Text, nullable=True)
+    wellness_trend = db.Column(db.Text, nullable=True)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='wellness_data')
+
+# ========== PROFESSIONAL AVAILABILITY ==========
+
+class ProfessionalAvailability(db.Model):
+    __tablename__ = 'professional_availability'
+    id = db.Column(db.Integer, primary_key=True)
+    professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=False)
+    
+    day_of_week = db.Column(db.Integer, nullable=False)
+    start_time = db.Column(db.String(10), nullable=False)
+    end_time = db.Column(db.String(10), nullable=False)
+    is_available = db.Column(db.Boolean, default=True)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='availability')
+
+# ========== NOTIFICATION AND ACTIVITY MODELS ==========
+
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    title = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    notification_type = db.Column(db.String(50), default='info')
+    icon = db.Column(db.String(50), nullable=True)
+    
+    link = db.Column(db.String(500), nullable=True)
+    link_text = db.Column(db.String(100), nullable=True)
+    
+    is_read = db.Column(db.Boolean, default=False)
+    is_important = db.Column(db.Boolean, default=False)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    read_at = db.Column(db.DateTime, nullable=True)
+    
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='notifications')
+    
+    def mark_as_read(self):
+        self.is_read = True
+        self.read_at = datetime.utcnow()
+
+class ActivityLog(db.Model):
+    __tablename__ = 'activity_logs'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    
+    action = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    entity_type = db.Column(db.String(50), nullable=True)
+    entity_id = db.Column(db.Integer, nullable=True)
+    
+    impersonated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    
+    ip_address = db.Column(db.String(50), nullable=True)
+    user_agent = db.Column(db.Text, nullable=True)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='activity_logs')
+    impersonator = db.relationship('User', foreign_keys=[impersonated_by])
