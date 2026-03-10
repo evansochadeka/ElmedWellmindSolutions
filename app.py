@@ -1,5 +1,4 @@
-# app.py - PostgreSQL Ready Version with ALL Features Retained
-
+# app.py - PostgreSQL Ready Version with ALL Features Retained - CORRECTED
 import os
 import sys
 import json
@@ -12,18 +11,14 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from sqlalchemy import text  # Add this for testing connection
-# Add this import
-from chat_routes import chat_bp
 
-# Register blueprint
-app.register_blueprint(chat_bp)
-# Load environment variables
+# Load environment variables FIRST
 load_dotenv()
 
 # Import extensions
 from extensions import db
 
-# Create Flask app
+# Create Flask app - THIS MUST COME FIRST
 app = Flask(
     __name__,
     static_folder="static",
@@ -109,10 +104,9 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # --------------------------------------------------
-# Import and register blueprints
+# Import blueprints (ALL blueprints here)
 # --------------------------------------------------
 
-# Import all blueprints
 from auth_routes import auth_bp
 from professional_routes import professional_bp
 from organization_routes import organization_bp
@@ -120,9 +114,13 @@ from routes_py import api  # Original API routes
 from admin_routes import admin_bp
 from superadmin_routes import superadmin_bp
 from department_head_routes import dept_head_bp
-from employee_routes import employee_bp  # Add this if you have employee routes
+from employee_routes import employee_bp
+from chat_routes import chat_bp  # Chat blueprint
 
-# Register blueprints
+# --------------------------------------------------
+# Register blueprints (ALL after app is created)
+# --------------------------------------------------
+
 app.register_blueprint(auth_bp)
 app.register_blueprint(professional_bp)
 app.register_blueprint(organization_bp)
@@ -130,7 +128,8 @@ app.register_blueprint(api)  # Original API routes
 app.register_blueprint(admin_bp)
 app.register_blueprint(superadmin_bp)
 app.register_blueprint(dept_head_bp)
-app.register_blueprint(employee_bp)  # Add this if you have employee routes
+app.register_blueprint(employee_bp)
+app.register_blueprint(chat_bp)  # Chat blueprint - NOW IN CORRECT POSITION
 
 # --------------------------------------------------
 # Try to import matching service (optional)
