@@ -1,4 +1,4 @@
-# app.py - COMPLETE WORKING VERSION WITH ALL ORIGINAL FEATURES RETAINED
+# app.py - PostgreSQL Ready Version with ALL Features Retained
 
 import os
 import sys
@@ -11,14 +11,13 @@ from flask import Flask, render_template, jsonify, request, send_from_directory,
 from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
+from sqlalchemy import text  # Add this for testing connection
+
 # Load environment variables
 load_dotenv()
 
 # Import extensions
 from extensions import db
-
-# Import models - will be defined in models.py
-# We'll import this after defining the models
 
 # Create Flask app
 app = Flask(
@@ -30,9 +29,10 @@ app = Flask(
 CORS(app)
 
 # --------------------------------------------------
-# Configuration
+# PostgreSQL Configuration
 # --------------------------------------------------
 
+# Get database URL from environment
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///elmed_wellmind.db")
 
 # Fix for Render Postgres URLs
@@ -42,6 +42,16 @@ if DATABASE_URL.startswith("postgres://"):
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", secrets.token_hex(32))
+
+# PostgreSQL specific optimizations (only if using PostgreSQL)
+if "postgresql" in DATABASE_URL:
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+        "pool_size": 10,              # Number of connections to keep in pool
+        "pool_recycle": 300,           # Recycle connections after 5 minutes
+        "pool_pre_ping": True,          # Verify connections before using
+        "max_overflow": 20,             # Allow up to 20 extra connections
+    }
+    print("✅ PostgreSQL connection pool configured")
 
 # Upload configuration
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -87,7 +97,7 @@ login_manager.login_view = 'auth.login'
 login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'info'
 
-# We'll import models after db is initialized
+# Import models after db is initialized
 from models import *
 
 @login_manager.user_loader
@@ -106,6 +116,7 @@ from routes_py import api  # Original API routes
 from admin_routes import admin_bp
 from superadmin_routes import superadmin_bp
 from department_head_routes import dept_head_bp
+from employee_routes import employee_bp  # Add this if you have employee routes
 
 # Register blueprints
 app.register_blueprint(auth_bp)
@@ -115,6 +126,7 @@ app.register_blueprint(api)  # Original API routes
 app.register_blueprint(admin_bp)
 app.register_blueprint(superadmin_bp)
 app.register_blueprint(dept_head_bp)
+app.register_blueprint(employee_bp)  # Add this if you have employee routes
 
 # --------------------------------------------------
 # Try to import matching service (optional)
@@ -134,11 +146,18 @@ except ImportError as e:
         pass
 
 # --------------------------------------------------
-# Create tables and initial data
+# Create tables and initial data with PostgreSQL connection test
 # --------------------------------------------------
 
 with app.app_context():
     try:
+        # Test PostgreSQL connection
+        if "postgresql" in DATABASE_URL:
+            result = db.session.execute(text('SELECT version()')).scalar()
+            print(f"✅ Connected to PostgreSQL: {result[:50]}...")
+        else:
+            print(f"✅ Connected to database: {DATABASE_URL.split('://')[0]}")
+        
         # Create all tables
         db.create_all()
         print("✅ Database tables created/verified")
@@ -186,6 +205,9 @@ with app.app_context():
             
     except Exception as e:
         print(f"⚠️ Database init warning: {e}")
+        if "postgresql" in DATABASE_URL:
+            print("❌ PostgreSQL connection failed. Please check your DATABASE_URL")
+            print("   Your URL should be: postgresql://username:password@host:port/database")
 
 # --------------------------------------------------
 # ORIGINAL ROUTES (from your first app.py) - ALL RETAINED
@@ -201,11 +223,24 @@ def chat_interface():
 
 @app.route("/health")
 def health_check():
+    # Enhanced health check with database status
+    db_status = "connected"
+    db_type = "sqlite"
+    
+    try:
+        if "postgresql" in DATABASE_URL:
+            db.session.execute(text('SELECT 1'))
+            db_type = "postgresql"
+    except:
+        db_status = "disconnected"
+    
     return jsonify({
         "status": "healthy",
         "service": "Elmed Wellmind Mental Health AI",
         "ai_status": "active" if os.getenv("COHERE_API_KEY") else "inactive",
-        "database": "connected"
+        "database": db_status,
+        "database_type": db_type,
+        "timestamp": datetime.utcnow().isoformat()
     })
 
 # --------------------------------------------------
@@ -352,6 +387,34 @@ def create_community_post_v2():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
+# --------------------------------------------------
+# PostgreSQL Test Route (Optional - remove in production)
+# --------------------------------------------------
+
+@app.route("/test-db")
+def test_db():
+    """Test database connection (remove in production)"""
+    try:
+        if "postgresql" in DATABASE_URL:
+            result = db.session.execute(text('SELECT version()')).scalar()
+            return jsonify({
+                "status": "connected",
+                "database": "postgresql",
+                "version": result[:100],
+                "message": "✅ PostgreSQL connection successful!"
+            })
+        else:
+            return jsonify({
+                "status": "connected",
+                "database": "sqlite",
+                "message": "✅ SQLite connection successful!"
+            })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
 # --------------------------------------------------
 # DASHBOARD REDIRECTS
