@@ -1638,4 +1638,287 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<!-- AI CHAT SECTION - RESTORED -->
+<section class="ai-chat-section" id="ai-chat">
+    <div class="container">
+        <div class="section-title">
+            <h2><i class="fas fa-robot"></i> Elmed Wellmind Solutions AI Mental Health Assistant</h2>
+            <p>Chat directly with our AI assistant for immediate mental health support, coping strategies, and information.</p>
+        </div>
+
+        <div class="ai-chat-main-wrapper">
+            <!-- Quick Questions Card -->
+            <div class="chat-feature-card quick-questions-card">
+                <div class="feature-card-header">
+                    <i class="fas fa-bolt feature-icon"></i>
+                    <h3>Quick Topics</h3>
+                </div>
+                <div class="quick-questions-grid">
+                    <div class="quick-question-btn" onclick="document.getElementById('chatMessageInput').value = 'I\'m feeling anxious today'">
+                        <i class="fas fa-heartbeat"></i> Anxiety
+                    </div>
+                    <div class="quick-question-btn" onclick="document.getElementById('chatMessageInput').value = 'How can I manage stress?'">
+                        <i class="fas fa-brain"></i> Stress
+                    </div>
+                    <div class="quick-question-btn" onclick="document.getElementById('chatMessageInput').value = 'I\'m having trouble sleeping'">
+                        <i class="fas fa-bed"></i> Sleep
+                    </div>
+                    <div class="quick-question-btn" onclick="document.getElementById('chatMessageInput').value = 'Self-care tips'">
+                        <i class="fas fa-heart"></i> Self-Care
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="ai-chat-container">
+                <div class="ai-chat-messages" id="aiChatMessages">
+                    <div class="chat-message bot-message">
+                        <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                        <div class="message-content">
+                            <div class="message-text">Hello! I'm your AI mental health assistant. How can I help you today?</div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <textarea id="chatMessageInput" placeholder="Type your message here..." rows="1"></textarea>
+                    <button id="sendChatButton" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Emergency Card -->
+            <div class="chat-feature-card emergency-card">
+                <h3><i class="fas fa-phone-alt"></i> Emergency Support</h3>
+                <a href="tel:+254759226354" class="emergency-btn">
+                    <i class="fas fa-phone"></i> Call Now
+                </a>
+                <a href="https://wa.me/254759226354" class="emergency-btn whatsapp">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.ai-chat-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f5f7ff 0%, #eef1ff 100%);
+}
+
+.ai-chat-main-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.chat-feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+.quick-questions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.quick-question-btn {
+    padding: 12px;
+    background: #f8f9ff;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.quick-question-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.ai-chat-container {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+.ai-chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.chat-message {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.bot-message .message-avatar {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.message-content {
+    max-width: 70%;
+}
+
+.message-text {
+    padding: 12px 18px;
+    border-radius: 18px;
+    background: #f0f2ff;
+    line-height: 1.5;
+}
+
+.bot-message .message-text {
+    border-bottom-left-radius: 5px;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 5px;
+}
+
+.chat-input-area {
+    padding: 20px;
+    border-top: 1px solid #eef0ff;
+    display: flex;
+    gap: 10px;
+}
+
+#chatMessageInput {
+    flex: 1;
+    padding: 12px 18px;
+    border: 2px solid #eef0ff;
+    border-radius: 25px;
+    resize: none;
+    font-family: inherit;
+}
+
+#chatMessageInput:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+#sendChatButton {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#sendChatButton:hover {
+    transform: scale(1.1);
+}
+
+.emergency-btn {
+    display: block;
+    padding: 15px;
+    margin: 10px 0;
+    background: var(--gradient-primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.emergency-btn.whatsapp {
+    background: #25D366;
+}
+
+@media (max-width: 1024px) {
+    .ai-chat-main-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+async function sendMessage() {
+    const input = document.getElementById('chatMessageInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    const messagesDiv = document.getElementById('aiChatMessages');
+    
+    // Add user message
+    messagesDiv.innerHTML += `
+        <div class="chat-message user-message" style="justify-content: flex-end;">
+            <div class="message-content">
+                <div class="message-text" style="background: var(--gradient-primary); color: white;">${escapeHtml(message)}</div>
+                <div class="message-time" style="text-align: right;">Just now</div>
+            </div>
+        </div>
+    `;
+    
+    input.value = '';
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+        });
+        const data = await response.json();
+        
+        messagesDiv.innerHTML += `
+            <div class="chat-message bot-message">
+                <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                <div class="message-content">
+                    <div class="message-text">${escapeHtml(data.response)}</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        messagesDiv.innerHTML += `
+            <div class="chat-message bot-message">
+                <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                <div class="message-content">
+                    <div class="message-text">Sorry, I'm having trouble connecting. Please try again.</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+</script>
 {% endblock %}
