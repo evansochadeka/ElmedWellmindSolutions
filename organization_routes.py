@@ -1,5 +1,4 @@
-# organization_routes.py - Complete with role-based views
-
+# organization_routes.py - Complete with proper blueprint name
 from flask import Blueprint, render_template, jsonify, request, redirect, url_for
 from flask_login import login_required, current_user
 from models import db, Organization, Client, Department, DepartmentHead, Session, WellnessAssessment, Notification, User, ActivityLog
@@ -7,17 +6,18 @@ from datetime import datetime, timedelta
 import json
 import secrets
 
-org_bp = Blueprint('organization', __name__, url_prefix='/organization')
+# Create blueprint with the name 'organization_bp' (this matches your import)
+organization_bp = Blueprint('organization', __name__, url_prefix='/organization')
 
-@org_bp.before_request
+@organization_bp.before_request
 @login_required
 def check_org_access():
     """Check if user has organization role"""
-    valid_roles = ['org_manager', 'org_dept_head', 'org_it', 'org_hr', 'org_employee']
+    valid_roles = ['org_manager', 'org_dept_head', 'org_it', 'org_hr', 'organization_admin']
     if current_user.role not in valid_roles:
         return redirect(url_for('main.index'))
 
-@org_bp.route('/dashboard')
+@organization_bp.route('/dashboard')
 def dashboard():
     """Organization dashboard - role-based view"""
     if current_user.role == 'org_manager':
@@ -28,10 +28,12 @@ def dashboard():
         return render_template('organization/it_dashboard.html')
     elif current_user.role == 'org_hr':
         return render_template('organization/hr_dashboard.html')
+    elif current_user.role == 'organization_admin':
+        return render_template('organization/admin_dashboard.html')
     else:
         return redirect(url_for('employee.dashboard'))
 
-@org_bp.route('/api/dashboard/data')
+@organization_bp.route('/api/dashboard/data')
 def api_dashboard_data():
     """Get organization data based on user role"""
     organization = Organization.query.filter_by(user_id=current_user.id).first()
@@ -42,7 +44,7 @@ def api_dashboard_data():
     employees = Client.query.filter_by(organization_id=organization.id).all()
     
     # Different data based on role
-    if current_user.role == 'org_manager':
+    if current_user.role == 'org_manager' or current_user.role == 'organization_admin':
         # Manager sees everything but anonymized
         return jsonify(get_manager_data(organization, employees))
     
@@ -316,7 +318,7 @@ def get_hr_data(organization, employees):
         } for d in Department.query.filter_by(organization_id=organization.id).all()]
     }
 
-@org_bp.route('/api/reset-password', methods=['POST'])
+@organization_bp.route('/api/reset-password', methods=['POST'])
 @login_required
 def api_reset_password():
     """IT Support - Reset employee password"""
@@ -353,3 +355,51 @@ def api_reset_password():
     db.session.commit()
     
     return jsonify({'success': True, 'message': 'Password reset successfully'})
+
+@organization_bp.route('/api/update-organization', methods=['POST'])
+@login_required
+def api_update_organization():
+    """Update organization settings"""
+    if current_user.role not in ['org_manager', 'organization_admin']:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    data = request.json
+    organization = Organization.query.filter_by(user_id=current_user.id).first()
+    
+    if not organization:
+        return jsonify({'error': 'Organization not found'}), 404
+    
+    # Update fields
+    if 'company_name' in data:
+        organization.company_name = data['company_name']
+    if 'industry' in data:
+        organization.industry = data['industry']
+    if 'anonymize_employee_data' in data:
+        organization.anonymize_employee_data = data['anonymize_employee_data']
+    
+    db.session.commit()
+    
+    return jsonify({'success': True, 'message': 'Organization updated successfully'})
+
+@organization_bp.route('/api/generate-new-code', methods=['POST'])
+@login_required
+def api_generate_new_code():
+    """Generate new employee registration code"""
+    if current_user.role not in ['org_manager', 'organization_admin', 'org_it']:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    organization = Organization.query.filter_by(user_id=current_user.id).first()
+    
+    if not organization:
+        return jsonify({'error': 'Organization not found'}), 404
+    
+    # Generate new code
+    new_code = secrets.token_hex(4).upper()
+    organization.employee_registration_code = new_code
+    db.session.commit()
+    
+    return jsonify({
+        'success': True,
+        'message': 'New employee code generated',
+        'employee_code': new_code
+    })
