@@ -1,0 +1,641 @@
+<!-- templates/assessment/take_assessment.html -->
+{% extends "base.html" %}
+
+{% block title %}Wellness Assessment | Elmed Wellmind{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .assessment-container {
+        padding: 120px 20px 60px;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .progress-bar {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: #E5E7EB;
+        z-index: 999;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        transition: width 0.3s ease;
+    }
+    
+    .section-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .section-header {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #F3F4F6;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 10px;
+    }
+    
+    .section-description {
+        color: #6B7280;
+        font-size: 1rem;
+    }
+    
+    .question-item {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #F9FAFB;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .question-item:hover {
+        background: #F3F4F6;
+    }
+    
+    .question-text {
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #1F2937;
+    }
+    
+    .rating-scale {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .rating-option {
+        flex: 1;
+        min-width: 60px;
+        text-align: center;
+    }
+    
+    .rating-option input[type="radio"] {
+        display: none;
+    }
+    
+    .rating-option label {
+        display: block;
+        padding: 12px 8px;
+        background: white;
+        border: 2px solid #E5E7EB;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .rating-option input[type="radio"]:checked + label {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-color: transparent;
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .rating-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding: 0 10px;
+        color: #6B7280;
+        font-size: 0.9rem;
+    }
+    
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+    }
+    
+    .btn {
+        padding: 15px 35px;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-secondary {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+    
+    .btn-secondary:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .section-indicator {
+        text-align: center;
+        margin: 20px 0;
+        color: #6B7280;
+        font-weight: 500;
+    }
+    
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #F3F4F6;
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .reverse-note {
+        font-size: 0.8rem;
+        color: #9CA3AF;
+        margin-top: 5px;
+        font-style: italic;
+    }
+    
+    @media (max-width: 768px) {
+        .assessment-container {
+            padding: 100px 15px 40px;
+        }
+        
+        .section-card {
+            padding: 25px;
+        }
+        
+        .rating-scale {
+            gap: 5px;
+        }
+        
+        .rating-option label {
+            padding: 10px 5px;
+            font-size: 0.9rem;
+        }
+        
+        .rating-labels {
+            font-size: 0.8rem;
+        }
+    }
+</style>
+
+<div class="assessment-container">
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    
+    <form id="assessmentForm">
+        <!-- Section A: Stress -->
+        <div class="section-card" id="sectionA">
+            <div class="section-header">
+                <h2 class="section-title">Section A: Stress Assessment</h2>
+                <p class="section-description">Rate how often you experience these feelings related to work stress</p>
+            </div>
+            
+            {% for i in range(1, 11) %}
+            <div class="question-item">
+                <div class="question-text">{{ i }}. {{ [
+                    'I feel overwhelmed by my workload.',
+                    'I struggle to relax after work hours.',
+                    'I experience tension headaches or muscle tightness.',
+                    'I feel pressured to meet unrealistic deadlines.',
+                    'I find it hard to switch off from work thoughts.',
+                    'I feel emotionally drained at the end of the day.',
+                    'I experience irritability at work.',
+                    'I feel mentally exhausted before the day ends.',
+                    'I feel constant urgency in my tasks.',
+                    'I struggle with sleep due to work stress.'
+                ][i-1] }}</div>
+                <div class="rating-scale" data-question="q{{ i }}">
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_0" value="0" required>
+                        <label for="q{{ i }}_0">0<br><small>Never</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_1" value="1">
+                        <label for="q{{ i }}_1">1<br><small>Rarely</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_2" value="2">
+                        <label for="q{{ i }}_2">2<br><small>Sometimes</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_3" value="3">
+                        <label for="q{{ i }}_3">3<br><small>Often</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_4" value="4">
+                        <label for="q{{ i }}_4">4<br><small>Very Often</small></label>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Section B: Burnout -->
+        <div class="section-card" id="sectionB">
+            <div class="section-header">
+                <h2 class="section-title">Section B: Burnout Assessment</h2>
+                <p class="section-description">Based on the Maslach Burnout Inventory concepts</p>
+            </div>
+            
+            {% for i in range(11, 19) %}
+            <div class="question-item">
+                <div class="question-text">{{ i }}. {{ [
+                    'I feel emotionally exhausted by my work.',
+                    'I feel detached from my job.',
+                    'I feel less enthusiastic than before.',
+                    'I feel unappreciated at work.',
+                    'I feel my work has little meaning.',
+                    'I feel cynical about workplace decisions.',
+                    'I feel ineffective in my role.',
+                    'I feel used up at the end of each day.'
+                ][i-11] }}</div>
+                <div class="rating-scale" data-question="q{{ i }}">
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_0" value="0" required>
+                        <label for="q{{ i }}_0">0<br><small>Never</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_1" value="1">
+                        <label for="q{{ i }}_1">1<br><small>Rarely</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_2" value="2">
+                        <label for="q{{ i }}_2">2<br><small>Sometimes</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_3" value="3">
+                        <label for="q{{ i }}_3">3<br><small>Often</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_4" value="4">
+                        <label for="q{{ i }}_4">4<br><small>Very Often</small></label>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Section C: Anxiety -->
+        <div class="section-card" id="sectionC">
+            <div class="section-header">
+                <h2 class="section-title">Section C: Anxiety Assessment</h2>
+                <p class="section-description">Evaluate anxiety symptoms related to work</p>
+            </div>
+            
+            {% for i in range(19, 27) %}
+            <div class="question-item">
+                <div class="question-text">{{ i }}. {{ [
+                    'I worry excessively about deadlines.',
+                    'I feel restless during work.',
+                    'I have difficulty concentrating.',
+                    'I overthink work-related mistakes.',
+                    'I experience physical symptoms (racing heart, sweating).',
+                    'I avoid difficult tasks due to fear of failure.',
+                    'I feel tense before meetings.',
+                    'I struggle to calm myself under pressure.'
+                ][i-19] }}</div>
+                <div class="rating-scale" data-question="q{{ i }}">
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_0" value="0" required>
+                        <label for="q{{ i }}_0">0<br><small>Never</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_1" value="1">
+                        <label for="q{{ i }}_1">1<br><small>Rarely</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_2" value="2">
+                        <label for="q{{ i }}_2">2<br><small>Sometimes</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_3" value="3">
+                        <label for="q{{ i }}_3">3<br><small>Often</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_4" value="4">
+                        <label for="q{{ i }}_4">4<br><small>Very Often</small></label>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Section D: Mood & Motivation -->
+        <div class="section-card" id="sectionD">
+            <div class="section-header">
+                <h2 class="section-title">Section D: Mood & Motivation</h2>
+                <p class="section-description">Assess your emotional state and motivation levels</p>
+            </div>
+            
+            {% for i in range(27, 35) %}
+            <div class="question-item">
+                <div class="question-text">{{ i }}. {{ [
+                    'I feel low energy most days.',
+                    'I lack motivation at work.',
+                    'I feel hopeless about career growth.',
+                    'I struggle to find joy in my work.',
+                    'I withdraw from colleagues.',
+                    'I feel emotionally numb at times.',
+                    'I have difficulty making decisions.',
+                    'I feel disengaged during meetings.'
+                ][i-27] }}</div>
+                <div class="rating-scale" data-question="q{{ i }}">
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_0" value="0" required>
+                        <label for="q{{ i }}_0">0<br><small>Never</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_1" value="1">
+                        <label for="q{{ i }}_1">1<br><small>Rarely</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_2" value="2">
+                        <label for="q{{ i }}_2">2<br><small>Sometimes</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_3" value="3">
+                        <label for="q{{ i }}_3">3<br><small>Often</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_4" value="4">
+                        <label for="q{{ i }}_4">4<br><small>Very Often</small></label>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Section E: Work Performance -->
+        <div class="section-card" id="sectionE">
+            <div class="section-header">
+                <h2 class="section-title">Section E: Work Performance</h2>
+                <p class="section-description">Note: Some questions are reverse-scored</p>
+            </div>
+            
+            {% for i in range(35, 43) %}
+            <div class="question-item">
+                <div class="question-text">{{ i }}. {{ [
+                    'I manage my time effectively. (Reverse scored)',
+                    'I meet deadlines consistently. (Reverse scored)',
+                    'I procrastinate important tasks.',
+                    'I feel productive during the day. (Reverse scored)',
+                    'I am able to prioritize tasks effectively. (Reverse scored)',
+                    'I feel distracted during work hours.',
+                    'I complete tasks efficiently. (Reverse scored)',
+                    'I feel satisfied with my performance. (Reverse scored)'
+                ][i-35] }}</div>
+                <div class="rating-scale" data-question="q{{ i }}">
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_0" value="0" required>
+                        <label for="q{{ i }}_0">0<br><small>Never</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_1" value="1">
+                        <label for="q{{ i }}_1">1<br><small>Rarely</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_2" value="2">
+                        <label for="q{{ i }}_2">2<br><small>Sometimes</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_3" value="3">
+                        <label for="q{{ i }}_3">3<br><small>Often</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_4" value="4">
+                        <label for="q{{ i }}_4">4<br><small>Very Often</small></label>
+                    </div>
+                </div>
+                {% if i in [35,36,38,39,41,42] %}
+                <div class="reverse-note">⬆️ Higher score indicates better wellness (reverse scored)</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Section F: Workplace Environment -->
+        <div class="section-card" id="sectionF">
+            <div class="section-header">
+                <h2 class="section-title">Section F: Workplace Environment</h2>
+                <p class="section-description">Based on psychological safety principles</p>
+            </div>
+            
+            {% for i in range(43, 51) %}
+            <div class="question-item">
+                <div class="question-text">{{ i }}. {{ [
+                    'I feel safe expressing my opinions. (Reverse scored)',
+                    'I feel supported by my supervisor. (Reverse scored)',
+                    'I fear negative consequences for mistakes.',
+                    'I feel recognized for my contributions. (Reverse scored)',
+                    'I feel respected by colleagues. (Reverse scored)',
+                    'I experience workplace conflict frequently.',
+                    'I feel valued in my organization. (Reverse scored)',
+                    'I feel comfortable asking for help. (Reverse scored)'
+                ][i-43] }}</div>
+                <div class="rating-scale" data-question="q{{ i }}">
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_0" value="0" required>
+                        <label for="q{{ i }}_0">0<br><small>Never</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_1" value="1">
+                        <label for="q{{ i }}_1">1<br><small>Rarely</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_2" value="2">
+                        <label for="q{{ i }}_2">2<br><small>Sometimes</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_3" value="3">
+                        <label for="q{{ i }}_3">3<br><small>Often</small></label>
+                    </div>
+                    <div class="rating-option">
+                        <input type="radio" name="q{{ i }}" id="q{{ i }}_4" value="4">
+                        <label for="q{{ i }}_4">4<br><small>Very Often</small></label>
+                    </div>
+                </div>
+                {% if i in [43,44,46,47,49,50] %}
+                <div class="reverse-note">⬆️ Higher score indicates better workplace (reverse scored)</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="nav-buttons">
+            <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeSection(-1)" disabled>Previous</button>
+            <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeSection(1)">Next Section</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Submit Assessment</button>
+        </div>
+    </form>
+</div>
+
+<script>
+let currentSection = 0;
+const sections = ['sectionA', 'sectionB', 'sectionC', 'sectionD', 'sectionE', 'sectionF'];
+const progressFill = document.getElementById('progressFill');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const submitBtn = document.getElementById('submitBtn');
+
+// Show only current section
+function showSection(index) {
+    sections.forEach((section, i) => {
+        document.getElementById(section).style.display = i === index ? 'block' : 'none';
+    });
+    
+    // Update progress
+    const progress = ((index + 1) / sections.length) * 100;
+    progressFill.style.width = progress + '%';
+    
+    // Update buttons
+    prevBtn.disabled = index === 0;
+    
+    if (index === sections.length - 1) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'block';
+    } else {
+        nextBtn.style.display = 'block';
+        submitBtn.style.display = 'none';
+    }
+}
+
+function changeSection(direction) {
+    const newSection = currentSection + direction;
+    if (newSection >= 0 && newSection < sections.length) {
+        // Validate current section
+        if (direction > 0 && !validateSection(sections[currentSection])) {
+            alert('Please answer all questions in this section before proceeding.');
+            return;
+        }
+        currentSection = newSection;
+        showSection(currentSection);
+    }
+}
+
+function validateSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const radioGroups = section.querySelectorAll('.rating-scale');
+    
+    for (let group of radioGroups) {
+        const radios = group.querySelectorAll('input[type="radio"]');
+        let checked = false;
+        for (let radio of radios) {
+            if (radio.checked) {
+                checked = true;
+                break;
+            }
+        }
+        if (!checked) return false;
+    }
+    return true;
+}
+
+// Form submission
+document.getElementById('assessmentForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Validate last section
+    if (!validateSection(sections[currentSection])) {
+        alert('Please answer all questions before submitting.');
+        return;
+    }
+    
+    // Collect all responses
+    const responses = {};
+    for (let i = 1; i <= 50; i++) {
+        const radio = document.querySelector(`input[name="q${i}"]:checked`);
+        if (radio) {
+            responses[`q${i}`] = radio.value;
+        }
+    }
+    
+    // Show loading
+    document.getElementById('loadingOverlay').style.display = 'flex';
+    
+    try {
+        const response = await fetch('/assessment/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ responses })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            alert('Error submitting assessment: ' + data.message);
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Network error. Please try again.');
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+});
+
+// Initialize
+showSection(0);
+</script>
+{% endblock %}
