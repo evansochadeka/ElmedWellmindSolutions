@@ -1,0 +1,332 @@
+<!-- templates/auth/login.html -->
+{% extends "base.html" %}
+
+{% block title %}Login | Elmed Wellmind Solutions{% endblock %}
+
+{% block content %}
+<style>
+    .auth-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 120px 20px 60px;
+        background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
+    }
+    
+    .auth-container {
+        width: 100%;
+        max-width: 450px;
+    }
+    
+    .auth-card {
+        background: white;
+        border-radius: 30px;
+        padding: 50px 40px;
+        box-shadow: 0 30px 70px rgba(108, 99, 255, 0.15);
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .auth-header h2 {
+        font-size: 2.2rem;
+        color: #2D2B5E;
+        margin-bottom: 10px;
+    }
+    
+    .auth-header h2 span {
+        background: linear-gradient(135deg, #6C63FF, #36D1DC);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    .auth-header p {
+        color: #6B7280;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #2D2B5E;
+        font-weight: 500;
+    }
+    
+    .form-group label i {
+        color: #6C63FF;
+        margin-right: 8px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e0e2ff;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #6C63FF;
+        box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+    }
+    
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 20px 0;
+    }
+    
+    .checkbox-group label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #6B7280;
+        cursor: pointer;
+    }
+    
+    .forgot-link {
+        color: #6C63FF;
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+    
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 18px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #6C63FF, #36D1DC);
+        color: white;
+        box-shadow: 0 10px 25px rgba(108, 99, 255, 0.3);
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(108, 99, 255, 0.4);
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #6B7280;
+    }
+    
+    .auth-footer a {
+        color: #6C63FF;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+    
+    .alert {
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .alert-error {
+        background: rgba(255, 71, 87, 0.1);
+        border: 1px solid #ff4757;
+        color: #c0392b;
+    }
+    
+    .alert-success {
+        background: rgba(76, 175, 80, 0.1);
+        border: 1px solid #4CAF50;
+        color: #2e7d32;
+    }
+    
+    .loader {
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 25px 0;
+        color: #999;
+    }
+    
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e0e2ff, transparent);
+    }
+</style>
+
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Welcome <span>Back</span></h2>
+                <p>Login to access your mental wellness journey</p>
+            </div>
+
+            <!-- Alert Container -->
+            <div id="alertContainer"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="remember"> Remember me
+                    </label>
+                    <a href="#" class="forgot-link" onclick="forgotPassword()">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span>Login</span>
+                    <i class="fas fa-sign-in-alt"></i>
+                </button>
+
+                <div class="divider">or</div>
+
+                <a href="{{ url_for('auth.register_page') }}" class="btn btn-primary" style="background: white; color: #6C63FF; border: 2px solid #6C63FF;">
+                    <i class="fas fa-user-plus"></i>
+                    Create New Account
+                </a>
+            </form>
+
+            <div class="auth-footer">
+                By logging in, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function showAlert(message, type) {
+    const alertContainer = document.getElementById('alertContainer');
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    alertContainer.innerHTML = '';
+    alertContainer.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const remember = document.getElementById('remember').checked;
+    
+    if (!email || !password) {
+        showAlert('Please enter email and password', 'error');
+        return;
+    }
+    
+    // Show loading
+    const loginBtn = document.getElementById('loginBtn');
+    const originalText = loginBtn.innerHTML;
+    loginBtn.innerHTML = '<span class="loader"></span> Logging in...';
+    loginBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/auth/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, remember })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showAlert('Login successful! Redirecting...', 'success');
+            setTimeout(() => {
+                window.location.href = data.redirect || '/';
+            }, 1500);
+        } else {
+            showAlert(data.message || 'Login failed', 'error');
+            loginBtn.innerHTML = originalText;
+            loginBtn.disabled = false;
+        }
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        showAlert('Connection error. Please try again.', 'error');
+        loginBtn.innerHTML = originalText;
+        loginBtn.disabled = false;
+    }
+});
+
+function forgotPassword() {
+    const email = document.getElementById('email').value;
+    if (!email) {
+        showAlert('Please enter your email address first', 'error');
+        return;
+    }
+    
+    // Implement forgot password functionality
+    showAlert('Password reset link sent to your email!', 'success');
+}
+</script>
+{% endblock %}
