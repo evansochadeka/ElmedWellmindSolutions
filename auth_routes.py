@@ -1,8 +1,8 @@
-# auth_routes.py - Enhanced with proper error messages
+# auth_routes.py - COMPLETE WITH NO DUPLICATES
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
-from models import db, User, Client, Professional, Organization, Department, DepartmentHead, Notification, ActivityLog, WellnessAssessment
+from models import db, User, Client, Professional, Organization, Department, DepartmentHead, Notification, ActivityLog
 from datetime import datetime, timedelta
 import secrets
 import os
@@ -92,9 +92,91 @@ def login():
         return redirect(url_for('dashboard_redirect'))
     return render_template('auth/login.html')
 
-# API: Register client
+# Get started redirect
+@auth_bp.route('/get-started')
+def get_started():
+    """Get started redirect"""
+    return redirect(url_for('auth.register'))
+
+# API: Login
+@auth_bp.route('/api/login', methods=['POST'])
+def api_login():
+    """Login user"""
+    try:
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+        remember = data.get('remember', False)
+        
+        if not email or not password:
+            return jsonify({'success': False, 'message': 'Email and password required'}), 400
+        
+        # Find user
+        user = User.query.filter_by(email=email).first()
+        
+        if not user or not user.check_password(password):
+            return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
+        
+        if not user.is_active:
+            return jsonify({'success': False, 'message': 'Account is deactivated. Contact support.'}), 403
+        
+        # Update last login
+        user.last_login = datetime.utcnow()
+        user.last_active = datetime.utcnow()
+        db.session.commit()
+        
+        # Login user
+        login_user(user, remember=remember)
+        
+        # Log activity
+        log_activity(user.id, 'LOGIN', 'User logged in')
+        
+        # Determine redirect based on role
+        if user.role == 'superadmin':
+            redirect_url = url_for('superadmin.dashboard')
+        elif user.role == 'admin':
+            redirect_url = url_for('admin.dashboard')
+        elif user.role == 'professional':
+            redirect_url = url_for('professional.dashboard')
+        elif user.role in ['org_manager', 'organization_admin']:
+            redirect_url = url_for('organization.dashboard')
+        elif user.role == 'org_dept_head':
+            redirect_url = url_for('dept_head.dashboard')
+        elif user.role == 'org_employee':
+            redirect_url = url_for('employee.dashboard')
+        else:
+            redirect_url = url_for('client_dashboard')
+        
+        return jsonify({
+            'success': True,
+            'message': 'Login successful!',
+            'redirect': redirect_url,
+            'user': {
+                'id': user.id,
+                'name': user.get_full_name(),
+                'email': user.email,
+                'role': user.role
+            }
+        })
+        
+    except Exception as e:
+        print(f"Login error: {str(e)}")
+        return jsonify({'success': False, 'message': 'Login failed. Please try again.'}), 500
+
+# API: Logout
+@auth_bp.route('/api/logout', methods=['POST'])
+@login_required
+def api_logout():
+    """Logout user"""
+    log_activity(current_user.id, 'LOGOUT', 'User logged out')
+    logout_user()
+    session.clear()
+    return jsonify({'success': True, 'message': 'Logged out successfully'})
+
+# ========== CLIENT REGISTRATION ==========
 @auth_bp.route('/api/register/client', methods=['POST'])
 def api_register_client():
+    """Register a new client"""
     try:
         data = request.json
         
@@ -102,43 +184,23 @@ def api_register_client():
         required = ['first_name', 'last_name', 'email', 'password']
         for field in required:
             if not data.get(field):
-                return jsonify({
-                    'success': False,
-                    'message': f'{field.replace("_", " ").title()} is required',
-                    'field': field
-                }), 400
+                return jsonify({'success': False, 'message': f'{field} is required', 'field': field}), 400
         
         # Validate email
         if not validate_email(data['email']):
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid email address',
-                'field': 'email'
-            }), 400
+            return jsonify({'success': False, 'message': 'Please enter a valid email address', 'field': 'email'}), 400
         
         # Validate phone if provided
         if data.get('phone') and not validate_phone(data['phone']):
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid phone number (e.g., +254712345678 or 0712345678)',
-                'field': 'phone'
-            }), 400
+            return jsonify({'success': False, 'message': 'Please enter a valid phone number', 'field': 'phone'}), 400
         
         # Validate password strength
         if not validate_password(data['password']):
-            return jsonify({
-                'success': False,
-                'message': 'Password must be at least 8 characters with at least one letter, one number, and one special character',
-                'field': 'password'
-            }), 400
+            return jsonify({'success': False, 'message': 'Password must be at least 8 characters with at least one letter, one number, and one special character', 'field': 'password'}), 400
         
         # Check if user exists
         if User.query.filter_by(email=data['email']).first():
-            return jsonify({
-                'success': False,
-                'message': 'This email is already registered. Please login instead.',
-                'field': 'email'
-            }), 400
+            return jsonify({'success': False, 'message': 'This email is already registered', 'field': 'email'}), 400
         
         # Check organization code if provided
         organization = None
@@ -146,13 +208,9 @@ def api_register_client():
         if data.get('organization_code'):
             organization = Organization.query.filter_by(employee_registration_code=data['organization_code']).first()
             if not organization:
-                return jsonify({
-                    'success': False,
-                    'message': 'Invalid organization code. Please check and try again.',
-                    'field': 'organization_code'
-                }), 400
+                return jsonify({'success': False, 'message': 'Invalid organization code', 'field': 'organization_code'}), 400
             
-            # Check if department exists or create it
+            # Check if department exists
             if data.get('department'):
                 department = Department.query.filter_by(
                     organization_id=organization.id,
@@ -174,7 +232,7 @@ def api_register_client():
             counter += 1
         
         # Determine role
-        role = 'employee' if organization else 'client'
+        role = 'org_employee' if organization else 'client'
         
         # Create user
         user = User(
@@ -199,7 +257,7 @@ def api_register_client():
             organization_id=organization.id if organization else None,
             department_id=department.id if department else None,
             employee_id=data.get('employee_id', ''),
-            hide_profile=True  # Default to hidden for privacy
+            hide_profile=True
         )
         
         db.session.add(client)
@@ -213,38 +271,35 @@ def api_register_client():
         db.session.commit()
         
         # Log activity
-        log_activity(user.id, 'REGISTER', f'{role.capitalize()} registered', 'user', user.id)
+        log_activity(user.id, 'REGISTER', f'{role} registered')
         
         # Create welcome notification
         welcome_message = "Thank you for registering"
-        if role == 'employee':
-            welcome_message = f"Welcome to {organization.company_name}'s wellness program. Your privacy is protected - your employer will only see anonymized data."
+        if role == 'org_employee':
+            welcome_message = f"Welcome to {organization.company_name}'s wellness program."
         
         create_notification(
             user.id,
             'Welcome to Elmed Wellmind!',
             welcome_message,
-            'success',
-            '/dashboard'
+            'success'
         )
         
         return jsonify({
             'success': True,
-            'message': 'Registration successful! Please login to continue.',
+            'message': 'Registration successful! Please login.',
             'redirect': url_for('auth.login')
         })
         
     except Exception as e:
         db.session.rollback()
         print(f"Client registration error: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': 'An error occurred during registration. Please try again.'
-        }), 500
+        return jsonify({'success': False, 'message': 'An error occurred during registration.'}), 500
 
-# API: Register professional
+# ========== PROFESSIONAL REGISTRATION ==========
 @auth_bp.route('/api/register/professional', methods=['POST'])
 def api_register_professional():
+    """Register a new professional"""
     try:
         # Handle multipart form data
         first_name = request.form.get('first_name')
@@ -259,77 +314,28 @@ def api_register_professional():
         password = request.form.get('password')
         
         # Validate required fields
-        required_fields = {
-            'first_name': 'First name',
-            'last_name': 'Last name',
-            'email': 'Email address',
-            'phone': 'Phone number',
-            'professional_type': 'Professional type',
-            'license_number': 'License number',
-            'session_fee': 'Session fee',
-            'password': 'Password'
-        }
-        
-        for field, label in required_fields.items():
-            value = locals().get(field)
-            if not value:
-                return jsonify({
-                    'success': False,
-                    'message': f'{label} is required',
-                    'field': field
-                }), 400
+        if not all([first_name, last_name, email, professional_type, license_number, session_fee, password]):
+            return jsonify({'success': False, 'message': 'All required fields must be filled'}), 400
         
         # Validate email
         if not validate_email(email):
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid email address',
-                'field': 'email'
-            }), 400
+            return jsonify({'success': False, 'message': 'Invalid email format'}), 400
         
         # Validate phone
         if not validate_phone(phone):
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid phone number (e.g., +254712345678)',
-                'field': 'phone'
-            }), 400
+            return jsonify({'success': False, 'message': 'Invalid phone number format'}), 400
         
         # Validate password
         if not validate_password(password):
-            return jsonify({
-                'success': False,
-                'message': 'Password must be at least 8 characters with at least one letter, one number, and one special character',
-                'field': 'password'
-            }), 400
-        
-        # Validate session fee
-        try:
-            fee = float(session_fee)
-            if fee <= 0:
-                raise ValueError()
-        except:
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid session fee',
-                'field': 'session_fee'
-            }), 400
+            return jsonify({'success': False, 'message': 'Password must be at least 8 characters with at least one letter, one number, and one special character'}), 400
         
         # Check if user exists
         if User.query.filter_by(email=email).first():
-            return jsonify({
-                'success': False,
-                'message': 'This email is already registered',
-                'field': 'email'
-            }), 400
+            return jsonify({'success': False, 'message': 'Email already registered'}), 400
         
         # Check license number uniqueness
         if Professional.query.filter_by(license_number=license_number).first():
-            return jsonify({
-                'success': False,
-                'message': 'This license number is already registered',
-                'field': 'license_number'
-            }), 400
+            return jsonify({'success': False, 'message': 'This license number is already registered'}), 400
         
         # Create username
         base_username = email.split('@')[0]
@@ -355,43 +361,19 @@ def api_register_professional():
         
         # Handle document uploads
         documents = []
-        upload_errors = []
         if 'documents' in request.files:
             files = request.files.getlist('documents')
-            if not files or files[0].filename == '':
-                return jsonify({
-                    'success': False,
-                    'message': 'Please upload your professional documents',
-                    'field': 'documents'
-                }), 400
-            
             for file in files:
                 if file and file.filename:
                     filename, error = save_uploaded_file(file, user.id, 'documents')
                     if error:
-                        upload_errors.append(f"{file.filename}: {error}")
-                    elif filename:
+                        return jsonify({'success': False, 'message': error}), 400
+                    if filename:
                         documents.append(filename)
-        
-        if upload_errors:
-            return jsonify({
-                'success': False,
-                'message': 'File upload errors: ' + ', '.join(upload_errors),
-                'field': 'documents'
-            }), 400
-        
-        if not documents:
-            return jsonify({
-                'success': False,
-                'message': 'Please upload at least one document',
-                'field': 'documents'
-            }), 400
         
         # Parse specializations
         try:
             specializations_list = json.loads(specializations) if specializations else []
-            if not isinstance(specializations_list, list):
-                specializations_list = [s.strip() for s in specializations.split(',') if s.strip()]
         except:
             specializations_list = [s.strip() for s in specializations.split(',') if s.strip()]
         
@@ -411,7 +393,7 @@ def api_register_professional():
         db.session.commit()
         
         # Log activity
-        log_activity(user.id, 'REGISTER', 'Professional registered', 'user', user.id)
+        log_activity(user.id, 'REGISTER', 'Professional registered')
         
         # Notify superadmins
         admins = User.query.filter_by(role='superadmin').all()
@@ -419,28 +401,26 @@ def api_register_professional():
             create_notification(
                 admin.id,
                 'New Professional Registration',
-                f'{user.get_full_name()} has registered as a {professional_type}. Please verify their documents.',
+                f'{user.get_full_name()} has registered as a {professional_type}.',
                 'info',
-                '/admin/professionals'
+                '/superadmin/professionals'
             )
         
         return jsonify({
             'success': True,
-            'message': 'Registration successful! Your account will be verified by our team within 24-48 hours. You will receive an email once verified.',
+            'message': 'Registration successful! Your account will be verified by admin.',
             'redirect': url_for('auth.login')
         })
         
     except Exception as e:
         db.session.rollback()
         print(f"Professional registration error: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': 'An error occurred during registration. Please try again.'
-        }), 500
+        return jsonify({'success': False, 'message': 'An error occurred during registration.'}), 500
 
-# API: Register organization
+# ========== ORGANIZATION REGISTRATION ==========
 @auth_bp.route('/api/register/organization', methods=['POST'])
 def api_register_organization():
+    """Register organization with role selection - SINGLE DEFINITION"""
     try:
         data = request.json
         
@@ -460,7 +440,8 @@ def api_register_organization():
             'contact_person': 'Contact person name',
             'email': 'Email address',
             'phone': 'Phone number',
-            'password': 'Password'
+            'password': 'Password',
+            'role': 'Organization role'
         }
         
         for field, label in required_fields.items():
@@ -470,6 +451,15 @@ def api_register_organization():
                     'message': f'{label} is required',
                     'field': field
                 }), 400
+        
+        # Validate organization role
+        valid_roles = ['manager', 'department_head', 'it_support', 'hr_manager']
+        if data['role'] not in valid_roles:
+            return jsonify({
+                'success': False,
+                'message': 'Invalid organization role selected',
+                'field': 'role'
+            }), 400
         
         # Validate employee count
         try:
@@ -495,7 +485,7 @@ def api_register_organization():
         if not validate_phone(data['phone']):
             return jsonify({
                 'success': False,
-                'message': 'Please enter a valid phone number (e.g., +254712345678)',
+                'message': 'Please enter a valid phone number',
                 'field': 'phone'
             }), 400
         
@@ -536,14 +526,31 @@ def api_register_organization():
         first_name = name_parts[0] if name_parts else data['contact_person']
         last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
         
-        # Create user (organization admin)
+        # Map organization role to system role
+        role_mapping = {
+            'manager': 'org_manager',
+            'department_head': 'org_dept_head',
+            'it_support': 'org_it',
+            'hr_manager': 'org_hr'
+        }
+        
+        system_role = role_mapping.get(data['role'], 'org_employee')
+        
+        # Create user with specific organization role
         user = User(
             username=username,
             email=data['email'],
             first_name=first_name,
             last_name=last_name,
             phone=data['phone'],
-            role='organization_admin'
+            role=system_role,
+            permissions=json.dumps({
+                'can_view_analytics': data['role'] in ['manager', 'hr_manager'],
+                'can_view_department': data['role'] in ['department_head', 'manager'],
+                'can_reset_passwords': data['role'] == 'it_support',
+                'can_manage_users': data['role'] in ['manager', 'hr_manager'],
+                'view_anonymized_only': True
+            })
         )
         user.set_password(data['password'])
         
@@ -563,19 +570,42 @@ def api_register_organization():
             industry=data.get('industry', ''),
             company_size=emp_count,
             employee_registration_code=employee_code,
-            anonymize_employee_data=True  # Default to anonymized
+            anonymize_employee_data=True,
+            org_role=data['role']
         )
         
         db.session.add(organization)
+        
+        # If department head, create department
+        if data['role'] == 'department_head' and data.get('department_name'):
+            department = Department(
+                organization_id=organization.id,
+                name=data['department_name'],
+                description=data.get('department_description', '')
+            )
+            db.session.add(department)
+            db.session.flush()
+            
+            # Link department head
+            organization.department_id = department.id
+        
         db.session.commit()
         
         # Log activity
-        log_activity(user.id, 'REGISTER', f'Organization registered: {data["company_name"]}', 'organization', organization.id)
+        log_activity(user.id, 'REGISTER', f'Organization registered as {data["role"]}', 'organization', organization.id)
+        
+        role_display = {
+            'manager': 'Organization Manager',
+            'department_head': 'Department Head',
+            'it_support': 'IT Support',
+            'hr_manager': 'HR Manager'
+        }
         
         return jsonify({
             'success': True,
-            'message': f'Organization registered successfully! Your employee registration code is: {employee_code}',
+            'message': f'{role_display[data["role"]]} registration successful! Your employee registration code is: {employee_code}',
             'employee_code': employee_code,
+            'role': data['role'],
             'redirect': url_for('auth.login')
         })
         
@@ -587,7 +617,7 @@ def api_register_organization():
             'message': 'An error occurred during registration. Please try again.'
         }), 500
 
-# API: Register department head
+# ========== DEPARTMENT HEAD REGISTRATION ==========
 @auth_bp.route('/api/register/department-head', methods=['POST'])
 def api_register_department_head():
     """Register as department head (invited by organization admin)"""
@@ -674,7 +704,7 @@ def api_register_department_head():
             first_name=data['first_name'],
             last_name=data['last_name'],
             phone=data.get('phone', ''),
-            role='department_head'
+            role='org_dept_head'
         )
         user.set_password(data['password'])
         
@@ -699,7 +729,7 @@ def api_register_department_head():
         db.session.commit()
         
         # Log activity
-        log_activity(user.id, 'REGISTER', f'Department head registered for {department.name}', 'department_head', dept_head.id)
+        log_activity(user.id, 'REGISTER', f'Department head registered for {department.name}')
         
         # Notify organization admin
         create_notification(
@@ -723,96 +753,6 @@ def api_register_department_head():
             'success': False,
             'message': 'An error occurred during registration. Please try again.'
         }), 500
-
-# API: Login
-@auth_bp.route('/api/login', methods=['POST'])
-def api_login():
-    try:
-        data = request.json
-        email = data.get('email')
-        password = data.get('password')
-        remember = data.get('remember', False)
-        
-        if not email or not password:
-            return jsonify({
-                'success': False,
-                'message': 'Email and password are required'
-            }), 400
-        
-        # Find user
-        user = User.query.filter_by(email=email).first()
-        
-        if not user:
-            return jsonify({
-                'success': False,
-                'message': 'No account found with this email'
-            }), 401
-        
-        if not user.check_password(password):
-            return jsonify({
-                'success': False,
-                'message': 'Incorrect password'
-            }), 401
-        
-        if not user.is_active:
-            return jsonify({
-                'success': False,
-                'message': 'This account has been deactivated. Please contact support.'
-            }), 403
-        
-        # Update last login
-        user.last_login = datetime.utcnow()
-        user.last_active = datetime.utcnow()
-        db.session.commit()
-        
-        # Login user
-        login_user(user, remember=remember)
-        
-        # Log activity
-        log_activity(user.id, 'LOGIN', 'User logged in')
-        
-        # Determine redirect based on role
-        if user.role == 'superadmin':
-            redirect_url = url_for('superadmin.dashboard')
-        elif user.role == 'admin':
-            redirect_url = url_for('admin.dashboard')
-        elif user.role == 'organization_admin':
-            redirect_url = url_for('organization.dashboard')
-        elif user.role == 'department_head':
-            redirect_url = url_for('department_head.dashboard')
-        elif user.role == 'professional':
-            redirect_url = url_for('professional.dashboard')
-        else:
-            redirect_url = url_for('client.dashboard')
-        
-        return jsonify({
-            'success': True,
-            'message': 'Login successful!',
-            'redirect': redirect_url,
-            'user': {
-                'id': user.id,
-                'name': user.get_full_name(),
-                'email': user.email,
-                'role': user.role
-            }
-        })
-        
-    except Exception as e:
-        print(f"Login error: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': 'An error occurred during login. Please try again.'
-        }), 500
-
-# API: Logout
-@auth_bp.route('/api/logout', methods=['POST'])
-@login_required
-def api_logout():
-    """Logout user"""
-    log_activity(current_user.id, 'LOGOUT', 'User logged out')
-    logout_user()
-    session.clear()
-    return jsonify({'success': True, 'message': 'Logged out successfully'})
 
 # API: Get current user
 @auth_bp.route('/api/me', methods=['GET'])
@@ -848,7 +788,7 @@ def api_get_current_user():
             'average_rating': prof.average_rating
         }
     
-    elif current_user.role in ['organization_admin', 'department_head'] and current_user.organization_profile:
+    elif current_user.role in ['org_manager', 'org_dept_head', 'org_it', 'org_hr'] and current_user.organization_profile:
         org = current_user.organization_profile
         user_data['organization'] = {
             'id': org.id,
@@ -858,14 +798,14 @@ def api_get_current_user():
             'anonymize_data': org.anonymize_employee_data
         }
         
-        if current_user.role == 'department_head' and current_user.department_head_profile:
+        if current_user.role == 'org_dept_head' and current_user.department_head_profile:
             dept_head = current_user.department_head_profile
             user_data['department'] = {
                 'id': dept_head.department.id if dept_head.department else None,
                 'name': dept_head.department.name if dept_head.department else None
             }
     
-    elif current_user.role in ['client', 'employee'] and current_user.client_profile:
+    elif current_user.role in ['client', 'org_employee'] and current_user.client_profile:
         client = current_user.client_profile
         user_data['client'] = {
             'id': client.id,
@@ -877,336 +817,75 @@ def api_get_current_user():
         }
     
     return jsonify(user_data)
-# Add this to your auth_routes.py
 
-@auth_bp.route('/api/register/organization', methods=['POST'])
-def api_register_organization():
-    """Register organization with role selection"""
+# API: Forgot password
+@auth_bp.route('/api/forgot-password', methods=['POST'])
+def api_forgot_password():
+    """Handle forgot password request"""
     try:
         data = request.json
+        email = data.get('email')
         
-        # Verify registration code
-        if data.get('registration_code') != 'Papai123':
-            return jsonify({
-                'success': False,
-                'message': 'Invalid registration code. Please contact support.',
-                'field': 'registration_code'
-            }), 400
-        
-        # Validate required fields
-        required_fields = {
-            'company_name': 'Company name',
-            'registration_number': 'Registration number',
-            'employee_count': 'Number of employees',
-            'contact_person': 'Contact person name',
-            'email': 'Email address',
-            'phone': 'Phone number',
-            'password': 'Password',
-            'role': 'Organization role'
-        }
-        
-        for field, label in required_fields.items():
-            if not data.get(field):
-                return jsonify({
-                    'success': False,
-                    'message': f'{label} is required',
-                    'field': field
-                }), 400
-        
-        # Validate organization role
-        valid_roles = ['manager', 'department_head', 'it_support', 'hr_manager']
-        if data['role'] not in valid_roles:
-            return jsonify({
-                'success': False,
-                'message': 'Invalid organization role selected',
-                'field': 'role'
-            }), 400
-        
-        # Validate employee count
-        try:
-            emp_count = int(data['employee_count'])
-            if emp_count <= 0:
-                raise ValueError()
-        except:
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid number of employees',
-                'field': 'employee_count'
-            }), 400
-        
-        # Validate email
-        if not validate_email(data['email']):
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid email address',
-                'field': 'email'
-            }), 400
-        
-        # Validate phone
-        if not validate_phone(data['phone']):
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid phone number (e.g., +254712345678)',
-                'field': 'phone'
-            }), 400
-        
-        # Validate password
-        if not validate_password(data['password']):
-            return jsonify({
-                'success': False,
-                'message': 'Password must be at least 8 characters with at least one letter, one number, and one special character',
-                'field': 'password'
-            }), 400
-        
-        # Check if user exists
-        if User.query.filter_by(email=data['email']).first():
-            return jsonify({
-                'success': False,
-                'message': 'This email is already registered',
-                'field': 'email'
-            }), 400
-        
-        # Check registration number uniqueness
-        if Organization.query.filter_by(registration_number=data['registration_number']).first():
-            return jsonify({
-                'success': False,
-                'message': 'This registration number is already registered',
-                'field': 'registration_number'
-            }), 400
-        
-        # Create username
-        base_username = data['email'].split('@')[0]
-        username = base_username
-        counter = 1
-        while User.query.filter_by(username=username).first():
-            username = f"{base_username}{counter}"
-            counter += 1
-        
-        # Parse contact person name
-        name_parts = data['contact_person'].strip().split()
-        first_name = name_parts[0] if name_parts else data['contact_person']
-        last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
-        
-        # Map organization role to system role
-        role_mapping = {
-            'manager': 'org_manager',
-            'department_head': 'org_dept_head',
-            'it_support': 'org_it',
-            'hr_manager': 'org_hr'
-        }
-        
-        system_role = role_mapping.get(data['role'], 'org_employee')
-        
-        # Create user with specific organization role
-        user = User(
-            username=username,
-            email=data['email'],
-            first_name=first_name,
-            last_name=last_name,
-            phone=data['phone'],
-            role=system_role,
-            permissions=json.dumps({
-                'can_view_analytics': data['role'] in ['manager', 'hr_manager'],
-                'can_view_department': data['role'] in ['department_head', 'manager'],
-                'can_reset_passwords': data['role'] == 'it_support',
-                'can_manage_users': data['role'] in ['manager', 'hr_manager'],
-                'view_anonymized_only': True  # Always true for privacy
-            })
-        )
-        user.set_password(data['password'])
-        
-        db.session.add(user)
-        db.session.flush()
-        
-        # Generate employee registration code
-        employee_code = secrets.token_hex(4).upper()
-        while Organization.query.filter_by(employee_registration_code=employee_code).first():
-            employee_code = secrets.token_hex(4).upper()
-        
-        # Create organization profile
-        organization = Organization(
-            user_id=user.id,
-            company_name=data['company_name'],
-            registration_number=data['registration_number'],
-            industry=data.get('industry', ''),
-            company_size=emp_count,
-            employee_registration_code=employee_code,
-            anonymize_employee_data=True,
-            org_role=data['role']
-        )
-        
-        db.session.add(organization)
-        
-        # If department head, create department
-        if data['role'] == 'department_head' and data.get('department_name'):
-            department = Department(
-                organization_id=organization.id,
-                name=data['department_name'],
-                description=data.get('department_description', '')
-            )
-            db.session.add(department)
-            db.session.flush()
+        user = User.query.filter_by(email=email).first()
+        if user:
+            token = user.generate_reset_token()
+            db.session.commit()
             
-            # Link department head
-            organization.department_id = department.id
-        
-        db.session.commit()
-        
-        # Log activity
-        log_activity(user.id, 'REGISTER', f'Organization registered as {data["role"]}', 'organization', organization.id)
-        
-        role_display = {
-            'manager': 'Organization Manager',
-            'department_head': 'Department Head',
-            'it_support': 'IT Support',
-            'hr_manager': 'HR Manager'
-        }
-        
-        return jsonify({
-            'success': True,
-            'message': f'{role_display[data["role"]]} registration successful! Your employee registration code is: {employee_code}',
-            'employee_code': employee_code,
-            'role': data['role'],
-            'redirect': url_for('auth.login')
-        })
-        
+            # Here you would send email with reset link
+            print(f"Password reset token for {email}: {token}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Password reset instructions sent to your email'
+            })
+        else:
+            return jsonify({'success': False, 'message': 'Email not found'}), 404
+            
     except Exception as e:
-        db.session.rollback()
-        print(f"Organization registration error: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': 'An error occurred during registration. Please try again.'
-        }), 500
-# Add to auth_routes.py
+        print(f"Forgot password error: {str(e)}")
+        return jsonify({'success': False, 'message': 'Failed to process request'}), 500
 
-@auth_bp.route('/api/register/employee', methods=['POST'])
-def api_register_employee():
-    """Register as employee using organization code"""
+# API: Reset password
+@auth_bp.route('/api/reset-password', methods=['POST'])
+def api_reset_password():
+    """Reset password with token"""
     try:
         data = request.json
+        token = data.get('token')
+        new_password = data.get('password')
         
-        # Validate required fields
-        required_fields = ['first_name', 'last_name', 'email', 'password', 'organization_code']
-        for field in required_fields:
-            if not data.get(field):
-                return jsonify({
-                    'success': False,
-                    'message': f'{field.replace("_", " ").title()} is required',
-                    'field': field
-                }), 400
+        if not token or not new_password:
+            return jsonify({'success': False, 'message': 'Token and password required'}), 400
         
-        # Validate email
-        if not validate_email(data['email']):
-            return jsonify({
-                'success': False,
-                'message': 'Please enter a valid email address',
-                'field': 'email'
-            }), 400
+        if len(new_password) < 8:
+            return jsonify({'success': False, 'message': 'Password must be at least 8 characters'}), 400
         
-        # Validate password
-        if not validate_password(data['password']):
-            return jsonify({
-                'success': False,
-                'message': 'Password must be at least 8 characters with at least one letter, one number, and one special character',
-                'field': 'password'
-            }), 400
+        user = User.query.filter_by(reset_token=token).first()
+        if not user or not user.verify_reset_token(token):
+            return jsonify({'success': False, 'message': 'Invalid or expired token'}), 400
         
-        # Find organization by code
-        organization = Organization.query.filter_by(employee_registration_code=data['organization_code']).first()
-        if not organization:
-            return jsonify({
-                'success': False,
-                'message': 'Invalid organization code. Please check and try again.',
-                'field': 'organization_code'
-            }), 400
-        
-        # Check if user exists
-        if User.query.filter_by(email=data['email']).first():
-            return jsonify({
-                'success': False,
-                'message': 'This email is already registered',
-                'field': 'email'
-            }), 400
-        
-        # Create username
-        base_username = data['email'].split('@')[0]
-        username = base_username
-        counter = 1
-        while User.query.filter_by(username=username).first():
-            username = f"{base_username}{counter}"
-            counter += 1
-        
-        # Create user
-        user = User(
-            username=username,
-            email=data['email'],
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            phone=data.get('phone', ''),
-            role='org_employee',
-            permissions=json.dumps({
-                'can_take_tests': True,
-                'can_view_own_results': True,
-                'can_book_sessions': True,
-                'can_consult_specialists': True
-            })
-        )
-        user.set_password(data['password'])
-        
-        db.session.add(user)
-        db.session.flush()
-        
-        # Find or create department
-        department_id = None
-        if data.get('department'):
-            department = Department.query.filter_by(
-                organization_id=organization.id,
-                name=data['department']
-            ).first()
-            if not department:
-                department = Department(
-                    organization_id=organization.id,
-                    name=data['department']
-                )
-                db.session.add(department)
-                db.session.flush()
-            department_id = department.id
-        
-        # Create client/employee profile
-        employee = Client(
-            user_id=user.id,
-            organization_id=organization.id,
-            department_id=department_id,
-            employee_id=data.get('employee_id', ''),
-            brief_issue=data.get('brief_issue', ''),
-            hide_profile=True,  # Always hide for privacy
-            wellness_score=0.0,
-            risk_level='low'
-        )
-        
-        db.session.add(employee)
-        
-        # Update organization stats
-        organization.total_employees += 1
-        if department_id:
-            dept = Department.query.get(department_id)
-            dept.employee_count += 1
-        
+        user.set_password(new_password)
+        user.reset_token = None
+        user.reset_token_expiry = None
         db.session.commit()
         
-        # Log activity
-        log_activity(user.id, 'REGISTER', f'Employee registered for {organization.company_name}', 'employee', employee.id)
+        log_activity(user.id, 'PASSWORD_RESET', 'Password reset completed')
         
-        return jsonify({
-            'success': True,
-            'message': f'Registration successful! Welcome to {organization.company_name}.',
-            'redirect': url_for('auth.login')
-        })
+        return jsonify({'success': True, 'message': 'Password reset successful'})
         
     except Exception as e:
-        db.session.rollback()
-        print(f"Employee registration error: {str(e)}")
+        print(f"Reset password error: {str(e)}")
+        return jsonify({'success': False, 'message': 'Failed to reset password'}), 500
+
+# API: Check session
+@auth_bp.route('/api/session', methods=['GET'])
+def api_check_session():
+    """Check if user is authenticated"""
+    if current_user.is_authenticated:
         return jsonify({
-            'success': False,
-            'message': 'An error occurred during registration. Please try again.'
-        }), 500
+            'authenticated': True,
+            'user_id': current_user.id,
+            'role': current_user.role,
+            'name': current_user.get_full_name()
+        })
+    return jsonify({'authenticated': False})
