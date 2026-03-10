@@ -1,0 +1,313 @@
+<!-- templates/chat/conversation.html -->
+{% extends "base.html" %}
+
+{% block title %}Chat with {{ professional.user.get_full_name() }}{% endblock %}
+
+{% block content %}
+<style>
+    .chat-container {
+        padding: 100px 30px 40px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .chat-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 25px;
+        color: white;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .chat-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 4px solid white;
+        object-fit: cover;
+    }
+    
+    .chat-info h2 {
+        margin-bottom: 5px;
+    }
+    
+    .chat-info p {
+        opacity: 0.9;
+    }
+    
+    .chat-box {
+        background: white;
+        border-radius: 20px;
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .messages-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .message {
+        display: flex;
+        gap: 10px;
+        max-width: 70%;
+    }
+    
+    .message.sent {
+        margin-left: auto;
+        flex-direction: row-reverse;
+    }
+    
+    .message-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .message-content {
+        background: #F3F4F6;
+        padding: 12px 18px;
+        border-radius: 18px;
+        border-bottom-left-radius: 5px;
+    }
+    
+    .message.sent .message-content {
+        background: var(--primary);
+        color: white;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 18px;
+    }
+    
+    .message-sender {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 3px;
+        color: var(--gray);
+    }
+    
+    .message.sent .message-sender {
+        color: rgba(255,255,255,0.8);
+    }
+    
+    .message-time {
+        font-size: 0.7rem;
+        color: #999;
+        margin-top: 5px;
+    }
+    
+    .input-area {
+        padding: 20px;
+        border-top: 1px solid #F3F4F6;
+        display: flex;
+        gap: 15px;
+    }
+    
+    #messageInput {
+        flex: 1;
+        padding: 15px 20px;
+        border: 2px solid #F3F4F6;
+        border-radius: 25px;
+        resize: none;
+        font-family: inherit;
+        transition: all 0.3s;
+    }
+    
+    #messageInput:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+    
+    #sendBtn {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    #sendBtn:hover {
+        transform: scale(1.1);
+        background: var(--primary-dark);
+    }
+    
+    .typing-indicator {
+        display: none;
+        padding: 15px;
+        color: var(--gray);
+        font-style: italic;
+    }
+</style>
+
+<div class="chat-container">
+    <div class="chat-header">
+        <img src="{{ professional.user.profile_pic ? url_for('static', filename='uploads/profiles/' + professional.user.profile_pic) : url_for('static', filename='images/default-avatar.jpg') }}" 
+             class="chat-avatar" alt="{{ professional.user.get_full_name() }}">
+        <div class="chat-info">
+            <h2>{{ professional.user.get_full_name() }}</h2>
+            <p>{{ professional.professional_type }} • 
+               {% if professional.is_available %}
+               <span style="color: #10B981;">● Available</span>
+               {% else %}
+               <span style="color: #EF4444;">● Busy</span>
+               {% endif %}
+            </p>
+        </div>
+    </div>
+    
+    <div class="chat-box">
+        <div class="messages-area" id="messagesArea">
+            <!-- Messages will appear here -->
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            {{ professional.user.get_full_name() }} is typing...
+        </div>
+        
+        <div class="input-area">
+            <textarea id="messageInput" placeholder="Type your message..." rows="1"></textarea>
+            <button id="sendBtn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+const sessionId = "{{ session_id }}";
+const professionalId = {{ professional.id }};
+let lastMessageTime = Date.now();
+
+// Load messages
+async function loadMessages() {
+    try {
+        const response = await fetch(`/chat/api/messages/${sessionId}`);
+        const messages = await response.json();
+        
+        const messagesArea = document.getElementById('messagesArea');
+        messagesArea.innerHTML = '';
+        
+        messages.forEach(msg => {
+            displayMessage(msg);
+        });
+        
+        // Scroll to bottom
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+    } catch (error) {
+        console.error('Error loading messages:', error);
+    }
+}
+
+function displayMessage(msg) {
+    const isSent = msg.user_id === {{ current_user.id }};
+    const messagesArea = document.getElementById('messagesArea');
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+    
+    const avatar = isSent ? 
+        '{{ current_user.profile_pic or "/static/images/default-avatar.jpg" }}' : 
+        '{{ professional.user.profile_pic or "/static/images/default-avatar.jpg" }}';
+    
+    messageDiv.innerHTML = `
+        <img src="${avatar}" class="message-avatar" alt="Avatar">
+        <div class="message-content">
+            <div class="message-sender">${msg.sender_name}</div>
+            <div>${escapeHtml(msg.content)}</div>
+            <div class="message-time">${new Date(msg.timestamp).toLocaleTimeString()}</div>
+        </div>
+    `;
+    
+    messagesArea.appendChild(messageDiv);
+}
+
+async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    try {
+        const response = await fetch('/chat/api/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                session_id: sessionId,
+                content: message,
+                receiver_id: {{ professional.user_id }}
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Display message immediately
+            displayMessage({
+                user_id: {{ current_user.id }},
+                sender_name: '{{ current_user.get_full_name() }}',
+                content: message,
+                timestamp: new Date().toISOString()
+            });
+            
+            input.value = '';
+            
+            // Scroll to bottom
+            document.getElementById('messagesArea').scrollTop = 
+                document.getElementById('messagesArea').scrollHeight;
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+        alert('Failed to send message');
+    }
+}
+
+// Check for new messages every 3 seconds
+setInterval(async () => {
+    const response = await fetch(`/chat/api/messages/${sessionId}?since=${lastMessageTime}`);
+    const newMessages = await response.json();
+    
+    newMessages.forEach(msg => {
+        if (msg.timestamp > lastMessageTime) {
+            displayMessage(msg);
+            lastMessageTime = msg.timestamp;
+        }
+    });
+}, 3000);
+
+// Enter key to send
+document.getElementById('messageInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Auto-resize textarea
+document.getElementById('messageInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Load messages on page load
+document.addEventListener('DOMContentLoaded', loadMessages);
+</script>
+{% endblock %}
