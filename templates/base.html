@@ -1,4 +1,4 @@
-<!-- templates/base.html - FIXED with correct URL endpoints -->
+<!-- templates/base.html - COMPLETE WITH ALL FEATURES RETAINED -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -215,6 +215,139 @@
             transform: translateX(0);
         }
 
+        /* Auth Links */
+        .auth-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .auth-link {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-link.login {
+            background: var(--primary);
+            color: white;
+            border: 2px solid var(--primary);
+        }
+
+        .auth-link.login:hover {
+            background: transparent;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .auth-link.register {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .auth-link.register:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .auth-link i {
+            font-size: 0.9rem;
+        }
+
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .user-menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-menu-btn img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+            margin-top: 10px;
+        }
+
+        .user-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .user-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-bottom: 1px solid #f0f2ff;
+        }
+
+        .user-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        .user-dropdown a:hover {
+            background: var(--light);
+            color: var(--primary);
+            padding-left: 25px;
+        }
+
+        .user-dropdown a i {
+            width: 20px;
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Responsive Styles */
         @media (max-width: 992px) {
             .section-title h2 {
@@ -237,11 +370,123 @@
                 height: 55px;
                 font-size: 1.3rem;
             }
+
+            .auth-links {
+                margin-left: 0;
+                margin-top: 10px;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 576px) {
             .section-title h2 {
                 font-size: 2rem;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideInRight 0.3s ease;
+            max-width: 350px;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--secondary);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--primary);
+        }
+
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast-icon {
+            font-size: 1.5rem;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--secondary);
+        }
+
+        .toast.info .toast-icon {
+            color: var(--primary);
+        }
+
+        .toast.warning .toast-icon {
+            color: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .toast-message {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .toast-close {
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .toast-close:hover {
+            color: var(--dark);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
             }
         }
     </style>
@@ -258,12 +503,137 @@
     
     {% include 'floating-buttons.html' %}
     
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
     {% block scripts %}
     <script>
         // Global configuration
         const API_BASE = window.location.origin + '/api';
         let chatSessionId = localStorage.getItem('chatSessionId') || 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('chatSessionId', chatSessionId);
+        
+        // Check if user is logged in
+        let currentUser = null;
+        
+        async function checkAuth() {
+            try {
+                const response = await fetch('/auth/api/session');
+                const data = await response.json();
+                if (data.authenticated) {
+                    currentUser = data;
+                    updateUIForLoggedInUser(data);
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        }
+        
+        function updateUIForLoggedInUser(user) {
+            // Update navigation to show user menu
+            const nav = document.querySelector('nav ul');
+            if (nav) {
+                // Remove existing auth links
+                const existingLogin = document.querySelector('.auth-links');
+                if (existingLogin) existingLogin.remove();
+                
+                // Add user menu
+                const userLi = document.createElement('li');
+                userLi.className = 'user-menu';
+                userLi.innerHTML = `
+                    <div class="user-menu">
+                        <button class="user-menu-btn" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle"></i>
+                            <span>${user.name || 'My Account'}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                            <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                `;
+                nav.appendChild(userLi);
+            }
+        }
+        
+        function toggleUserMenu() {
+            document.getElementById('userDropdown').classList.toggle('show');
+        }
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown) dropdown.classList.remove('show');
+            }
+        });
+        
+        async function logout() {
+            try {
+                const response = await fetch('/auth/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showToast('Logout successful', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Logout failed:', error);
+                showToast('Logout failed', 'error');
+            }
+        }
+        
+        // Toast notification system
+        function showToast(message, type = 'info', title = '') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            
+            const titles = {
+                success: 'Success',
+                error: 'Error',
+                warning: 'Warning',
+                info: 'Information'
+            };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas ${icons[type] || icons.info}"></i>
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${title || titles[type]}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <div class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        }
         
         // Helper functions
         function escapeHtml(text) {
@@ -293,8 +663,23 @@
             });
         }
         
+        function formatDateTime(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleString('en-KE', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
         // Prevent all anchor links from scrolling
         document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            checkAuth();
+            
             // Override all anchor link clicks
             document.addEventListener('click', function(e) {
                 const target = e.target.closest('a');
@@ -313,8 +698,6 @@
                 }
             });
             
-            console.log('Elmed Wellmind Solutions loaded successfully');
-
             // Make phone numbers clickable
             document.querySelectorAll('.phone-link').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -323,6 +706,28 @@
                     }
                 });
             });
+            
+            // Add CSRF token to all fetch requests
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            if (csrfToken) {
+                const originalFetch = window.fetch;
+                window.fetch = function(url, options = {}) {
+                    if (!options.headers) options.headers = {};
+                    options.headers['X-CSRFToken'] = csrfToken;
+                    return originalFetch(url, options);
+                };
+            }
+            
+            console.log('Elmed Wellmind Solutions loaded successfully');
+        });
+        
+        // Handle offline/online status
+        window.addEventListener('offline', function() {
+            showToast('You are offline. Some features may be unavailable.', 'warning', 'Offline');
+        });
+        
+        window.addEventListener('online', function() {
+            showToast('You are back online!', 'success', 'Online');
         });
     </script>
     {% endblock %}
@@ -339,6 +744,14 @@
                         registration.addEventListener('updatefound', function() {
                             const newWorker = registration.installing;
                             console.log('ServiceWorker update found!');
+                            
+                            newWorker.addEventListener('statechange', function() {
+                                if (newWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        showToast('New version available! Refresh to update.', 'info', 'Update Available');
+                                    }
+                                }
+                            });
                         });
                     })
                     .catch(function(error) {
@@ -352,7 +765,20 @@
                     deferredPrompt = e;
                     console.log('Install prompt available');
                     
-                    // You could show a custom install button here
+                    // Show install button if needed
+                    const installBtn = document.getElementById('installPWA');
+                    if (installBtn) {
+                        installBtn.style.display = 'block';
+                        installBtn.addEventListener('click', () => {
+                            deferredPrompt.prompt();
+                            deferredPrompt.userChoice.then((choiceResult) => {
+                                if (choiceResult.outcome === 'accepted') {
+                                    console.log('User accepted the install prompt');
+                                }
+                                deferredPrompt = null;
+                            });
+                        });
+                    }
                 });
             });
         }
