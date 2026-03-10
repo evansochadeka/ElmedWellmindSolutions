@@ -1,6 +1,6 @@
-# routes_py.py - UPDATED TO WORK WITH NEW MODELS
+# routes_py.py - UPDATED TO WORK WITH NEW MODELS (ALL FEATURES RETAINED)
 from flask import Blueprint, request, jsonify, current_app
-from models import db, User, Client, Professional, Session, SessionRequest, Notification
+from models import db, User, Client, Professional, ChatMessage, CommunityPost, PostComment, Session, SessionRequest, Notification
 import os
 import requests
 import uuid
@@ -137,41 +137,87 @@ def chat():
         data = request.json
         message = data.get('message', '').strip()
         session_id = data.get('session_id', str(uuid.uuid4()))
+        user_id = data.get('user_id')  # Optional user ID if logged in
         
         if not message:
             return jsonify({'error': 'Message cannot be empty'}), 400
         
-        # Get or create anonymous user for chat
-        # For now, we'll just use session_id without saving to DB
-        # You can implement chat history storage later if needed
+        # Save user message to database
+        user_message = ChatMessage(
+            user_id=user_id if user_id else None,
+            session_id=session_id,
+            role='user',
+            content=message,
+            is_mental_health_related=True
+        )
+        db.session.add(user_message)
+        db.session.commit()
         
         # Get Cohere API key
         cohere_key = os.environ.get('COHERE_API_KEY')
         
-        # Try to call Cohere API
-        bot_response = None
+        # Prepare chat history
+        chat_history = []
         if cohere_key:
             try:
-                # Simple chat history for context (just the current message for now)
-                chat_history = []
-                bot_response = call_cohere_api(cohere_key, message, chat_history)
+                # Get recent chat history for context
+                recent_messages = ChatMessage.query.filter_by(session_id=session_id)\
+                    .order_by(ChatMessage.created_at.desc())\
+                    .limit(6)\
+                    .all()
+                
+                # Format history for Cohere (most recent first, then reverse for context)
+                history_for_api = []
+                for msg in reversed(recent_messages):
+                    if msg.role == 'user':
+                        history_for_api.append({"role": "USER", "message": msg.content})
+                    elif msg.role == 'assistant':
+                        history_for_api.append({"role": "CHATBOT", "message": msg.content})
+                
+                # Try to call Cohere API
+                bot_response = call_cohere_api(cohere_key, message, history_for_api)
+                
+                if bot_response:
+                    # Ensure response includes emergency contact for serious concerns
+                    serious_keywords = ['suicide', 'kill myself', 'end my life', 'want to die', 'harm myself', 'emergency', 'urgent']
+                    if any(keyword in message.lower() for keyword in serious_keywords):
+                        if '+254759226354' not in bot_response and '999' not in bot_response:
+                            bot_response += "\n\n🚨 EMERGENCY: If you're having thoughts of harming yourself, please call our emergency line immediately: +254759226354 or dial 999."
+                else:
+                    # Cohere API failed, use intelligent fallback
+                    bot_response = get_intelligent_fallback(message)
+                    current_app.logger.info("⚠️ Using intelligent fallback response")
+                    
             except Exception as e:
                 current_app.logger.error(f"Cohere API attempt failed: {e}")
-        
-        if not bot_response:
-            # Use intelligent fallback
+                bot_response = get_intelligent_fallback(message)
+                current_app.logger.info("⚠️ Using fallback after API error")
+        else:
+            # No API key, use intelligent fallback
             bot_response = get_intelligent_fallback(message)
-            current_app.logger.info("⚠️ Using intelligent fallback response")
+            current_app.logger.info("⚠️ No API key, using intelligent fallback")
+        
+        # Save assistant response to database
+        assistant_message = ChatMessage(
+            user_id=None,  # Assistant messages don't have a user
+            session_id=session_id,
+            role='assistant',
+            content=bot_response,
+            is_mental_health_related=True
+        )
+        db.session.add(assistant_message)
+        db.session.commit()
         
         return jsonify({
             'response': bot_response,
             'session_id': session_id,
             'timestamp': datetime.utcnow().isoformat(),
-            'source': 'cohere' if cohere_key and bot_response and 'cohere' in str(bot_response).lower() else 'fallback'
+            'source': 'cohere' if cohere_key and bot_response and 'cohere' not in str(bot_response).lower() else 'fallback'
         })
         
     except Exception as e:
         current_app.logger.error(f"Unexpected error in chat endpoint: {e}")
+        db.session.rollback()
         fallback = random.choice(FALLBACK_RESPONSES)
         return jsonify({
             'response': fallback,
@@ -180,50 +226,71 @@ def chat():
             'source': 'error_fallback'
         })
 
-# Get chat history for a session (simplified version)
+# Get chat history for a session
 @api.route('/chat/history/<session_id>', methods=['GET'])
 def get_chat_history(session_id):
     try:
-        # For now, return empty history
-        # You can implement chat history storage in a simple table later
-        return jsonify([])
+        messages = ChatMessage.query.filter_by(session_id=session_id)\
+                     .order_by(ChatMessage.created_at.asc())\
+                     .limit(100)\
+                     .all()
+        
+        return jsonify([{
+            'id': m.id,
+            'role': m.role,
+            'content': m.content,
+            'timestamp': m.created_at.isoformat() if m.created_at else None,
+            'is_mental_health_related': m.is_mental_health_related
+        } for m in messages])
     except Exception as e:
         current_app.logger.error(f"Error getting chat history: {e}")
         return jsonify([])
 
-# Community posts endpoint
+# Community posts endpoints
 @api.route('/community/posts', methods=['GET'])
 def get_community_posts():
     """Get community posts"""
     try:
-        # Return sample posts for now
-        posts = [
-            {
-                "id": 1,
-                "author": "Anonymous",
-                "content": "Today marks 30 days of being anxiety-free. It does get better!",
-                "likes": 24,
-                "comments": 8,
-                "date": "2 hours ago"
-            },
-            {
-                "id": 2,
-                "author": "Teacher_254",
-                "content": "Our school's mental health program is making a real difference.",
-                "likes": 15,
-                "comments": 3,
-                "date": "1 day ago"
-            },
-            {
-                "id": 3,
-                "author": "Recovering",
-                "content": "Grateful for this community. You're not alone in your struggles.",
-                "likes": 42,
-                "comments": 12,
-                "date": "3 days ago"
-            }
-        ]
-        return jsonify(posts)
+        # Get posts from database
+        posts = CommunityPost.query.filter_by(is_approved=True)\
+                .order_by(CommunityPost.created_at.desc())\
+                .limit(50)\
+                .all()
+        
+        if posts:
+            return jsonify([post.to_dict() for post in posts])
+        else:
+            # Return sample posts if no database posts yet
+            sample_posts = [
+                {
+                    "id": 1,
+                    "author": "Anonymous",
+                    "content": "Today marks 30 days of being anxiety-free. It does get better!",
+                    "likes": 24,
+                    "comments": 8,
+                    "date": "2 hours ago",
+                    "category": "Anxiety"
+                },
+                {
+                    "id": 2,
+                    "author": "Teacher_254",
+                    "content": "Our school's mental health program is making a real difference.",
+                    "likes": 15,
+                    "comments": 3,
+                    "date": "1 day ago",
+                    "category": "School Programs"
+                },
+                {
+                    "id": 3,
+                    "author": "Recovering",
+                    "content": "Grateful for this community. You're not alone in your struggles.",
+                    "likes": 42,
+                    "comments": 12,
+                    "date": "3 days ago",
+                    "category": "Depression"
+                }
+            ]
+            return jsonify(sample_posts)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -232,25 +299,133 @@ def create_community_post():
     """Create a new community post"""
     try:
         data = request.json
-        # For now, just return success
-        # You can implement post storage later
+        author_name = data.get('author', 'Anonymous')
+        content = data.get('content', '').strip()
+        category = data.get('category', '')
+        
+        if not content:
+            return jsonify({'error': 'Post content cannot be empty'}), 400
+        
+        # Create new post
+        post = CommunityPost(
+            author_name=author_name,
+            content=content,
+            category=category,
+            is_approved=True  # Auto-approve for now
+        )
+        
+        db.session.add(post)
+        db.session.commit()
+        
         return jsonify({
             "success": True,
             "message": "Post created successfully",
-            "post": {
-                "id": len(data) + 1,
-                "author": data.get('author', 'Anonymous'),
-                "content": data.get('content', ''),
-                "category": data.get('category', ''),
-                "likes": 0,
-                "comments": 0,
-                "date": "Just now"
-            }
+            "post": post.to_dict()
         })
     except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+@api.route('/community/posts/<int:post_id>/like', methods=['POST'])
+def like_post(post_id):
+    """Like a community post"""
+    try:
+        post = CommunityPost.query.get_or_404(post_id)
+        post.likes += 1
+        db.session.commit()
+        
+        return jsonify({
+            "success": True,
+            "likes": post.likes
+        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+@api.route('/community/posts/<int:post_id>/comments', methods=['GET'])
+def get_post_comments(post_id):
+    """Get comments for a post"""
+    try:
+        post = CommunityPost.query.get_or_404(post_id)
+        comments = PostComment.query.filter_by(post_id=post_id)\
+                    .order_by(PostComment.created_at.asc())\
+                    .all()
+        
+        return jsonify([comment.to_dict() for comment in comments])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@api.route('/community/posts/<int:post_id>/comments', methods=['POST'])
+def add_post_comment(post_id):
+    """Add a comment to a post"""
+    try:
+        data = request.json
+        author_name = data.get('author', 'Anonymous')
+        content = data.get('content', '').strip()
+        
+        if not content:
+            return jsonify({'error': 'Comment cannot be empty'}), 400
+        
+        post = CommunityPost.query.get_or_404(post_id)
+        
+        comment = PostComment(
+            post_id=post_id,
+            author_name=author_name,
+            content=content
+        )
+        
+        db.session.add(comment)
+        post.comments_count += 1
+        db.session.commit()
+        
+        return jsonify({
+            "success": True,
+            "comment": comment.to_dict()
+        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+# Session request endpoint (for client to request a session)
+@api.route('/session/request', methods=['POST'])
+def create_session_request():
+    """Create a new session request"""
+    try:
+        data = request.json
+        client_id = data.get('client_id')
+        
+        if not client_id:
+            return jsonify({'error': 'Client ID required'}), 400
+        
+        client = Client.query.get(client_id)
+        if not client:
+            return jsonify({'error': 'Client not found'}), 404
+        
+        session_request = SessionRequest(
+            client_id=client_id,
+            issue_description=data.get('issue_description', ''),
+            preferred_date=datetime.strptime(data.get('preferred_date'), '%Y-%m-%d').date() if data.get('preferred_date') else None,
+            preferred_time=data.get('preferred_time'),
+            session_type=data.get('session_type', 'video')
+        )
+        
+        db.session.add(session_request)
+        db.session.commit()
+        
+        return jsonify({
+            "success": True,
+            "message": "Session request created successfully",
+            "request_id": session_request.id
+        })
+    except Exception as e:
+        db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
 # Test route
 @api.route('/test', methods=['GET'])
 def test():
-    return jsonify({"message": "API is working!"})
+    return jsonify({
+        "message": "API is working!",
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat()
+    })
