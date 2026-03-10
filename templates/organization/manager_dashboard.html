@@ -1,0 +1,458 @@
+<!-- templates/organization/manager_dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Organization Manager Dashboard | Elmed Wellmind{% endblock %}
+
+{% block content %}
+<style>
+.dashboard-container {
+    padding: 100px 20px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    min-height: 100vh;
+}
+
+.org-header {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+}
+
+.org-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.org-header .org-code {
+    background: rgba(255,255,255,0.2);
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: inline-block;
+    font-size: 1.2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.stat-label {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.risk-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.risk-high { background: #ff4757; }
+.risk-medium { background: #ffa502; }
+.risk-low { background: #26de81; }
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.chart-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--dark);
+}
+
+.department-table {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 15px;
+    background: var(--light);
+    color: var(--dark);
+    font-weight: 600;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid var(--light);
+}
+
+tr:hover {
+    background: var(--light);
+}
+
+.activity-feed {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.activity-item {
+    padding: 15px;
+    border-bottom: 1px solid var(--light);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--light);
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    padding: 10px 25px;
+    background: none;
+    border: none;
+    font-weight: 600;
+    color: var(--gray);
+    cursor: pointer;
+    border-radius: 25px;
+    transition: var(--transition);
+}
+
+.tab-btn:hover {
+    background: var(--light);
+    color: var(--primary);
+}
+
+.tab-btn.active {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .org-header h1 {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<div class="dashboard-container" id="dashboard">
+    <div class="org-header">
+        <h1 id="orgName">Loading...</h1>
+        <p>Organization Manager Dashboard</p>
+        <div class="org-code" id="orgCode"></div>
+    </div>
+
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+        <button class="tab-btn" onclick="showTab('departments')">Departments</button>
+        <button class="tab-btn" onclick="showTab('activity')">Activity</button>
+        <button class="tab-btn" onclick="showTab('employees')">Employees</button>
+    </div>
+
+    <div class="tab-content active" id="overviewTab">
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">Wellness Distribution</h3>
+                <canvas id="wellnessChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3 class="chart-title">Service Usage</h3>
+                <canvas id="serviceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="departmentsTab">
+        <div class="department-table">
+            <h3>Department Performance</h3>
+            <table id="deptTable">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Employees</th>
+                        <th>Avg Wellness</th>
+                        <th>High Risk</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="deptTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tab-content" id="activityTab">
+        <div class="activity-feed" id="activityFeed"></div>
+    </div>
+
+    <div class="tab-content" id="employeesTab">
+        <div class="department-table">
+            <h3>Employee Overview (Anonymized)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Department</th>
+                        <th>Wellness Score</th>
+                        <th>Risk Level</th>
+                        <th>Last Active</th>
+                        <th>Sessions</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let wellnessChart, serviceChart;
+
+async function loadDashboard() {
+    try {
+        const response = await fetch('/organization/api/dashboard/data');
+        const data = await response.json();
+        
+        // Update header
+        document.getElementById('orgName').textContent = data.organization.name;
+        document.getElementById('orgCode').textContent = `Employee Code: ${data.organization.employee_code}`;
+        
+        // Update stats grid
+        const statsGrid = document.getElementById('statsGrid');
+        statsGrid.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-value">${data.organization.total_employees}</div>
+                <div class="stat-label">Total Employees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-value">${data.metrics.sessions_this_month}</div>
+                <div class="stat-label">Sessions This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-heartbeat"></i></div>
+                <div class="stat-value">${data.metrics.avg_wellness}</div>
+                <div class="stat-label">Avg Wellness Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="stat-value">${data.metrics.risk_distribution.high}</div>
+                <div class="stat-label">High Risk Employees</div>
+            </div>
+        `;
+        
+        // Update charts
+        updateCharts(data);
+        
+        // Update department table
+        const deptBody = document.getElementById('deptTableBody');
+        deptBody.innerHTML = data.departments.map(dept => `
+            <tr>
+                <td>${dept.name}</td>
+                <td>${dept.employee_count}</td>
+                <td>${dept.avg_wellness.toFixed(1)}</td>
+                <td>
+                    <span class="risk-indicator risk-high"></span>
+                    ${dept.high_risk}
+                </td>
+                <td>
+                    <span class="risk-${dept.avg_wellness > 70 ? 'low' : dept.avg_wellness > 40 ? 'medium' : 'high'}">
+                        ${dept.avg_wellness > 70 ? 'Good' : dept.avg_wellness > 40 ? 'Fair' : 'Needs Attention'}
+                    </span>
+                </td>
+            </tr>
+        `).join('');
+        
+        // Update employee table
+        const empBody = document.getElementById('employeeTableBody');
+        empBody.innerHTML = data.employee_list.map(emp => `
+            <tr>
+                <td>EMP-${emp.id}</td>
+                <td>Dept-${emp.department_id || 'N/A'}</td>
+                <td>${emp.wellness_score.toFixed(1)}</td>
+                <td>
+                    <span class="risk-indicator risk-${emp.risk_level}"></span>
+                    ${emp.risk_level}
+                </td>
+                <td>${emp.last_active ? new Date(emp.last_active).toLocaleDateString() : 'Never'}</td>
+                <td>${emp.sessions_attended}</td>
+            </tr>
+        `).join('');
+        
+        // Update activity feed
+        const activityFeed = document.getElementById('activityFeed');
+        activityFeed.innerHTML = data.recent_activity.map(act => `
+            <div class="activity-item">
+                <div class="activity-icon"><i class="fas fa-${act.action === 'LOGIN' ? 'sign-in-alt' : 'clipboard-list'}"></i></div>
+                <div>
+                    <div>${act.action}</div>
+                    <small>${new Date(act.time).toLocaleString()}</small>
+                </div>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+    }
+}
+
+function updateCharts(data) {
+    // Wellness distribution chart
+    const wellnessCtx = document.getElementById('wellnessChart').getContext('2d');
+    if (wellnessChart) wellnessChart.destroy();
+    wellnessChart = new Chart(wellnessCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Low Risk', 'Medium Risk', 'High Risk'],
+            datasets: [{
+                data: [
+                    data.metrics.risk_distribution.low,
+                    data.metrics.risk_distribution.medium,
+                    data.metrics.risk_distribution.high
+                ],
+                backgroundColor: ['#26de81', '#ffa502', '#ff4757'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+    
+    // Service usage chart
+    const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+    if (serviceChart) serviceChart.destroy();
+    serviceChart = new Chart(serviceCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Counseling', 'Group', 'AI Chat'],
+            datasets: [{
+                data: [
+                    data.metrics.service_usage.counseling,
+                    data.metrics.service_usage.group,
+                    data.metrics.service_usage.ai_chat
+                ],
+                backgroundColor: ['#6C63FF', '#36D1DC', '#FF6584']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+function showTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tab + 'Tab').classList.add('active');
+}
+
+// Load dashboard on page load
+document.addEventListener('DOMContentLoaded', loadDashboard);
+
+// Refresh every 30 seconds
+setInterval(loadDashboard, 30000);
+</script>
+{% endblock %}
