@@ -1,4 +1,4 @@
-# app.py - COMPLETE WORKING VERSION WITH ALL FEATURES
+# app.py - COMPLETE WORKING VERSION WITH ALL FEATURES AND FIXED RELATIONSHIPS
 
 import os
 import sys
@@ -20,7 +20,7 @@ from extensions import db
 
 # Import models - ALL models
 from models import (
-    User, Client, Professional, Organization, Department, 
+    User, Client, Professional, Organization, Department, DepartmentHead,
     Session, SessionRequest, Webinar, Notification, Review, 
     WellnessAssessment, OrganizationWellnessData, ProfessionalAvailability, 
     WebinarParticipant, SessionFeedback, ActivityLog, 
@@ -77,7 +77,7 @@ db.init_app(app)
 # Initialize Login Manager
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'auth.login_page'
+login_manager.login_view = 'auth.login'
 login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'info'
 
@@ -95,6 +95,8 @@ from professional_routes import professional_bp
 from organization_routes import organization_bp
 from routes_py import api  # Original API routes
 from admin_routes import admin_bp
+from superadmin_routes import superadmin_bp
+from department_head_routes import dept_head_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp)
@@ -102,6 +104,8 @@ app.register_blueprint(professional_bp)
 app.register_blueprint(organization_bp)
 app.register_blueprint(api)  # Original API routes
 app.register_blueprint(admin_bp)
+app.register_blueprint(superadmin_bp)
+app.register_blueprint(dept_head_bp)
 
 # --------------------------------------------------
 # Try to import matching service (optional)
@@ -130,34 +134,43 @@ with app.app_context():
         db.create_all()
         print("✅ Database tables created/verified")
         
-        # Create admin user if not exists
-        admin_email = os.getenv("ADMIN_EMAIL", "admin@elmedwellmind.com")
-        admin_password = os.getenv("ADMIN_PASSWORD", "Admin@123")
+        # Create superadmin user if not exists
+        superadmin_email = os.getenv("SUPERADMIN_EMAIL", "elijahokware@gmail.com")
+        superadmin_password = os.getenv("SUPERADMIN_PASSWORD", "Pa$$w0rd")
         
-        admin = User.query.filter_by(email=admin_email).first()
-        if not admin:
-            admin = User(
-                username="admin",
-                email=admin_email,
-                first_name="System",
-                last_name="Administrator",
-                role="admin",
+        superadmin = User.query.filter_by(email=superadmin_email).first()
+        if not superadmin:
+            superadmin = User(
+                username="elijahokware",
+                email=superadmin_email,
+                first_name="Elijah",
+                last_name="Okware",
+                role="superadmin",
                 is_verified=True,
                 email_verified=True,
-                is_active=True
+                is_active=True,
+                permissions=json.dumps({
+                    'can_impersonate': True,
+                    'can_manage_all': True,
+                    'can_verify_professionals': True,
+                    'can_manage_site_settings': True,
+                    'can_promote_admins': True
+                })
             )
-            admin.set_password(admin_password)
-            db.session.add(admin)
+            superadmin.set_password(superadmin_password)
+            db.session.add(superadmin)
             db.session.commit()
-            print("✅ Admin user created")
+            print("✅ Superadmin user created")
+            print("   Email: elijahokware@gmail.com")
+            print("   Password: Pa$$w0rd")
             
-            # Create welcome notification for admin
+            # Create welcome notification for superadmin
             notification = Notification(
-                user_id=admin.id,
+                user_id=superadmin.id,
                 title="Welcome to Elmed Wellmind",
-                message="You have been set up as the system administrator.",
+                message="You have been set up as the system superadmin with full control.",
                 notification_type="success",
-                link="/admin/dashboard"
+                link="/superadmin/dashboard"
             )
             db.session.add(notification)
             db.session.commit()
@@ -228,14 +241,14 @@ def send_email_original():
         print(f"Message: {message[:100]}...")
         
         # Create notification for admins
-        admins = User.query.filter_by(role='admin').all()
+        admins = User.query.filter_by(role='superadmin').all()
         for admin in admins:
             notification = Notification(
                 user_id=admin.id,
                 title=f"New Contact: {subject}",
                 message=f"From: {name} ({email})\n\n{message[:200]}...",
                 notification_type='info',
-                link='/admin/messages'
+                link='/superadmin/messages'
             )
             db.session.add(notification)
         db.session.commit()
@@ -369,135 +382,6 @@ def community_posts_v2():
         print(f"Error in community_posts_v2: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route("/api/v2/community/posts", methods=['POST'])
-def create_community_post_v2():
-    """Create a new community post with database storage"""
-    try:
-        data = request.json
-        author_name = data.get('author', 'Anonymous')
-        content = data.get('content', '').strip()
-        category = data.get('category', '')
-        user_id = data.get('user_id')
-        
-        if not content:
-            return jsonify({'error': 'Post content cannot be empty'}), 400
-        
-        # Find client if user_id provided
-        client_id = None
-        if user_id:
-            client = Client.query.filter_by(user_id=user_id).first()
-            if client:
-                client_id = client.id
-        
-        # Create new post
-        post = CommunityPost(
-            author_id=client_id,
-            author_name=author_name,
-            content=content,
-            category=category,
-            is_approved=True  # Auto-approve for now
-        )
-        
-        db.session.add(post)
-        db.session.commit()
-        
-        return jsonify({
-            "success": True,
-            "message": "Post created successfully",
-            "post": {
-                'id': post.id,
-                'author': post.author_name,
-                'content': post.content,
-                'category': post.category,
-                'likes': post.likes,
-                'comments': post.comments_count,
-                'date': post.created_at.strftime('%Y-%m-%d %H:%M') if post.created_at else None
-            }
-        })
-    except Exception as e:
-        db.session.rollback()
-        print(f"Error creating post: {e}")
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/api/v2/community/posts/<int:post_id>/like", methods=['POST'])
-def like_post_v2(post_id):
-    """Like a community post"""
-    try:
-        post = CommunityPost.query.get_or_404(post_id)
-        post.likes += 1
-        db.session.commit()
-        
-        return jsonify({
-            "success": True,
-            "likes": post.likes
-        })
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/api/v2/community/posts/<int:post_id>/comments", methods=['GET'])
-def get_post_comments_v2(post_id):
-    """Get comments for a post"""
-    try:
-        post = CommunityPost.query.get_or_404(post_id)
-        comments = PostComment.query.filter_by(post_id=post_id)\
-                    .order_by(PostComment.created_at.asc())\
-                    .all()
-        
-        return jsonify([{
-            'id': c.id,
-            'author': c.author_name,
-            'content': c.content,
-            'date': c.created_at.strftime('%Y-%m-%d %H:%M') if c.created_at else None
-        } for c in comments])
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/api/v2/community/posts/<int:post_id>/comments", methods=['POST'])
-def add_post_comment_v2(post_id):
-    """Add a comment to a post"""
-    try:
-        data = request.json
-        author_name = data.get('author', 'Anonymous')
-        content = data.get('content', '').strip()
-        user_id = data.get('user_id')
-        
-        if not content:
-            return jsonify({'error': 'Comment cannot be empty'}), 400
-        
-        post = CommunityPost.query.get_or_404(post_id)
-        
-        # Find client if user_id provided
-        client_id = None
-        if user_id:
-            client = Client.query.filter_by(user_id=user_id).first()
-            if client:
-                client_id = client.id
-        
-        comment = PostComment(
-            post_id=post_id,
-            author_id=client_id,
-            author_name=author_name,
-            content=content
-        )
-        
-        db.session.add(comment)
-        post.comments_count += 1
-        db.session.commit()
-        
-        return jsonify({
-            "success": True,
-            "comment": {
-                'id': comment.id,
-                'author': comment.author_name,
-                'content': comment.content,
-                'date': comment.created_at.strftime('%Y-%m-%d %H:%M') if comment.created_at else None
-            }
-        })
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
 @app.route("/api/v2/chat/history/<session_id>", methods=['GET'])
 def chat_history_v2(session_id):
     """Enhanced chat history with database storage"""
@@ -518,45 +402,24 @@ def chat_history_v2(session_id):
         print(f"Error in chat_history_v2: {e}")
         return jsonify([])
 
-@app.route("/api/v2/chat/message", methods=['POST'])
-def save_chat_message_v2():
-    """Save a chat message to database"""
-    try:
-        data = request.json
-        message = ChatMessage(
-            session_id=data.get('session_id'),
-            role=data.get('role', 'user'),
-            content=data.get('content', ''),
-            user_id=data.get('user_id'),
-            is_mental_health_related=data.get('is_mental_health_related', True)
-        )
-        db.session.add(message)
-        db.session.commit()
-        
-        return jsonify({
-            'success': True,
-            'id': message.id,
-            'timestamp': message.created_at.isoformat() if message.created_at else None
-        })
-    except Exception as e:
-        db.session.rollback()
-        print(f"Error saving chat message: {e}")
-        return jsonify({'error': str(e)}), 500
-
 # --------------------------------------------------
-# Dashboard routes
+# Dashboard redirects
 # --------------------------------------------------
 
 @app.route('/dashboard')
 @login_required
 def dashboard_redirect():
     """Redirect to appropriate dashboard based on role"""
-    if current_user.role == 'admin':
+    if current_user.role == 'superadmin':
+        return redirect(url_for('superadmin.dashboard'))
+    elif current_user.role == 'admin':
         return redirect(url_for('admin.dashboard'))
     elif current_user.role == 'professional':
         return redirect(url_for('professional.dashboard'))
-    elif current_user.role == 'organization':
+    elif current_user.role == 'organization_admin':
         return redirect(url_for('organization.dashboard'))
+    elif current_user.role == 'department_head':
+        return redirect(url_for('dept_head.dashboard'))
     else:
         # Client dashboard
         return render_template('dashboard/client_dashboard.html')
@@ -565,7 +428,7 @@ def dashboard_redirect():
 @login_required
 def client_dashboard():
     """Client dashboard page"""
-    if current_user.role not in ['client', 'admin']:
+    if current_user.role not in ['client', 'employee', 'superadmin', 'admin']:
         return redirect(url_for('dashboard_redirect'))
     return render_template('dashboard/client_dashboard.html')
 
@@ -605,7 +468,7 @@ def unauthorized(e):
     """Handle 401 errors"""
     if request.path.startswith('/api/'):
         return jsonify({"error": "Unauthorized"}), 401
-    return redirect(url_for('auth.login_page'))
+    return redirect(url_for('auth.login'))
 
 # --------------------------------------------------
 # Template context processors
@@ -646,10 +509,24 @@ def utility_processor():
         return '.' in filename and \
                filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
     
+    def get_role_name(role):
+        """Convert role code to display name"""
+        role_names = {
+            'superadmin': 'Super Administrator',
+            'admin': 'Administrator',
+            'organization_admin': 'Organization Admin',
+            'department_head': 'Department Head',
+            'professional': 'Professional',
+            'client': 'Client',
+            'employee': 'Employee'
+        }
+        return role_names.get(role, role.replace('_', ' ').title())
+    
     return dict(
         format_datetime=format_datetime,
         time_ago=time_ago,
         allowed_file=allowed_file,
+        get_role_name=get_role_name,
         app_name="Elmed Wellmind Solutions",
         support_phone="+254 759 226354",
         support_email="elijahokware@gmail.com",
@@ -685,33 +562,51 @@ if not app.debug and MATCHING_SERVICE_AVAILABLE:
 # CLI commands
 # --------------------------------------------------
 
-@app.cli.command("create-admin")
-def create_admin_command():
-    """Create admin user"""
+@app.cli.command("create-superadmin")
+def create_superadmin_command():
+    """Create superadmin user"""
     import getpass
-    email = input("Enter admin email: ")
-    password = getpass.getpass("Enter admin password: ")
+    email = input("Enter superadmin email [elijahokware@gmail.com]: ") or "elijahokware@gmail.com"
+    password = getpass.getpass("Enter superadmin password: ")
+    
+    if not password:
+        password = "Pa$$w0rd"
+        print("Using default password: Pa$$w0rd")
     
     admin = User.query.filter_by(email=email).first()
     if admin:
-        print("Admin user already exists")
-        return
+        print("User already exists. Updating to superadmin...")
+        admin.role = 'superadmin'
+        admin.permissions = json.dumps({
+            'can_impersonate': True,
+            'can_manage_all': True,
+            'can_verify_professionals': True,
+            'can_manage_site_settings': True,
+            'can_promote_admins': True
+        })
+    else:
+        admin = User(
+            username=email.split('@')[0],
+            email=email,
+            first_name="Super",
+            last_name="Admin",
+            role="superadmin",
+            is_verified=True,
+            email_verified=True,
+            is_active=True,
+            permissions=json.dumps({
+                'can_impersonate': True,
+                'can_manage_all': True,
+                'can_verify_professionals': True,
+                'can_manage_site_settings': True,
+                'can_promote_admins': True
+            })
+        )
+        admin.set_password(password)
+        db.session.add(admin)
     
-    admin = User(
-        username="admin",
-        email=email,
-        first_name="Admin",
-        last_name="User",
-        role="admin",
-        is_verified=True,
-        email_verified=True,
-        is_active=True
-    )
-    admin.set_password(password)
-    
-    db.session.add(admin)
     db.session.commit()
-    print(f"✅ Admin user created with email: {email}")
+    print(f"✅ Superadmin user created/updated with email: {email}")
 
 @app.cli.command("seed-services")
 def seed_services_command():
