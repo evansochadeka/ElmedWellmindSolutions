@@ -1,0 +1,315 @@
+<!-- templates/employee/dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Employee Dashboard | Elmed Wellmind{% endblock %}
+
+{% block content %}
+<style>
+.emp-dashboard {
+    padding: 100px 20px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    min-height: 100vh;
+}
+
+.welcome-card {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow);
+}
+
+.welcome-card h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.org-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 8px 20px;
+    border-radius: 50px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.progress-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+}
+
+.progress-circle {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    position: relative;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.service-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.service-count {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 10px 0;
+}
+
+.schedule-section, .professionals-section {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+}
+
+.session-item {
+    padding: 15px;
+    border-bottom: 1px solid var(--light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.session-item:last-child {
+    border-bottom: none;
+}
+
+.professional-card {
+    padding: 20px;
+    border: 1px solid var(--light);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: var(--transition);
+}
+
+.professional-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.book-btn {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.book-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108,99,255,0.3);
+}
+
+.assessment-btn {
+    background: var(--gradient-secondary);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: var(--transition);
+}
+
+.assessment-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255,101,132,0.3);
+}
+
+@media (max-width: 768px) {
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .welcome-card h1 {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<div class="emp-dashboard" id="dashboard">
+    <div class="welcome-card">
+        <h1 id="orgName">Loading...</h1>
+        <p>Welcome back, <span id="empName">{{ current_user.get_full_name() }}</span></p>
+        <div class="org-badge" id="orgDept"></div>
+    </div>
+
+    <div class="progress-card">
+        <h2>Your Wellness Progress</h2>
+        <div class="progress-circle">
+            <canvas id="progressCanvas" width="120" height="120"></canvas>
+            <div class="progress-text" id="wellnessScore">0</div>
+        </div>
+        <p id="wellnessMessage"></p>
+    </div>
+
+    <div class="services-grid" id="servicesGrid"></div>
+
+    <div class="schedule-section">
+        <h2>Upcoming Sessions</h2>
+        <div id="upcomingSessions"></div>
+        <button class="assessment-btn" onclick="takeAssessment()">
+            <i class="fas fa-clipboard-list"></i> Take Wellness Assessment
+        </button>
+    </div>
+
+    <div class="professionals-section">
+        <h2>Available Professionals</h2>
+        <div id="professionalsList"></div>
+    </div>
+</div>
+
+<script>
+let progressChart;
+
+async function loadDashboard() {
+    try {
+        const response = await fetch('/employee/api/dashboard/data');
+        const data = await response.json();
+        
+        // Update organization info
+        document.getElementById('orgName').textContent = data.organization.name;
+        document.getElementById('orgDept').textContent = data.organization.department || 'No Department';
+        
+        // Update wellness score
+        document.getElementById('wellnessScore').textContent = data.employee.wellness_score;
+        
+        // Update progress circle
+        updateProgressCircle(data.employee.wellness_score);
+        
+        // Update wellness message
+        const message = document.getElementById('wellnessMessage');
+        if (data.employee.wellness_score > 70) {
+            message.innerHTML = '🌟 You\'re doing great! Keep up the good work.';
+        } else if (data.employee.wellness_score > 40) {
+            message.innerHTML = '💪 You\'re making progress. Consider booking a session.';
+        } else {
+            message.innerHTML = '❤️ We\'re here to help. Please reach out to a professional.';
+        }
+        
+        // Update services grid
+        document.getElementById('servicesGrid').innerHTML = `
+            <div class="service-card">
+                <i class="fas fa-calendar-check fa-2x" style="color: var(--primary)"></i>
+                <div class="service-count">${data.services_accessed.counseling}</div>
+                <div>Counseling Sessions</div>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-users fa-2x" style="color: var(--accent)"></i>
+                <div class="service-count">${data.services_accessed.group}</div>
+                <div>Group Sessions</div>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-clipboard-check fa-2x" style="color: var(--secondary)"></i>
+                <div class="service-count">${data.services_accessed.assessments}</div>
+                <div>Assessments Taken</div>
+            </div>
+        `;
+        
+        // Update upcoming sessions
+        const sessionsHtml = data.upcoming_sessions.length > 0 
+            ? data.upcoming_sessions.map(s => `
+                <div class="session-item">
+                    <div>
+                        <strong>${s.title}</strong><br>
+                        <small>${s.date} at ${s.time} with ${s.professional}</small>
+                    </div>
+                    ${s.meeting_link ? `<a href="${s.meeting_link}" class="book-btn" target="_blank">Join</a>` : ''}
+                </div>
+            `).join('')
+            : '<p>No upcoming sessions. Book one below!</p>';
+        document.getElementById('upcomingSessions').innerHTML = sessionsHtml;
+        
+        // Update professionals list
+        document.getElementById('professionalsList').innerHTML = data.professionals.map(p => `
+            <div class="professional-card">
+                <h4>${p.name}</h4>
+                <p>${p.type} • ⭐ ${p.rating.toFixed(1)} • KES ${p.fee}</p>
+                <p>${p.specializations.slice(0, 3).join(', ')}</p>
+                <button class="book-btn" onclick="bookSession(${p.id})">
+                    Book Session
+                </button>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+    }
+}
+
+function updateProgressCircle(score) {
+    const canvas = document.getElementById('progressCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, 120, 120);
+    
+    // Draw background circle
+    ctx.beginPath();
+    ctx.arc(60, 60, 50, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 10;
+    ctx.stroke();
+    
+    // Draw progress arc
+    const angle = (score / 100) * 2 * Math.PI - Math.PI/2;
+    ctx.beginPath();
+    ctx.arc(60, 60, 50, -Math.PI/2, angle);
+    ctx.strokeStyle = score > 70 ? '#26de81' : score > 40 ? '#ffa502' : '#ff4757';
+    ctx.lineWidth = 10;
+    ctx.stroke();
+}
+
+function bookSession(professionalId) {
+    // Show booking modal
+    alert('Booking feature coming soon!');
+}
+
+function takeAssessment() {
+    window.location.href = '/employee/assessment';
+}
+
+// Load dashboard on page load
+document.addEventListener('DOMContentLoaded', loadDashboard);
+
+// Refresh every minute
+setInterval(loadDashboard, 60000);
+</script>
+{% endblock %}
