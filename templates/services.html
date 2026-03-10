@@ -1,4 +1,4 @@
-<!-- templates/services.html -->
+<!-- templates/services.html - COMPLETE WITH ALL FEATURES -->
 <!-- Services Section -->
 <section class="services" id="services">
     <div class="container">
@@ -8,7 +8,26 @@
         </div>
         
         <div class="services-grid">
-            <div class="service-card">
+            <!-- School Services -->
+            <div class="service-card" id="school-services">
+                <div class="service-icon">
+                    <i class="fas fa-school"></i>
+                </div>
+                <h3>School Services</h3>
+                <p>Comprehensive mental health support for educational institutions, including student counseling, teacher training, and parent workshops.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Student counseling</li>
+                    <li><i class="fas fa-check"></i> Teacher wellness programs</li>
+                    <li><i class="fas fa-check"></i> Parent education sessions</li>
+                    <li><i class="fas fa-check"></i> Bullying prevention</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-calendar"></i> Inquire Now
+                </a>
+            </div>
+            
+            <!-- Individual Counseling -->
+            <div class="service-card" id="individual">
                 <div class="service-icon">
                     <i class="fas fa-user-md"></i>
                 </div>
@@ -18,26 +37,15 @@
                     <li><i class="fas fa-check"></i> Confidential sessions</li>
                     <li><i class="fas fa-check"></i> Online & in-person options</li>
                     <li><i class="fas fa-check"></i> Flexible scheduling</li>
+                    <li><i class="fas fa-check"></i> Personalized treatment plans</li>
                 </ul>
-            </div>
-            
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <h3>AI Mental Health Assistant</h3>
-                <p>24/7 AI-powered support for immediate guidance, coping strategies, and mental health information. Chat directly on this page.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Instant responses</li>
-                    <li><i class="fas fa-check"></i> Confidential chats</li>
-                    <li><i class="fas fa-check"></i> Evidence-based information</li>
-                </ul>
-                <a href="#ai-chat" class="btn btn-primary" style="margin-top: 15px;">
-                    <i class="fas fa-comments"></i> Start Chat Now
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-user-plus"></i> Book a Session
                 </a>
             </div>
             
-            <div class="service-card">
+            <!-- Group Therapy -->
+            <div class="service-card" id="group">
                 <div class="service-icon">
                     <i class="fas fa-users"></i>
                 </div>
@@ -47,12 +55,17 @@
                     <li><i class="fas fa-check"></i> Peer support</li>
                     <li><i class="fas fa-check"></i> Expert facilitation</li>
                     <li><i class="fas fa-check"></i> Safe environment</li>
+                    <li><i class="fas fa-check"></i> Weekly sessions</li>
                 </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-users"></i> Join a Group
+                </a>
             </div>
             
-            <div class="service-card">
+            <!-- Mental Health Training -->
+            <div class="service-card" id="training">
                 <div class="service-icon">
-                    <i class="fas fa-graduation-cap"></i>
+                    <i class="fas fa-chalkboard-teacher"></i>
                 </div>
                 <h3>Mental Health Training</h3>
                 <p>Workshops and training programs for schools, corporations, and community organizations on mental health awareness.</p>
@@ -60,12 +73,17 @@
                     <li><i class="fas fa-check"></i> Customized programs</li>
                     <li><i class="fas fa-check"></i> Certification available</li>
                     <li><i class="fas fa-check"></i> Practical skills</li>
+                    <li><i class="fas fa-check"></i> Follow-up support</li>
                 </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-graduation-cap"></i> Request Training
+                </a>
             </div>
             
-            <div class="service-card">
+            <!-- School Programs -->
+            <div class="service-card" id="school-programs">
                 <div class="service-icon">
-                    <i class="fas fa-school"></i>
+                    <i class="fas fa-graduation-cap"></i>
                 </div>
                 <h3>School Programs</h3>
                 <p>Comprehensive mental health support for students, teachers, and parents in educational institutions.</p>
@@ -73,12 +91,17 @@
                     <li><i class="fas fa-check"></i> Student counseling</li>
                     <li><i class="fas fa-check"></i> Teacher training</li>
                     <li><i class="fas fa-check"></i> Parent workshops</li>
+                    <li><i class="fas fa-check"></i> Crisis intervention</li>
                 </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-school"></i> Learn More
+                </a>
             </div>
             
-            <div class="service-card">
+            <!-- Crisis Intervention -->
+            <div class="service-card" id="crisis">
                 <div class="service-icon">
-                    <i class="fas fa-briefcase-medical"></i>
+                    <i class="fas fa-ambulance"></i>
                 </div>
                 <h3>Crisis Intervention</h3>
                 <p>Immediate support for mental health emergencies, suicide prevention, and acute psychological distress.</p>
@@ -86,7 +109,206 @@
                     <li><i class="fas fa-check"></i> 24/7 availability</li>
                     <li><i class="fas fa-check"></i> Emergency response</li>
                     <li><i class="fas fa-check"></i> Follow-up care</li>
+                    <li><i class="fas fa-check"></i> Safety planning</li>
                 </ul>
+                <a href="tel:+254759226354" class="btn btn-danger" style="margin-top: 15px;">
+                    <i class="fas fa-phone-alt"></i> Emergency: +254 759 226354
+                </a>
+            </div>
+            
+            <!-- Community Mental Health -->
+            <div class="service-card" id="community">
+                <div class="service-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Community Mental Health</h3>
+                <p>Grassroots mental health programs, community outreach, and awareness campaigns across Kenya.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Community outreach</li>
+                    <li><i class="fas fa-check"></i> Awareness campaigns</li>
+                    <li><i class="fas fa-check"></i> Support groups</li>
+                    <li><i class="fas fa-check"></i> Resource distribution</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-heart"></i> Get Involved
+                </a>
+            </div>
+            
+            <!-- AI Mental Health Assistant -->
+            <div class="service-card featured" id="ai-chat">
+                <div class="featured-badge">24/7 Available</div>
+                <div class="service-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI Mental Health Assistant</h3>
+                <p>24/7 AI-powered support for immediate guidance, coping strategies, and mental health information. Chat directly on this page.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Instant responses</li>
+                    <li><i class="fas fa-check"></i> Confidential chats</li>
+                    <li><i class="fas fa-check"></i> Evidence-based information</li>
+                    <li><i class="fas fa-check"></i> No appointment needed</li>
+                </ul>
+                <a href="/chat" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-comments"></i> Start Chat Now
+                </a>
+            </div>
+            
+            <!-- Corporate Wellness -->
+            <div class="service-card" id="corporate">
+                <div class="service-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3>Corporate Wellness</h3>
+                <p>Comprehensive mental health packages for businesses. Support your employees' wellbeing and boost productivity.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Employee counseling</li>
+                    <li><i class="fas fa-check"></i> Team workshops</li>
+                    <li><i class="fas fa-check"></i> Management training</li>
+                    <li><i class="fas fa-check"></i> Wellness analytics</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}?role=organization" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-building"></i> Register Organization
+                </a>
+            </div>
+            
+            <!-- Family Counseling -->
+            <div class="service-card" id="family">
+                <div class="service-icon">
+                    <i class="fas fa-family"></i>
+                </div>
+                <h3>Family Counseling</h3>
+                <p>Therapy sessions for families dealing with conflict, communication issues, parenting challenges, and life transitions.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Family sessions</li>
+                    <li><i class="fas fa-check"></i> Communication skills</li>
+                    <li><i class="fas fa-check"></i> Conflict resolution</li>
+                    <li><i class="fas fa-check"></i> Parenting support</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-family"></i> Learn More
+                </a>
+            </div>
+            
+            <!-- Couples Therapy -->
+            <div class="service-card" id="couples">
+                <div class="service-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Couples Therapy</h3>
+                <p>Support for couples facing relationship challenges, improving communication, and strengthening their bond.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Relationship counseling</li>
+                    <li><i class="fas fa-check"></i> Communication tools</li>
+                    <li><i class="fas fa-check"></i> Conflict resolution</li>
+                    <li><i class="fas fa-check"></i> Pre-marital counseling</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-heart"></i> Book Session
+                </a>
+            </div>
+            
+            <!-- Trauma Counseling -->
+            <div class="service-card" id="trauma">
+                <div class="service-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <h3>Trauma Counseling</h3>
+                <p>Specialized support for individuals who have experienced trauma, abuse, or post-traumatic stress.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Trauma-informed care</li>
+                    <li><i class="fas fa-check"></i> EMDR therapy</li>
+                    <li><i class="fas fa-check"></i> Safe environment</li>
+                    <li><i class="fas fa-check"></i> Healing-focused</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-hand-holding-heart"></i> Get Support
+                </a>
+            </div>
+            
+            <!-- Addiction Recovery -->
+            <div class="service-card" id="addiction">
+                <div class="service-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <h3>Addiction Recovery</h3>
+                <p>Support for individuals and families dealing with substance abuse and addiction issues.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Individual counseling</li>
+                    <li><i class="fas fa-check"></i> Group support</li>
+                    <li><i class="fas fa-check"></i> Family therapy</li>
+                    <li><i class="fas fa-check"></i> Relapse prevention</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-hand-holding-heart"></i> Start Recovery
+                </a>
+            </div>
+            
+            <!-- Grief Counseling -->
+            <div class="service-card" id="grief">
+                <div class="service-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3>Grief Counseling</h3>
+                <p>Support for individuals dealing with loss, bereavement, and grief-related challenges.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Bereavement support</li>
+                    <li><i class="fas fa-check"></i> Loss counseling</li>
+                    <li><i class="fas fa-check"></i> Group support</li>
+                    <li><i class="fas fa-check"></i> Healing resources</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-cloud"></i> Find Support
+                </a>
+            </div>
+            
+            <!-- Youth Counseling -->
+            <div class="service-card" id="youth">
+                <div class="service-icon">
+                    <i class="fas fa-child"></i>
+                </div>
+                <h3>Youth Counseling</h3>
+                <p>Age-appropriate mental health support for children and adolescents.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Child therapy</li>
+                    <li><i class="fas fa-check"></i> Adolescent counseling</li>
+                    <li><i class="fas fa-check"></i> School issues</li>
+                    <li><i class="fas fa-check"></i> Family involvement</li>
+                </ul>
+                <a href="#contact" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-child"></i> Learn More
+                </a>
+            </div>
+            
+            <!-- Online Therapy -->
+            <div class="service-card" id="online">
+                <div class="service-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h3>Online Therapy</h3>
+                <p>Virtual counseling sessions from the comfort of your home. Secure video conferencing.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Secure video calls</li>
+                    <li><i class="fas fa-check"></i> Flexible scheduling</li>
+                    <li><i class="fas fa-check"></i> Anywhere access</li>
+                    <li><i class="fas fa-check"></i> Same quality care</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-video"></i> Start Online Therapy
+                </a>
+            </div>
+        </div>
+        
+        <!-- Service Inquiry CTA -->
+        <div class="service-cta">
+            <h3>Not sure which service is right for you?</h3>
+            <p>Take our free assessment or speak with a mental health professional</p>
+            <div class="cta-buttons">
+                <a href="#assessment" class="btn btn-primary">
+                    <i class="fas fa-clipboard-list"></i> Take Free Assessment
+                </a>
+                <a href="tel:+254759226354" class="btn btn-secondary">
+                    <i class="fas fa-phone-alt"></i> Call +254 759 226354
+                </a>
             </div>
         </div>
     </div>
@@ -143,6 +365,24 @@
         opacity: 0.05;
     }
     
+    .service-card.featured {
+        border: 2px solid var(--primary);
+        transform: scale(1.02);
+    }
+    
+    .featured-badge {
+        position: absolute;
+        top: 20px;
+        right: -30px;
+        background: var(--gradient-primary);
+        color: white;
+        padding: 8px 40px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transform: rotate(45deg);
+        z-index: 10;
+    }
+    
     .service-icon {
         font-size: 3.5rem;
         margin-bottom: 25px;
@@ -151,6 +391,8 @@
         background-clip: text;
         color: transparent;
         display: inline-block;
+        position: relative;
+        z-index: 2;
     }
     
     .service-card h3 {
@@ -189,15 +431,70 @@
         font-size: 1.1rem;
     }
     
+    .btn-danger {
+        background: linear-gradient(135deg, #dc3545, #ff6b6b);
+        color: white;
+        box-shadow: 0 10px 25px rgba(220, 53, 69, 0.3);
+    }
+    
+    .btn-danger:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(220, 53, 69, 0.4);
+    }
+    
+    .service-cta {
+        margin-top: 60px;
+        text-align: center;
+        padding: 50px;
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 20px 50px rgba(108, 99, 255, 0.15);
+    }
+    
+    .service-cta h3 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: var(--dark);
+    }
+    
+    .service-cta p {
+        color: #666;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+    }
+    
+    .service-cta .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
     @media (max-width: 992px) {
         .services-grid {
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        
+        .service-card.featured {
+            transform: scale(1);
         }
     }
     
     @media (max-width: 768px) {
         .service-card {
             padding: 30px;
+        }
+        
+        .service-cta {
+            padding: 30px 20px;
+        }
+        
+        .service-cta h3 {
+            font-size: 1.6rem;
+        }
+        
+        .service-cta .cta-buttons {
+            flex-direction: column;
         }
     }
 </style>
