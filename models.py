@@ -297,8 +297,8 @@ class Department(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
     
-    # Department head
-    head_id = db.Column(db.Integer, db.ForeignKey('department_heads.id'), nullable=True)
+    # Department head - FIXED: Remove circular dependency
+    head_id = db.Column(db.Integer, nullable=True)  # Temporarily remove FK constraint
     
     # Statistics
     employee_count = db.Column(db.Integer, default=0)
@@ -310,10 +310,12 @@ class Department(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships - FIXED with proper foreign_keys and backrefs
+    # Relationships - FIXED: Remove circular backrefs
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='departments')
-    head = db.relationship('DepartmentHead', foreign_keys=[head_id], back_populates='department')
     employees_list = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')
+    
+    # FIXED: Add relationship to department head without circular dependency
+    head = db.relationship('DepartmentHead', foreign_keys='DepartmentHead.department_id', uselist=False)
     
     def update_stats(self):
         employees = Client.query.filter_by(department_id=self.id).all()
@@ -332,7 +334,7 @@ class DepartmentHead(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=False)
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=True)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=True, unique=True)
     
     # Permissions
     can_view_department_data = db.Column(db.Boolean, default=True)
@@ -341,10 +343,10 @@ class DepartmentHead(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships - FIXED: Use back_populates instead of backref to avoid conflicts
+    # Relationships - FIXED: No circular backrefs
     user = db.relationship('User', foreign_keys=[user_id], back_populates='department_head_profile')
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='department_heads')
-    department = db.relationship('Department', foreign_keys=[department_id], back_populates='head')
+    department = db.relationship('Department', foreign_keys=[department_id], backref='department_head_ref')
     
     def get_department_stats(self):
         if not self.department:
