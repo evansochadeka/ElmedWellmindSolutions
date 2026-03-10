@@ -1,4 +1,4 @@
-# models.py - Complete System Models with FIXED relationships
+# models.py - Complete System Models with ALL FEATURES and FIXED relationships
 from extensions import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
@@ -166,12 +166,13 @@ class Professional(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships - FIXED with explicit foreign_keys
+    # Relationships - FIXED with unique backref names
     user = db.relationship('User', foreign_keys=[user_id], back_populates='professional_profile')
     verifier = db.relationship('User', foreign_keys=[verified_by], backref='verified_professionals')
     sessions = db.relationship('Session', back_populates='professional')
-    session_requests = db.relationship('SessionRequest', back_populates='professional', foreign_keys='SessionRequest.professional_id')
-    matched_requests = db.relationship('SessionRequest', foreign_keys='SessionRequest.matched_professional_id', backref='matched_professional')
+    session_requests = db.relationship('SessionRequest', foreign_keys='SessionRequest.professional_id', back_populates='professional')
+    # FIXED: Changed backref name to avoid conflict
+    matched_requests = db.relationship('SessionRequest', foreign_keys='SessionRequest.matched_professional_id', backref='matched_professional_ref')
     webinars = db.relationship('Webinar', back_populates='professional')
     availability = db.relationship('ProfessionalAvailability', back_populates='professional')
     
@@ -269,10 +270,11 @@ class SessionRequest(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships - FIXED with explicit foreign_keys
+    # Relationships - FIXED with unique backref names
     client = db.relationship('Client', foreign_keys=[client_id], back_populates='session_requests')
-    professional = db.relationship('Professional', foreign_keys=[professional_id])
-    matched_professional = db.relationship('Professional', foreign_keys=[matched_professional_id])
+    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='session_requests')
+    # This now uses the backref 'matched_professional_ref' from Professional.matched_requests
+    matched_professional = db.relationship('Professional', foreign_keys=[matched_professional_id], backref='matched_requests')
     session = db.relationship('Session', back_populates='request', uselist=False)
 
 class Session(db.Model):
@@ -414,7 +416,7 @@ class Review(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships - FIXED with explicit foreign_keys
+    # Relationships
     session = db.relationship('Session', foreign_keys=[session_id], back_populates='review')
     reviewer = db.relationship('User', foreign_keys=[reviewer_id], back_populates='reviews_given')
     reviewee = db.relationship('User', foreign_keys=[reviewee_id], back_populates='reviews_received')
