@@ -12,7 +12,11 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from sqlalchemy import text  # Add this for testing connection
+# Add this import
+from chat_routes import chat_bp
 
+# Register blueprint
+app.register_blueprint(chat_bp)
 # Load environment variables
 load_dotenv()
 
