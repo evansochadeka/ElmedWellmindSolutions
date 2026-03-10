@@ -1,9 +1,9 @@
-<!-- templates/header.html -->
+<!-- templates/header.html - FIXED with correct URL endpoints -->
 <!-- Header -->
 <header id="mainHeader">
     <div class="container header-container">
         <!-- Logo Section -->
-        <a href="#home" class="logo">
+        <a href="/" class="logo">
             <div class="logo-img">
                 <img src="{{ url_for('static', filename='images/mental.png') }}" alt="Logo" class="flag">
             </div>
@@ -25,13 +25,19 @@
         <!-- Main Navigation -->
         <nav id="mainNav">
             <ul>
-                <li><a href="#home" class="active"><i class="fas fa-home"></i> <span>Home</span></a></li>
+                <li><a href="/" class="active"><i class="fas fa-home"></i> <span>Home</span></a></li>
                 <li><a href="#services"><i class="fas fa-hand-holding-heart"></i> <span>Services</span></a></li>
-               
-                <li><a href="#contact"><i class="fas fa-phone-alt"></i> <span>login</span></a></li>
-                <li><a href="#Corporate"><i class="fas fa-phone-alt"></i> <span>register</span></a></li>
-                <li><a href="#payment" class="donate-btn"><i class="fas fa-donate"></i> <span>Get started</span></a></li>
+                <li><a href="#resources" id="resourcesTab"><i class="fas fa-folder-open"></i> <span>Resources</span></a></li>
+                <li><a href="#ai-chat"><i class="fas fa-robot"></i> <span>AI Assistant</span></a></li>
+                <li><a href="#community"><i class="fas fa-users"></i> <span>Community</span></a></li>
+                <li><a href="#contact"><i class="fas fa-phone-alt"></i> <span>Contact</span></a></li>
+                <li><a href="#Corporate"><i class="fas fa-phone-alt"></i> <span>Corporations</span></a></li>
                 
+                <!-- Authentication Links - FIXED with correct endpoints -->
+                <li><a href="/auth/register" class="register-link"><i class="fas fa-user-plus"></i> <span>Register</span></a></li>
+                <li><a href="/auth/login" class="login-link"><i class="fas fa-sign-in-alt"></i> <span>Login</span></a></li>
+                
+                <li><a href="#payment" class="donate-btn"><i class="fas fa-donate"></i> <span>Donate Now</span></a></li>
             </ul>
         </nav>
     </div>
@@ -118,7 +124,7 @@
 </div>
 
 <style>
-    /* Header Styles */
+    /* Header Styles - same as before */
     :root {
         --primary: #6c63ff;
         --secondary: #ff6584;
@@ -267,6 +273,30 @@
         transform: translateY(-2px);
     }
     
+    /* Register and Login link styles */
+    .register-link, .login-link {
+        border: 2px solid var(--primary);
+        padding: 8px 18px !important;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+    
+    .register-link:hover, .login-link:hover {
+        background: var(--primary);
+        color: white !important;
+        transform: translateY(-2px);
+    }
+    
+    .register-link {
+        background: transparent;
+        color: var(--primary);
+    }
+    
+    .login-link {
+        background: var(--primary);
+        color: white;
+    }
+    
     .donate-btn {
         background: var(--gradient-secondary);
         color: white !important;
@@ -310,7 +340,7 @@
         transform: rotate(90deg);
     }
     
-    /* Resources Modal */
+    /* Resources Modal - keep same as before */
     .resources-modal {
         display: none;
         position: fixed;
@@ -856,7 +886,6 @@
                 if (!this.classList.contains('coming-soon')) {
                     console.log('Download initiated:', this.href);
                     // Add analytics tracking here
-                    // Example: ga('send', 'event', 'Resources', 'Download', this.href);
                 } else {
                     e.preventDefault();
                 }
