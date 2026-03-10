@@ -1,4 +1,4 @@
-# models.py - Complete System Models (FULLY CORRECTED)
+# models.py - Complete System Models with FIXED relationships
 from extensions import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
@@ -40,16 +40,15 @@ class User(UserMixin, db.Model):
     last_login = db.Column(db.DateTime, nullable=True)
     last_active = db.Column(db.DateTime, nullable=True)
     
-    # Relationships
-    client_profile = db.relationship('Client', back_populates='user', uselist=False, cascade='all, delete-orphan')
-    professional_profile = db.relationship('Professional', back_populates='user', uselist=False, cascade='all, delete-orphan')
-    organization_profile = db.relationship('Organization', back_populates='user', uselist=False, cascade='all, delete-orphan')
+    # Relationships - FIXED with explicit foreign_keys
+    client_profile = db.relationship('Client', foreign_keys='Client.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
+    professional_profile = db.relationship('Professional', foreign_keys='Professional.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
+    organization_profile = db.relationship('Organization', foreign_keys='Organization.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
     notifications = db.relationship('Notification', back_populates='user', cascade='all, delete-orphan')
     reviews_given = db.relationship('Review', foreign_keys='Review.reviewer_id', back_populates='reviewer')
     reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', back_populates='reviewee')
-    
-    # Chat messages relationship
     chat_messages = db.relationship('ChatMessage', back_populates='user', cascade='all, delete-orphan')
+    activity_logs = db.relationship('ActivityLog', back_populates='user', cascade='all, delete-orphan')
     
     # Security tokens
     reset_token = db.Column(db.String(100), nullable=True)
@@ -121,13 +120,11 @@ class Client(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationships
-    user = db.relationship('User', back_populates='client_profile')
-    organization = db.relationship('Organization', back_populates='employees')
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='client_profile')
+    organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='employees')
     sessions = db.relationship('Session', back_populates='client')
     session_requests = db.relationship('SessionRequest', back_populates='client')
     assessments = db.relationship('WellnessAssessment', back_populates='client')
-    
-    # Community posts relationship
     community_posts = db.relationship('CommunityPost', back_populates='author', cascade='all, delete-orphan')
     post_comments = db.relationship('PostComment', back_populates='author', cascade='all, delete-orphan')
 
@@ -169,10 +166,12 @@ class Professional(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships
-    user = db.relationship('User', back_populates='professional_profile')
+    # Relationships - FIXED with explicit foreign_keys
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='professional_profile')
+    verifier = db.relationship('User', foreign_keys=[verified_by], backref='verified_professionals')
     sessions = db.relationship('Session', back_populates='professional')
-    session_requests = db.relationship('SessionRequest', back_populates='professional')
+    session_requests = db.relationship('SessionRequest', back_populates='professional', foreign_keys='SessionRequest.professional_id')
+    matched_requests = db.relationship('SessionRequest', foreign_keys='SessionRequest.matched_professional_id', backref='matched_professional')
     webinars = db.relationship('Webinar', back_populates='professional')
     availability = db.relationship('ProfessionalAvailability', back_populates='professional')
     
@@ -194,7 +193,7 @@ class Organization(db.Model):
     # Organization details
     company_name = db.Column(db.String(200), nullable=False)
     registration_number = db.Column(db.String(100), nullable=False)
-    industry = db.Column(db.String(100), nullable=True)  # FIXED: Removed extra '.db'
+    industry = db.Column(db.String(100), nullable=True)  # FIXED: removed extra '.db'
     company_size = db.Column(db.Integer, default=0)  # Number of employees
     
     # Registration code for employees
@@ -215,8 +214,8 @@ class Organization(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationships
-    user = db.relationship('User', back_populates='organization_profile')
-    employees = db.relationship('Client', back_populates='organization')
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='organization_profile')
+    employees = db.relationship('Client', foreign_keys='Client.organization_id', back_populates='organization')
     departments = db.relationship('Department', back_populates='organization')
     wellness_data = db.relationship('OrganizationWellnessData', back_populates='organization')
     
@@ -270,8 +269,8 @@ class SessionRequest(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships
-    client = db.relationship('Client', back_populates='session_requests')
+    # Relationships - FIXED with explicit foreign_keys
+    client = db.relationship('Client', foreign_keys=[client_id], back_populates='session_requests')
     professional = db.relationship('Professional', foreign_keys=[professional_id])
     matched_professional = db.relationship('Professional', foreign_keys=[matched_professional_id])
     session = db.relationship('Session', back_populates='request', uselist=False)
@@ -316,9 +315,9 @@ class Session(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    client = db.relationship('Client', back_populates='sessions')
-    professional = db.relationship('Professional', back_populates='sessions')
-    request = db.relationship('SessionRequest', back_populates='session')
+    client = db.relationship('Client', foreign_keys=[client_id], back_populates='sessions')
+    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='sessions')
+    request = db.relationship('SessionRequest', foreign_keys=[request_id], back_populates='session')
     feedback = db.relationship('SessionFeedback', back_populates='session', uselist=False)
     review = db.relationship('Review', back_populates='session', uselist=False)
 
@@ -355,7 +354,7 @@ class Webinar(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    professional = db.relationship('Professional', back_populates='webinars')
+    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='webinars')
     participants = db.relationship('WebinarParticipant', back_populates='webinar')
     
     @property
@@ -378,8 +377,8 @@ class WebinarParticipant(db.Model):
     
     # Relationships
     webinar = db.relationship('Webinar', back_populates='participants')
-    client = db.relationship('Client')
-    organization = db.relationship('Organization')
+    client = db.relationship('Client', foreign_keys=[client_id])
+    organization = db.relationship('Organization', foreign_keys=[organization_id])
 
 class SessionFeedback(db.Model):
     __tablename__ = 'session_feedback'
@@ -397,7 +396,7 @@ class SessionFeedback(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    session = db.relationship('Session', back_populates='feedback')
+    session = db.relationship('Session', foreign_keys=[session_id], back_populates='feedback')
 
 class Review(db.Model):
     __tablename__ = 'reviews'
@@ -415,8 +414,8 @@ class Review(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships
-    session = db.relationship('Session', back_populates='review')
+    # Relationships - FIXED with explicit foreign_keys
+    session = db.relationship('Session', foreign_keys=[session_id], back_populates='review')
     reviewer = db.relationship('User', foreign_keys=[reviewer_id], back_populates='reviews_given')
     reviewee = db.relationship('User', foreign_keys=[reviewee_id], back_populates='reviews_received')
 
@@ -434,7 +433,7 @@ class ProfessionalAvailability(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    professional = db.relationship('Professional', back_populates='availability')
+    professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='availability')
 
 class WellnessAssessment(db.Model):
     __tablename__ = 'wellness_assessments'
@@ -458,7 +457,7 @@ class WellnessAssessment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    client = db.relationship('Client', back_populates='assessments')
+    client = db.relationship('Client', foreign_keys=[client_id], back_populates='assessments')
 
 class OrganizationWellnessData(db.Model):
     __tablename__ = 'organization_wellness_data'
@@ -486,7 +485,7 @@ class OrganizationWellnessData(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    organization = db.relationship('Organization', back_populates='wellness_data')
+    organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='wellness_data')
 
 class Notification(db.Model):
     __tablename__ = 'notifications'
@@ -511,7 +510,7 @@ class Notification(db.Model):
     read_at = db.Column(db.DateTime, nullable=True)
     
     # Relationships
-    user = db.relationship('User', back_populates='notifications')
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='notifications')
     
     def mark_as_read(self):
         self.is_read = True
@@ -535,9 +534,9 @@ class ActivityLog(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    user = db.relationship('User')
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='activity_logs')
 
-# ========== CHAT AND COMMUNITY MODELS (ADDED BACK) ==========
+# ========== CHAT AND COMMUNITY MODELS ==========
 
 class ChatMessage(db.Model):
     __tablename__ = 'chat_messages'
@@ -550,7 +549,7 @@ class ChatMessage(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    user = db.relationship('User', back_populates='chat_messages')
+    user = db.relationship('User', foreign_keys=[user_id], back_populates='chat_messages')
     
     def to_dict(self):
         return {
@@ -580,7 +579,7 @@ class CommunityPost(db.Model):
     is_featured = db.Column(db.Boolean, default=False)
     
     # Relationships
-    author = db.relationship('Client', back_populates='community_posts')
+    author = db.relationship('Client', foreign_keys=[author_id], back_populates='community_posts')
     comments = db.relationship('PostComment', back_populates='post', cascade='all, delete-orphan')
     
     def to_dict(self):
@@ -605,8 +604,8 @@ class PostComment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
-    post = db.relationship('CommunityPost', back_populates='comments')
-    author = db.relationship('Client', back_populates='post_comments')
+    post = db.relationship('CommunityPost', foreign_keys=[post_id], back_populates='comments')
+    author = db.relationship('Client', foreign_keys=[author_id], back_populates='post_comments')
     
     def to_dict(self):
         return {
