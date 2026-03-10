@@ -238,9 +238,12 @@ class Department(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships
-    organization = db.relationship('Organization', back_populates='departments')
-    employees = db.relationship('Client', foreign_keys='Client.department')
+    # Relationships - FIXED
+    organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='departments')
+    employees = db.relationship('Client', 
+                              primaryjoin="and_(Client.department==Department.name, "
+                                            "Client.organization_id==Department.organization_id)",
+                              viewonly=True)
 
 class SessionRequest(db.Model):
     __tablename__ = 'session_requests'
