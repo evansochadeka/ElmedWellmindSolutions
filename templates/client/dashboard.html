@@ -1,0 +1,769 @@
+<!-- templates/client/dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}My Wellness Journey | Elmed Wellmind{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #8B5CF6;
+        --primary-light: #A78BFA;
+        --secondary: #EC4899;
+        --accent: #06B6D4;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --danger: #EF4444;
+        --dark: #1F2937;
+        --light: #F9FAFB;
+        --gray: #6B7280;
+        --gradient-primary: linear-gradient(135deg, #8B5CF6, #EC4899);
+        --gradient-success: linear-gradient(135deg, #10B981, #34D399);
+        --shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+        --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+        --border-radius: 20px;
+        --transition: all 0.3s ease;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #F3F4F6;
+    }
+
+    .dashboard {
+        padding: 100px 30px 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Welcome Section */
+    .welcome-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: var(--border-radius);
+        padding: 40px;
+        color: white;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .welcome-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .welcome-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 20px;
+    }
+
+    .handwriting {
+        font-family: 'Caveat', cursive;
+        font-size: 2rem;
+        color: #FFD700;
+        margin-top: 10px;
+    }
+
+    /* Progress Section */
+    .progress-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .progress-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 30px;
+        box-shadow: var(--shadow);
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .progress-header h3 {
+        font-size: 1.3rem;
+        color: var(--dark);
+    }
+
+    .progress-circle {
+        width: 150px;
+        height: 150px;
+        margin: 20px auto;
+        position: relative;
+    }
+
+    .progress-circle svg {
+        width: 150px;
+        height: 150px;
+        transform: rotate(-90deg);
+    }
+
+    .progress-circle circle {
+        fill: none;
+        stroke-width: 8;
+        stroke-linecap: round;
+    }
+
+    .progress-circle .bg {
+        stroke: #F3F4F6;
+    }
+
+    .progress-circle .progress {
+        stroke: url(#gradient);
+        stroke-dasharray: 440;
+        stroke-dashoffset: calc(440 - (440 * 75) / 100);
+        transition: stroke-dashoffset 1s ease;
+    }
+
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .progress-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        line-height: 1;
+    }
+
+    .progress-label {
+        font-size: 0.9rem;
+        color: var(--gray);
+    }
+
+    .streak-card {
+        background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+        border-radius: 15px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .streak-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(245, 158, 11, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+    }
+
+    .streak-days {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #92400E;
+    }
+
+    /* Services Grid */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .service-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .service-icon i {
+        font-size: 2rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .service-card h4 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: var(--dark);
+    }
+
+    .service-card p {
+        color: var(--gray);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .service-count {
+        margin-top: 15px;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    /* Professionals Grid */
+    .professionals-section {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 30px;
+        margin-bottom: 40px;
+        box-shadow: var(--shadow);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .section-header h3 {
+        font-size: 1.5rem;
+        color: var(--dark);
+    }
+
+    .view-all {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .professionals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .professional-card {
+        background: #F9FAFB;
+        border-radius: 15px;
+        padding: 20px;
+        transition: var(--transition);
+        border: 1px solid transparent;
+    }
+
+    .professional-card:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+    }
+
+    .professional-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .professional-avatar {
+        width: 60px;
+        height: 60px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .professional-info h4 {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .professional-rating {
+        color: #F59E0B;
+        font-size: 0.9rem;
+    }
+
+    .professional-specialty {
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .professional-fee {
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 15px;
+    }
+
+    .book-btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .book-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    /* Appointments */
+    .appointments-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .appointments-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+    }
+
+    .appointment-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #F3F4F6;
+    }
+
+    .appointment-item:last-child {
+        border-bottom: none;
+    }
+
+    .appointment-date {
+        background: linear-gradient(135deg, #8B5CF6, #EC4899);
+        color: white;
+        padding: 10px;
+        border-radius: 10px;
+        text-align: center;
+        min-width: 60px;
+    }
+
+    .appointment-date .day {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .appointment-date .month {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+
+    .appointment-details h5 {
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+
+    .appointment-details p {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .appointment-status {
+        margin-left: auto;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-confirmed {
+        background: #D1FAE5;
+        color: #065F46;
+    }
+
+    .status-pending {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    /* Assessment */
+    .assessment-card {
+        background: linear-gradient(135deg, #10B981, #34D399);
+        border-radius: var(--border-radius);
+        padding: 30px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .assessment-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    .assessment-content p {
+        opacity: 0.9;
+    }
+
+    .assessment-btn {
+        background: white;
+        color: #10B981;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .assessment-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 1024px) {
+        .progress-section,
+        .services-grid,
+        .appointments-section {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard {
+            padding: 80px 20px 30px;
+        }
+        
+        .welcome-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="dashboard">
+    <!-- Welcome Section -->
+    <div class="welcome-card">
+        <div class="welcome-content">
+            <h1 class="welcome-title">Welcome back, {{ current_user.get_full_name() }}! 👋</h1>
+            <p class="welcome-subtitle">Your healing journey continues. We're here for you every step of the way.</p>
+            <div class="handwriting">"Every step forward is a step toward peace"</div>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+        <div class="progress-card">
+            <div class="progress-header">
+                <h3>Your Wellness Score</h3>
+                <i class="fas fa-heartbeat" style="color: var(--primary); font-size: 1.5rem;"></i>
+            </div>
+            <div class="progress-circle">
+                <svg viewBox="0 0 150 150">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#8B5CF6" />
+                            <stop offset="100%" stop-color="#EC4899" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="bg" cx="75" cy="75" r="70" />
+                    <circle class="progress" cx="75" cy="75" r="70" />
+                </svg>
+                <div class="progress-text">
+                    <div class="progress-value" id="wellnessScore">75</div>
+                    <div class="progress-label">out of 100</div>
+                </div>
+            </div>
+            <div class="streak-card">
+                <div class="streak-icon">🔥</div>
+                <div>
+                    <div class="streak-days" id="streakDays">7</div>
+                    <div>day streak</div>
+                </div>
+                <div style="margin-left: auto;">
+                    <i class="fas fa-calendar-check" style="color: #10B981; font-size: 1.5rem;"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-card">
+            <div class="progress-header">
+                <h3>Your Progress</h3>
+                <i class="fas fa-chart-line" style="color: var(--primary); font-size: 1.5rem;"></i>
+            </div>
+            <canvas id="progressChart" style="width: 100%; height: 200px;"></canvas>
+        </div>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="services-grid">
+        <div class="service-card" onclick="location.href='#counseling'">
+            <div class="service-icon">
+                <i class="fas fa-user-md"></i>
+            </div>
+            <h4>Counseling Sessions</h4>
+            <p>One-on-one support with licensed professionals</p>
+            <div class="service-count" id="counselingCount">3 sessions completed</div>
+        </div>
+        <div class="service-card" onclick="location.href='#ai-chat'">
+            <div class="service-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h4>AI Assistant</h4>
+            <p>24/7 instant support and guidance</p>
+            <div class="service-count" id="aiChatCount">12 conversations</div>
+        </div>
+        <div class="service-card" onclick="location.href='#assessments'">
+            <div class="service-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <h4>Assessments</h4>
+            <p>Track your wellness journey</p>
+            <div class="service-count" id="assessmentCount">5 assessments taken</div>
+        </div>
+    </div>
+
+    <!-- Professionals Section -->
+    <div class="professionals-section">
+        <div class="section-header">
+            <h3>Available Professionals</h3>
+            <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="professionals-grid" id="professionalsGrid"></div>
+    </div>
+
+    <!-- Appointments Section -->
+    <div class="appointments-section">
+        <div class="appointments-card">
+            <div class="section-header">
+                <h3>Upcoming Sessions</h3>
+                <a href="#" class="view-all">Schedule <i class="fas fa-plus-circle"></i></a>
+            </div>
+            <div id="upcomingAppointments"></div>
+        </div>
+        <div class="appointments-card">
+            <div class="section-header">
+                <h3>Past Sessions</h3>
+                <a href="#" class="view-all">View All</a>
+            </div>
+            <div id="pastAppointments"></div>
+        </div>
+    </div>
+
+    <!-- Assessment CTA -->
+    <div class="assessment-card">
+        <div class="assessment-content">
+            <h3>How are you feeling today?</h3>
+            <p>Take a quick check-in to track your progress and get personalized recommendations</p>
+        </div>
+        <a href="#" class="assessment-btn">
+            <i class="fas fa-heart"></i> Start Check-in
+        </a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let progressChart;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+    initProgressChart();
+    loadProfessionals();
+    loadAppointments();
+});
+
+function loadDashboardData() {
+    // Simulated data - replace with API calls
+    document.getElementById('wellnessScore').textContent = '75';
+    document.getElementById('streakDays').textContent = '7';
+    document.getElementById('counselingCount').textContent = '3 sessions completed';
+    document.getElementById('aiChatCount').textContent = '12 conversations';
+    document.getElementById('assessmentCount').textContent = '5 assessments taken';
+}
+
+function initProgressChart() {
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    
+    progressChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+            datasets: [{
+                label: 'Wellness Score',
+                data: [45, 52, 58, 63, 70, 75],
+                borderColor: '#8B5CF6',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#8B5CF6',
+                pointBorderColor: 'white',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: '#F3F4F6'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+function loadProfessionals() {
+    const professionals = [
+        {
+            id: 1,
+            name: 'Dr. Sarah Kimani',
+            specialty: 'Clinical Psychologist',
+            rating: 4.9,
+            reviews: 127,
+            fee: 3500,
+            avatar: 'SK',
+            specializations: ['Anxiety', 'Depression', 'Trauma']
+        },
+        {
+            id: 2,
+            name: 'Dr. James Omondi',
+            specialty: 'Counseling Psychologist',
+            rating: 4.8,
+            reviews: 98,
+            fee: 3000,
+            avatar: 'JO',
+            specializations: ['Stress', 'Relationships', 'Career']
+        },
+        {
+            id: 3,
+            name: 'Dr. Mary Wanjiku',
+            specialty: 'Trauma Specialist',
+            rating: 5.0,
+            reviews: 156,
+            fee: 4000,
+            avatar: 'MW',
+            specializations: ['PTSD', 'Grief', 'Abuse Recovery']
+        }
+    ];
+
+    document.getElementById('professionalsGrid').innerHTML = professionals.map(p => `
+        <div class="professional-card">
+            <div class="professional-header">
+                <div class="professional-avatar">${p.avatar}</div>
+                <div class="professional-info">
+                    <h4>${p.name}</h4>
+                    <div class="professional-rating">
+                        <i class="fas fa-star"></i> ${p.rating} (${p.reviews} reviews)
+                    </div>
+                </div>
+            </div>
+            <div class="professional-specialty">${p.specialty}</div>
+            <div class="professional-specialty">
+                ${p.specializations.join(' • ')}
+            </div>
+            <div class="professional-fee">KES ${p.fee}/session</div>
+            <button class="book-btn" onclick="bookSession(${p.id})">
+                <i class="fas fa-calendar-plus"></i> Book Session
+            </button>
+        </div>
+    `).join('');
+}
+
+function loadAppointments() {
+    const upcoming = [
+        {
+            day: '15',
+            month: 'Mar',
+            title: 'Therapy Session with Dr. Sarah',
+            time: '10:00 AM',
+            status: 'confirmed'
+        },
+        {
+            day: '18',
+            month: 'Mar',
+            title: 'Follow-up with Dr. James',
+            time: '2:30 PM',
+            status: 'pending'
+        }
+    ];
+
+    const past = [
+        {
+            day: '10',
+            month: 'Mar',
+            title: 'Session with Dr
