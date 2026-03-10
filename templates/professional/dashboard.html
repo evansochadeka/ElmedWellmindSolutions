@@ -1,0 +1,768 @@
+<!-- templates/professional/dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Professional Dashboard | Elmed Wellmind{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #8B5CF6;
+        --primary-light: #A78BFA;
+        --secondary: #EC4899;
+        --accent: #06B6D4;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --danger: #EF4444;
+        --dark: #1F2937;
+        --light: #F9FAFB;
+        --gray: #6B7280;
+        --gradient-primary: linear-gradient(135deg, #8B5CF6, #EC4899);
+        --shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+        --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+        --border-radius: 20px;
+        --transition: all 0.3s ease;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #F3F4F6;
+    }
+
+    .dashboard {
+        padding: 100px 30px 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Header */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .header-title h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 5px;
+    }
+
+    .header-title p {
+        color: var(--gray);
+        font-size: 1.1rem;
+    }
+
+    .verification-badge {
+        background: linear-gradient(135deg, #10B981, #34D399);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+    }
+
+    .verification-badge.pending {
+        background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid rgba(139, 92, 246, 0.1);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .stat-icon i {
+        font-size: 1.5rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    /* Tabs */
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #E5E7EB;
+        padding-bottom: 10px;
+        overflow-x: auto;
+    }
+
+    .tab-btn {
+        padding: 12px 25px;
+        background: none;
+        border: none;
+        font-weight: 600;
+        color: var(--gray);
+        cursor: pointer;
+        border-radius: 25px;
+        transition: var(--transition);
+        white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+        background: #F3F4F6;
+        color: var(--primary);
+    }
+
+    .tab-btn.active {
+        background: var(--gradient-primary);
+        color: white;
+    }
+
+    /* Session Requests */
+    .requests-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .request-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        border-left: 4px solid var(--primary);
+        transition: var(--transition);
+    }
+
+    .request-card.urgent {
+        border-left-color: var(--danger);
+    }
+
+    .request-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .request-type {
+        background: #F3F4F6;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .timer {
+        color: var(--danger);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .request-body {
+        margin-bottom: 20px;
+    }
+
+    .request-body p {
+        color: var(--gray);
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .request-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 0.9rem;
+        color: var(--gray);
+    }
+
+    .request-meta i {
+        color: var(--primary);
+        margin-right: 5px;
+    }
+
+    .request-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+
+    .btn-primary {
+        background: var(--gradient-primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+    }
+
+    .btn-outline:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-danger {
+        background: var(--danger);
+        color: white;
+    }
+
+    /* Schedule */
+    .schedule-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+    }
+
+    .schedule-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+    }
+
+    .schedule-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .schedule-header h3 {
+        font-size: 1.3rem;
+        color: var(--dark);
+    }
+
+    .session-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #F3F4F6;
+    }
+
+    .session-item:last-child {
+        border-bottom: none;
+    }
+
+    .session-time {
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .session-title {
+        color: var(--dark);
+        font-weight: 500;
+    }
+
+    .join-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    /* Availability */
+    .availability-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .day-card {
+        background: #F9FAFB;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .day-card:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .day-card.active {
+        background: var(--gradient-primary);
+        color: white;
+    }
+
+    .day-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .day-time {
+        font-size: 0.8rem;
+    }
+
+    /* Webinar Form */
+    .webinar-form {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 30px;
+        margin-top: 30px;
+        box-shadow: var(--shadow);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #E5E7EB;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .dashboard {
+            padding: 80px 20px 30px;
+        }
+        
+        .schedule-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="header-title">
+            <h1>Welcome back, Dr. {{ current_user.get_full_name() }}</h1>
+            <p>Your healing practice continues</p>
+        </div>
+        <div class="verification-badge" id="verificationBadge">
+            <i class="fas fa-check-circle"></i>
+            <span>Verified Professional</span>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('requests')">Session Requests</button>
+        <button class="tab-btn" onclick="showTab('schedule')">My Schedule</button>
+        <button class="tab-btn" onclick="showTab('availability')">Set Availability</button>
+        <button class="tab-btn" onclick="showTab('webinars')">Manage Webinars</button>
+        <button class="tab-btn" onclick="showTab('earnings')">Earnings</button>
+    </div>
+
+    <!-- Session Requests Tab -->
+    <div class="tab-content active" id="requestsTab">
+        <div class="requests-grid" id="requestsGrid"></div>
+    </div>
+
+    <!-- Schedule Tab -->
+    <div class="tab-content" id="scheduleTab">
+        <div class="schedule-grid">
+            <div class="schedule-card">
+                <div class="schedule-header">
+                    <h3>Today's Sessions</h3>
+                    <span class="badge" id="todayCount">0</span>
+                </div>
+                <div id="todaySessions"></div>
+            </div>
+            <div class="schedule-card">
+                <div class="schedule-header">
+                    <h3>Upcoming Sessions</h3>
+                    <span class="badge" id="upcomingCount">0</span>
+                </div>
+                <div id="upcomingSessions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Availability Tab -->
+    <div class="tab-content" id="availabilityTab">
+        <div class="schedule-card">
+            <h3>Set Your Weekly Availability</h3>
+            <div class="availability-grid" id="availabilityGrid"></div>
+            <button class="btn btn-primary" style="margin-top: 20px;" onclick="saveAvailability()">
+                <i class="fas fa-save"></i> Save Availability
+            </button>
+        </div>
+    </div>
+
+    <!-- Webinars Tab -->
+    <div class="tab-content" id="webinarsTab">
+        <div class="webinar-form">
+            <h3>Create New Webinar</h3>
+            <form onsubmit="createWebinar(event)">
+                <div class="form-group">
+                    <label>Webinar Title</label>
+                    <input type="text" class="form-control" id="webinarTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" id="webinarDesc" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Topic</label>
+                    <input type="text" class="form-control" id="webinarTopic" required>
+                </div>
+                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" class="form-control" id="webinarDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Time</label>
+                        <input type="time" class="form-control" id="webinarTime" required>
+                    </div>
+                </div>
+                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Duration (minutes)</label>
+                        <input type="number" class="form-control" id="webinarDuration" value="60" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Participants</label>
+                        <input type="number" class="form-control" id="webinarMax" value="50" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="webinarFree"> Free Webinar
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i> Create Webinar
+                </button>
+            </form>
+        </div>
+        <div class="schedule-card" style="margin-top: 30px;">
+            <h3>Your Webinars</h3>
+            <div id="webinarsList"></div>
+        </div>
+    </div>
+
+    <!-- Earnings Tab -->
+    <div class="tab-content" id="earningsTab">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-coins"></i></div>
+                </div>
+                <div class="stat-value" id="totalEarnings">KES 0</div>
+                <div class="stat-label">Total Earnings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                </div>
+                <div class="stat-value" id="monthEarnings">KES 0</div>
+                <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                </div>
+                <div class="stat-value" id="avgRating">0.0</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let sessionRequests = [];
+let refreshInterval;
+
+async function loadDashboard() {
+    try {
+        // Simulated data - replace with actual API calls
+        const stats = {
+            totalSessions: 127,
+            pendingRequests: 5,
+            upcomingSessions: 8,
+            responseRate: 94,
+            totalEarnings: 245000,
+            monthEarnings: 65000,
+            avgRating: 4.8
+        };
+
+        updateStats(stats);
+        loadSessionRequests();
+        loadSchedule();
+        loadAvailability();
+        loadWebinars();
+        updateEarnings(stats);
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+    }
+}
+
+function updateStats(stats) {
+    document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            </div>
+            <div class="stat-value">${stats.totalSessions}</div>
+            <div class="stat-label">Total Sessions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            </div>
+            <div class="stat-value">${stats.pendingRequests}</div>
+            <div class="stat-label">Pending Requests</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon"><i class="fas fa-video"></i></div>
+            </div>
+            <div class="stat-value">${stats.upcomingSessions}</div>
+            <div class="stat-label">Upcoming Sessions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+            </div>
+            <div class="stat-value">${stats.responseRate}%</div>
+            <div class="stat-label">Response Rate</div>
+        </div>
+    `;
+}
+
+function loadSessionRequests() {
+    const requests = [
+        {
+            id: 1,
+            type: 'Anxiety',
+            description: 'Feeling overwhelmed with work and family pressure. Need coping strategies.',
+            preferredDate: '2024-03-15',
+            preferredTime: '14:00',
+            sessionType: 'video',
+            urgent: true,
+            timeLeft: '8:32'
+        },
+        {
+            id: 2,
+            type: 'Depression',
+            description: 'Been feeling low for weeks, loss of interest in activities.',
+            preferredDate: '2024-03-16',
+            preferredTime: '10:30',
+            sessionType: 'chat',
+            urgent: false,
+            timeLeft: '25:15'
+        }
+    ];
+
+    document.getElementById('requestsGrid').innerHTML = requests.map(req => `
+        <div class="request-card ${req.urgent ? 'urgent' : ''}">
+            <div class="request-header">
+                <span class="request-type">${req.type}</span>
+                <span class="timer"><i class="fas fa-hourglass-half"></i> ${req.timeLeft}</span>
+            </div>
+            <div class="request-body">
+                <p>${req.description}</p>
+                <div class="request-meta">
+                    <span><i class="fas fa-calendar"></i> ${req.preferredDate}</span>
+                    <span><i class="fas fa-clock"></i> ${req.preferredTime}</span>
+                    <span><i class="fas fa-${req.sessionType}"></i> ${req.sessionType}</span>
+                </div>
+            </div>
+            <div class="request-actions">
+                <button class="btn btn-primary" onclick="acceptRequest(${req.id})">
+                    <i class="fas fa-check"></i> Accept
+                </button>
+                <button class="btn btn-outline" onclick="declineRequest(${req.id})">
+                    <i class="fas fa-times"></i> Decline
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadSchedule() {
+    const today = [
+        { time: '09:00', title: 'Session with Mary K.', link: '#' },
+        { time: '11:30', title: 'Session with John D.', link: '#' },
+        { time: '14:00', title: 'Group Therapy Session', link: '#' }
+    ];
+
+    const upcoming = [
+        { date: 'Tomorrow', time: '10:00', title: 'Session with Anne W.' },
+        { date: 'Mar 15', time: '15:30', title: 'New Client Intake' },
+        { date: 'Mar 16', time: '13:00', title: 'Follow-up with Peter' }
+    ];
+
+    document.getElementById('todayCount').textContent = today.length;
+    document.getElementById('upcomingCount').textContent = upcoming.length;
+
+    document.getElementById('todaySessions').innerHTML = today.map(s => `
+        <div class="session-item">
+            <div>
+                <span class="session-time">${s.time}</span>
+                <span class="session-title"> - ${s.title}</span>
+            </div>
+            <a href="${s.link}" class="join-link">Join <i class="fas fa-arrow-right"></i></a>
+        </div>
+    `).join('');
+
+    document.getElementById('upcomingSessions').innerHTML = upcoming.map(s => `
+        <div class="session-item">
+            <div>
+                <span class="session-time">${s.date} ${s.time}</span>
+                <span class="session-title"> - ${s.title}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadAvailability() {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    document.getElementById('availabilityGrid').innerHTML = days.map(day => `
+        <div class="day-card active">
+            <div class="day-name">${day}</div>
+            <div class="day-time">9AM - 5PM</div>
+        </div>
+    `).join('');
+}
+
+function loadWebinars() {
+    document.getElementById('webinarsList').innerHTML = `
+        <p>No webinars scheduled. Create your first webinar above.</p>
+    `;
+}
+
+function updateEarnings(stats) {
+    document.getElementById('totalEarnings').textContent = `KES ${stats.totalEarnings.toLocaleString()}`;
+    document.getElementById('monthEarnings').textContent = `KES ${stats.monthEarnings.toLocaleString()}`;
+    document.getElementById('avgRating').textContent = stats.avgRating;
+}
+
+function showTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tab + 'Tab').classList.add('active');
+}
+
+function acceptRequest(id) {
+    alert('Request accepted! The client will be notified.');
+}
+
+function declineRequest(id) {
+    alert('Request declined.');
+}
+
+function saveAvailability() {
+    alert('Availability saved successfully!');
+}
+
+function createWebinar(event) {
+    event.preventDefault();
+    alert('Webinar created successfully!');
+}
+
+// Load dashboard on page load
+document.addEventListener('DOMContentLoaded', loadDashboard);
+
+// Refresh pending requests every 30 seconds
+refreshInterval = setInterval(loadSessionRequests, 30000);
+</script>
+{% endblock %}
