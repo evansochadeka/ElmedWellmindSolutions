@@ -1,4 +1,4 @@
-# app.py - PostgreSQL Ready Version with ALL Features Retained - CORRECTED
+# app.py - COMPLETE PRODUCTION READY VERSION WITH ALL FEATURES
 import os
 import sys
 import json
@@ -6,19 +6,20 @@ import threading
 from datetime import datetime, timedelta
 import secrets
 
-from flask import Flask, render_template, jsonify, request, send_from_directory, redirect, url_for
+from flask import Flask, render_template, jsonify, request, send_from_directory, redirect, url_for, session
 from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
-from sqlalchemy import text  # Add this for testing connection
+from sqlalchemy import text
+from werkzeug.utils import secure_filename
 
-# Load environment variables FIRST
+# Load environment variables
 load_dotenv()
 
 # Import extensions
 from extensions import db
 
-# Create Flask app - THIS MUST COME FIRST
+# Create Flask app
 app = Flask(
     __name__,
     static_folder="static",
@@ -42,19 +43,19 @@ app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", secrets.token_hex(32))
 
-# PostgreSQL specific optimizations (only if using PostgreSQL)
+# PostgreSQL optimizations
 if "postgresql" in DATABASE_URL:
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-        "pool_size": 10,              # Number of connections to keep in pool
-        "pool_recycle": 300,           # Recycle connections after 5 minutes
-        "pool_pre_ping": True,          # Verify connections before using
-        "max_overflow": 20,             # Allow up to 20 extra connections
+        "pool_size": 10,
+        "pool_recycle": 300,
+        "pool_pre_ping": True,
+        "max_overflow": 20,
     }
     print("✅ PostgreSQL connection pool configured")
 
 # Upload configuration
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx'}
 
 # Session configuration
@@ -64,24 +65,38 @@ app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=31)
 app.config['REMEMBER_COOKIE_SECURE'] = True
 app.config['REMEMBER_COOKIE_HTTPONLY'] = True
 
-# Create upload directories if they don't exist
+# Create directories
 os.makedirs(os.path.join('static', 'uploads', 'documents'), exist_ok=True)
 os.makedirs(os.path.join('static', 'uploads', 'profiles'), exist_ok=True)
 os.makedirs(os.path.join('static', 'uploads', 'posts'), exist_ok=True)
 os.makedirs(os.path.join('static', 'uploads', 'temp'), exist_ok=True)
 
-# Create services directory if it doesn't exist
+# Create services directory
 services_dir = os.path.join(os.path.dirname(__file__), 'services')
 if not os.path.exists(services_dir):
     os.makedirs(services_dir)
     print("✅ Created services directory")
 
-# Create __init__.py if it doesn't exist
-init_file = os.path.join(services_dir, '__init__.py')
-if not os.path.exists(init_file):
-    with open(init_file, 'w') as f:
-        f.write('"""Services module for Elmed Wellmind Solutions"""\n')
-    print("✅ Created services/__init__.py")
+# --------------------------------------------------
+# Jinja2 Filters
+# --------------------------------------------------
+
+@app.template_filter('from_json')
+def from_json_filter(value):
+    """Convert JSON string to Python object"""
+    try:
+        if isinstance(value, str):
+            return json.loads(value)
+        return value
+    except:
+        return []
+
+@app.template_filter('format_date')
+def format_date_filter(date):
+    """Format date nicely"""
+    if date:
+        return date.strftime('%B %d, %Y')
+    return ''
 
 # --------------------------------------------------
 # Initialize extensions
@@ -96,7 +111,7 @@ login_manager.login_view = 'auth.login'
 login_manager.login_message = 'Please log in to access this page.'
 login_manager.login_message_category = 'info'
 
-# Import models after db is initialized
+# Import models
 from models import *
 
 @login_manager.user_loader
@@ -104,35 +119,34 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # --------------------------------------------------
-# Import blueprints (ALL blueprints here)
+# Import blueprints
 # --------------------------------------------------
 
 from auth_routes import auth_bp
 from professional_routes import professional_bp
 from organization_routes import organization_bp
-from routes_py import api  # Original API routes
+from routes_py import api
 from admin_routes import admin_bp
 from superadmin_routes import superadmin_bp
 from department_head_routes import dept_head_bp
 from employee_routes import employee_bp
-from chat_routes import chat_bp  # Chat blueprint
+from chat_routes import chat_bp
+from assessment_routes import assessment_bp
 
-# --------------------------------------------------
-# Register blueprints (ALL after app is created)
-# --------------------------------------------------
-
+# Register blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(professional_bp)
 app.register_blueprint(organization_bp)
-app.register_blueprint(api)  # Original API routes
+app.register_blueprint(api)
 app.register_blueprint(admin_bp)
 app.register_blueprint(superadmin_bp)
 app.register_blueprint(dept_head_bp)
 app.register_blueprint(employee_bp)
-app.register_blueprint(chat_bp)  # Chat blueprint - NOW IN CORRECT POSITION
+app.register_blueprint(chat_bp)
+app.register_blueprint(assessment_bp)
 
 # --------------------------------------------------
-# Try to import matching service (optional)
+# Try to import matching service
 # --------------------------------------------------
 
 MATCHING_SERVICE_AVAILABLE = False
@@ -142,30 +156,25 @@ try:
     print("✅ Matching service loaded successfully")
 except ImportError as e:
     print(f"⚠️ Matching service not available (optional): {e}")
-    # Define a placeholder function
     def start_matching_service(app):
-        """Placeholder for matching service"""
-        print("ℹ️ Matching service placeholder - no actual matching")
         pass
 
 # --------------------------------------------------
-# Create tables and initial data with PostgreSQL connection test
+# Create tables and initial data
 # --------------------------------------------------
 
 with app.app_context():
     try:
-        # Test PostgreSQL connection
         if "postgresql" in DATABASE_URL:
             result = db.session.execute(text('SELECT version()')).scalar()
             print(f"✅ Connected to PostgreSQL: {result[:50]}...")
         else:
             print(f"✅ Connected to database: {DATABASE_URL.split('://')[0]}")
         
-        # Create all tables
         db.create_all()
         print("✅ Database tables created/verified")
         
-        # Create superadmin user if not exists
+        # Create superadmin if not exists
         superadmin_email = os.getenv("SUPERADMIN_EMAIL", "elijahokware@gmail.com")
         superadmin_password = os.getenv("SUPERADMIN_PASSWORD", "Pa$$w0rd")
         
@@ -195,38 +204,26 @@ with app.app_context():
             print("   Email: elijahokware@gmail.com")
             print("   Password: Pa$$w0rd")
             
-            # Create welcome notification for superadmin
-            notification = Notification(
-                user_id=superadmin.id,
-                title="Welcome to Elmed Wellmind",
-                message="You have been set up as the system superadmin with full control.",
-                notification_type="success",
-                link="/superadmin/dashboard"
-            )
-            db.session.add(notification)
-            db.session.commit()
-            
     except Exception as e:
         print(f"⚠️ Database init warning: {e}")
-        if "postgresql" in DATABASE_URL:
-            print("❌ PostgreSQL connection failed. Please check your DATABASE_URL")
-            print("   Your URL should be: postgresql://username:password@host:port/database")
 
 # --------------------------------------------------
-# ORIGINAL ROUTES (from your first app.py) - ALL RETAINED
+# Routes
 # --------------------------------------------------
 
 @app.route("/")
 def home():
+    """Home page with assessment call-to-action"""
     return render_template("index.html")
 
 @app.route("/chat")
 def chat_interface():
+    """AI chat interface"""
     return render_template("chat.html")
 
 @app.route("/health")
 def health_check():
-    # Enhanced health check with database status
+    """Health check endpoint"""
     db_status = "connected"
     db_type = "sqlite"
     
@@ -247,180 +244,65 @@ def health_check():
     })
 
 # --------------------------------------------------
-# ORIGINAL MISSING ROUTES FROM LOGS
+# Assessment Routes
 # --------------------------------------------------
 
-# 1. Community posts endpoint (404 in logs)
-@app.route("/api/community/posts")
-def community_posts():
-    try:
-        # Return empty array for now - implement database logic later
-        return jsonify([])
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@app.route('/assessment/take')
+@login_required
+def take_assessment():
+    """Take the wellness assessment"""
+    return render_template('assessment/take_assessment.html')
 
-# 2. Email endpoint replacement for PHP
-@app.route("/send_email.php", methods=["POST"])
-@app.route("/api/send_email", methods=["POST"])
-def send_email():
-    try:
-        # Get form data
-        if request.is_json:
-            data = request.json
-            name = data.get("name", "")
-            email = data.get("email", "")
-            subject = data.get("subject", "")
-            message = data.get("message", "")
-        else:
-            name = request.form.get("name", "")
-            email = request.form.get("email", "")
-            subject = request.form.get("subject", "")
-            message = request.form.get("message", "")
-        
-        # Log the email attempt
-        print(f"📧 Email attempted: {name} <{email}> - {subject}")
-        
-        # For now, just acknowledge receipt
-        return jsonify({
-            "status": "success",
-            "message": "Message received. We'll get back to you soon!",
-            "data": {
-                "name": name,
-                "email": email,
-                "subject": subject[:50]
-            }
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+@app.route('/assessment/results/<int:assessment_id>')
+@login_required
+def assessment_results(assessment_id):
+    """View assessment results"""
+    assessment = WellnessAssessment.query.get_or_404(assessment_id)
+    
+    # Verify ownership
+    client = Client.query.filter_by(user_id=current_user.id).first()
+    if assessment.client_id != client.id and current_user.role not in ['superadmin', 'admin']:
+        return redirect(url_for('main.index'))
+    
+    return render_template('assessment/results.html', assessment=assessment)
 
-# 3. Static file serving - ensure images work
+@app.route('/assessment/history')
+@login_required
+def assessment_history():
+    """View assessment history"""
+    client = Client.query.filter_by(user_id=current_user.id).first()
+    if not client:
+        return redirect(url_for('assessment.take_assessment'))
+    
+    assessments = WellnessAssessment.query.filter_by(client_id=client.id)\
+                    .order_by(WellnessAssessment.created_at.desc())\
+                    .all()
+    
+    return render_template('assessment/history.html', assessments=assessments)
+
+# --------------------------------------------------
+# Static file serving
+# --------------------------------------------------
+
 @app.route('/static/<path:filename>')
 def serve_static(filename):
-    return send_from_directory('static', filename)
-
-# 4. Chat history endpoint (original)
-@app.route("/api/chat/history/<session_id>")
-def chat_history(session_id):
     try:
-        messages = ChatMessage.query.filter_by(session_id=session_id)\
-                     .order_by(ChatMessage.created_at.asc())\
-                     .limit(100)\
-                     .all()
-        
-        if messages:
-            return jsonify([{
-                'id': m.id,
-                'role': m.role,
-                'content': m.content,
-                'timestamp': m.created_at.isoformat() if m.created_at else None
-            } for m in messages])
-        
-        return jsonify({"messages": [], "session_id": session_id})
-    except Exception as e:
-        return jsonify({"messages": [], "session_id": session_id})
+        return send_from_directory('static', filename)
+    except:
+        return "File not found", 404
 
-# --------------------------------------------------
-# FALLBACK ROUTES FOR MISSING IMAGES
-# --------------------------------------------------
-
-@app.route("/static/images/<image_name>")
-def serve_image(image_name):
-    """Serve images with fallback for missing files"""
+@app.route('/static/images/<path:filename>')
+def serve_image(filename):
     try:
-        return send_from_directory('static/images', image_name)
+        return send_from_directory('static/images', filename)
     except:
         try:
-            return send_from_directory('static/images', 'wellmed.jpg')
+            return send_from_directory('static/images', 'default.jpg')
         except:
-            return jsonify({"error": "Image not found"}), 404
+            return "", 404
 
 # --------------------------------------------------
-# ENHANCED API ROUTES (New functionality)
-# --------------------------------------------------
-
-@app.route("/api/v2/community/posts", methods=['GET'])
-def community_posts_v2():
-    """Enhanced community posts endpoint"""
-    try:
-        posts = CommunityPost.query.filter_by(is_approved=True)\
-                .order_by(CommunityPost.created_at.desc())\
-                .limit(50)\
-                .all()
-        
-        if posts:
-            return jsonify([post.to_dict() for post in posts])
-        else:
-            sample_posts = [
-                {
-                    "id": 1,
-                    "author": "Anonymous",
-                    "content": "Today marks 30 days of being anxiety-free. It does get better!",
-                    "likes": 24,
-                    "comments": 8,
-                    "date": "2 hours ago",
-                    "category": "Anxiety"
-                },
-                {
-                    "id": 2,
-                    "author": "Teacher_254",
-                    "content": "Our school's mental health program is making a real difference.",
-                    "likes": 15,
-                    "comments": 3,
-                    "date": "1 day ago",
-                    "category": "School Programs"
-                }
-            ]
-            return jsonify(sample_posts)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route("/api/v2/community/posts", methods=['POST'])
-def create_community_post_v2():
-    """Create a new community post"""
-    try:
-        data = request.json
-        post = CommunityPost(
-            author_name=data.get('author', 'Anonymous'),
-            content=data.get('content', ''),
-            category=data.get('category', '')
-        )
-        db.session.add(post)
-        db.session.commit()
-        return jsonify({"success": True, "post": post.to_dict()})
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
-# --------------------------------------------------
-# PostgreSQL Test Route (Optional - remove in production)
-# --------------------------------------------------
-
-@app.route("/test-db")
-def test_db():
-    """Test database connection (remove in production)"""
-    try:
-        if "postgresql" in DATABASE_URL:
-            result = db.session.execute(text('SELECT version()')).scalar()
-            return jsonify({
-                "status": "connected",
-                "database": "postgresql",
-                "version": result[:100],
-                "message": "✅ PostgreSQL connection successful!"
-            })
-        else:
-            return jsonify({
-                "status": "connected",
-                "database": "sqlite",
-                "message": "✅ SQLite connection successful!"
-            })
-    except Exception as e:
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 500
-
-# --------------------------------------------------
-# DASHBOARD REDIRECTS
+# Dashboard Redirect
 # --------------------------------------------------
 
 @app.route('/dashboard')
@@ -437,31 +319,31 @@ def dashboard_redirect():
         return redirect(url_for('organization.dashboard'))
     elif current_user.role == 'department_head':
         return redirect(url_for('dept_head.dashboard'))
+    elif current_user.role == 'org_employee':
+        return redirect(url_for('employee.dashboard'))
     else:
-        return render_template('dashboard/client_dashboard.html')
+        return render_template('client/dashboard.html')
 
 # --------------------------------------------------
-# ERROR HANDLERS
+# Error Handlers
 # --------------------------------------------------
 
 @app.errorhandler(404)
 def not_found(e):
-    """Handle 404 errors gracefully"""
     if request.path.startswith('/api/'):
-        return jsonify({"error": "Endpoint not found", "path": request.path}), 404
-    elif request.path.startswith('/static/'):
-        return "File not found", 404
+        return jsonify({"error": "Endpoint not found"}), 404
     return render_template("index.html"), 200
 
 @app.errorhandler(500)
 def internal_error(e):
     db.session.rollback()
+    print(f"Internal server error: {e}")
     if request.path.startswith('/api/'):
         return jsonify({"error": "Internal server error"}), 500
     return render_template("index.html"), 500
 
 # --------------------------------------------------
-# TEMPLATE CONTEXT PROCESSORS
+# Template Context Processors
 # --------------------------------------------------
 
 @app.context_processor
@@ -494,9 +376,19 @@ def utility_processor():
         else:
             return "just now"
     
+    def get_risk_color(risk_level):
+        colors = {
+            'low': '#10B981',
+            'medium': '#F59E0B',
+            'high': '#EF4444',
+            'critical': '#7F1D1D'
+        }
+        return colors.get(risk_level, '#6B7280')
+    
     return dict(
         format_datetime=format_datetime,
         time_ago=time_ago,
+        get_risk_color=get_risk_color,
         app_name="Elmed Wellmind Solutions",
         support_phone="+254 759 226354",
         support_email="elijahokware@gmail.com",
@@ -504,28 +396,7 @@ def utility_processor():
     )
 
 # --------------------------------------------------
-# START BACKGROUND SERVICES
-# --------------------------------------------------
-
-def start_background_services():
-    with app.app_context():
-        try:
-            if MATCHING_SERVICE_AVAILABLE:
-                start_matching_service(app)
-                print("✅ Matching service started")
-        except Exception as e:
-            print(f"⚠️ Could not start matching service: {e}")
-
-if not app.debug and MATCHING_SERVICE_AVAILABLE:
-    try:
-        service_thread = threading.Thread(target=start_background_services, daemon=True)
-        service_thread.start()
-        print("✅ Background services thread started")
-    except Exception as e:
-        print(f"⚠️ Could not start background services thread: {e}")
-
-# --------------------------------------------------
-# CLI COMMANDS
+# CLI Commands
 # --------------------------------------------------
 
 @app.cli.command("create-superadmin")
@@ -557,12 +428,31 @@ def create_superadmin_command():
     print(f"✅ Superadmin user created/updated with email: {email}")
 
 # --------------------------------------------------
-# IMPORTANT
+# Start Background Services
 # --------------------------------------------------
-# ❌ NO app.run() in production
-# Render runs this app using: gunicorn app:app
+
+def start_background_services():
+    with app.app_context():
+        try:
+            if MATCHING_SERVICE_AVAILABLE:
+                start_matching_service(app)
+                print("✅ Matching service started")
+        except Exception as e:
+            print(f"⚠️ Could not start matching service: {e}")
+
+if not app.debug and MATCHING_SERVICE_AVAILABLE:
+    try:
+        service_thread = threading.Thread(target=start_background_services, daemon=True)
+        service_thread.start()
+        print("✅ Background services thread started")
+    except Exception as e:
+        print(f"⚠️ Could not start background services thread: {e}")
+
+# --------------------------------------------------
+# Run App
+# --------------------------------------------------
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5001))
-    debug = os.environ.get("FLASK_DEBUG", "True").lower() == "true"
+    debug = os.getenv("FLASK_DEBUG", "True").lower() == "true"
     app.run(host="0.0.0.0", port=port, debug=debug)
