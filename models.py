@@ -57,14 +57,13 @@ class User(UserMixin, db.Model):
     reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', back_populates='reviewee')
     chat_messages = db.relationship('ChatMessage', foreign_keys='ChatMessage.user_id', back_populates='user', cascade='all, delete-orphan')
     
-    # FIXED: activity_logs relationship with explicit foreign_keys to avoid ambiguity
+    # FIXED: activity_logs relationship
     activity_logs = db.relationship('ActivityLog', 
                                    foreign_keys='ActivityLog.user_id', 
                                    back_populates='user', 
                                    cascade='all, delete-orphan')
     
-    # FIXED: impersonation relationship with proper remote_side and backref
-    # This resolves the "both of the same direction" error
+    # FIXED: impersonation relationship
     impersonated_users = db.relationship('User',
                                         foreign_keys='User.impersonated_by',
                                         remote_side='User.id',
@@ -311,7 +310,7 @@ class Department(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships
+    # Relationships - FIXED with proper foreign_keys and backrefs
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='departments')
     head = db.relationship('DepartmentHead', foreign_keys=[head_id], back_populates='department')
     employees_list = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')
@@ -342,7 +341,7 @@ class DepartmentHead(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships
+    # Relationships - FIXED: Use back_populates instead of backref to avoid conflicts
     user = db.relationship('User', foreign_keys=[user_id], back_populates='department_head_profile')
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='department_heads')
     department = db.relationship('Department', foreign_keys=[department_id], back_populates='head')
