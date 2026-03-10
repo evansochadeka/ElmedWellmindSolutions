@@ -1,5 +1,4 @@
-<!-- templates/header.html - SIMPLIFIED VERSION -->
-<!-- Header -->
+<!-- templates/header.html - CLEAN VERSION WITH MENU BUTTON -->
 <header id="mainHeader">
     <div class="container header-container">
         <!-- Logo Section - Far Left -->
@@ -13,7 +12,7 @@
         </a>
 
         <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
         </button>
         
@@ -23,8 +22,47 @@
                 <!-- Home Button -->
                 <li><a href="/" class="active"><i class="fas fa-home"></i> <span>Home</span></a></li>
                 
-                <!-- Services Button -->
-                <li><a href="#services"><i class="fas fa-hand-holding-heart"></i> <span>Services</span></a></li>
+                <!-- Services Mega Menu -->
+                <li class="mega-menu-item">
+                    <a href="#" class="mega-menu-trigger">
+                        <i class="fas fa-hand-holding-heart"></i> 
+                        <span>Services</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="mega-menu">
+                        <div class="mega-menu-container">
+                            <div class="mega-menu-column">
+                                <h4><i class="fas fa-school"></i> Educational</h4>
+                                <a href="#school-services"><i class="fas fa-school"></i> School Services</a>
+                                <a href="#school-programs"><i class="fas fa-graduation-cap"></i> School Programs</a>
+                                <a href="#youth"><i class="fas fa-child"></i> Youth Counseling</a>
+                            </div>
+                            <div class="mega-menu-column">
+                                <h4><i class="fas fa-user-md"></i> Clinical</h4>
+                                <a href="#individual"><i class="fas fa-user-md"></i> Individual Counseling</a>
+                                <a href="#group"><i class="fas fa-users"></i> Group Therapy</a>
+                                <a href="#couples"><i class="fas fa-heart"></i> Couples Therapy</a>
+                                <a href="#family"><i class="fas fa-family"></i> Family Counseling</a>
+                                <a href="#trauma"><i class="fas fa-hand-holding-heart"></i> Trauma Counseling</a>
+                            </div>
+                            <div class="mega-menu-column">
+                                <h4><i class="fas fa-briefcase"></i> Corporate</h4>
+                                <a href="#corporate"><i class="fas fa-building"></i> Corporate Wellness</a>
+                                <a href="#training"><i class="fas fa-chalkboard-teacher"></i> Mental Health Training</a>
+                                <a href="#employee-assistance"><i class="fas fa-users-cog"></i> Employee Assistance</a>
+                                <a href="#stress"><i class="fas fa-brain"></i> Stress Management</a>
+                            </div>
+                            <div class="mega-menu-column">
+                                <h4><i class="fas fa-heart"></i> Specialized</h4>
+                                <a href="#crisis"><i class="fas fa-ambulance"></i> Crisis Intervention</a>
+                                <a href="#addiction"><i class="fas fa-hand-holding-heart"></i> Addiction Recovery</a>
+                                <a href="#grief"><i class="fas fa-cloud"></i> Grief Counseling</a>
+                                <a href="#community"><i class="fas fa-heart"></i> Community Mental Health</a>
+                                <a href="#online"><i class="fas fa-video"></i> Online Therapy</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
                 
                 <!-- Right side items -->
                 <li class="nav-right">
@@ -34,11 +72,10 @@
                     <!-- Get Started Button -->
                     <a href="/auth/register" class="get-started-btn"><i class="fas fa-rocket"></i> <span>Get Started</span></a>
                     
-                    <!-- Menu Dropdown -->
+                    <!-- Menu Dropdown (contains Resources, AI Assistant, Community, Contact) -->
                     <div class="menu-dropdown">
                         <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i> <span>Menu</span></button>
                         <div class="dropdown-content" id="dropdownContent">
-                            <a href="#services"><i class="fas fa-hand-holding-heart"></i> Services</a>
                             <a href="#resources" id="resourcesTab"><i class="fas fa-folder-open"></i> Resources</a>
                             <a href="#ai-chat"><i class="fas fa-robot"></i> AI Assistant</a>
                             <a href="#community"><i class="fas fa-users"></i> Community</a>
@@ -132,24 +169,21 @@
 </div>
 
 <style>
-/* Header Styles */
+/* Modern Header Styles */
 :root {
-    --primary: #6c63ff;
-    --secondary: #ff6584;
-    --accent: #36d1dc;
-    --success: #4CAF50;
-    --light: #f8f9ff;
-    --dark: #2d2b5e;
-    --gradient-primary: linear-gradient(135deg, #6c63ff 0%, #36d1dc 100%);
-    --gradient-secondary: linear-gradient(135deg, #ff6584 0%, #ffd166 100%);
-    --shadow: 0 10px 40px rgba(108, 99, 255, 0.1);
-    --transition: all 0.3s ease;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    --primary: #6C63FF;
+    --primary-dark: #5A52D5;
+    --primary-light: #8C85FF;
+    --secondary: #FF6584;
+    --accent: #36D1DC;
+    --dark: #2D2B5E;
+    --light: #F8F9FF;
+    --gray: #6B7280;
+    --gradient-primary: linear-gradient(135deg, #6C63FF, #36D1DC);
+    --gradient-secondary: linear-gradient(135deg, #FF6584, #FFC107);
+    --shadow: 0 10px 40px rgba(108, 99, 255, 0.15);
+    --shadow-hover: 0 20px 50px rgba(108, 99, 255, 0.25);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 header {
@@ -166,6 +200,7 @@ header {
 }
 
 header.scrolled {
+    background: rgba(255, 255, 255, 0.98);
     box-shadow: 0 10px 40px rgba(108, 99, 255, 0.15);
 }
 
@@ -173,41 +208,42 @@ header.scrolled {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 30px;
+    padding: 15px 30px;
     max-width: 1400px;
     margin: 0 auto;
 }
 
-/* Logo Section - Far Left */
+/* Logo */
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     text-decoration: none;
+    transition: var(--transition);
+}
+
+.logo:hover {
+    transform: scale(1.02);
 }
 
 .wellmed-logo {
     height: 50px;
     width: auto;
-    transition: var(--transition);
+    border-radius: 10px;
 }
 
 .kenya-flag {
-    height: 30px;
+    height: 35px;
     width: auto;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.logo:hover .wellmed-logo {
-    transform: scale(1.05);
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Navigation */
 nav ul {
     display: flex;
     list-style: none;
-    gap: 15px;
+    gap: 5px;
     margin: 0;
     padding: 0;
     align-items: center;
@@ -219,30 +255,120 @@ nav ul li a {
     font-weight: 600;
     font-size: 1rem;
     transition: var(--transition);
-    padding: 10px 18px;
+    padding: 12px 20px;
     border-radius: 50px;
     display: flex;
     align-items: center;
     gap: 8px;
+    position: relative;
+    overflow: hidden;
 }
 
-nav ul li a i {
-    font-size: 1rem;
+nav ul li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
 }
 
 nav ul li a:hover {
-    color: var(--primary);
-    background: rgba(108, 99, 255, 0.08);
+    color: white;
     transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+}
+
+nav ul li a:hover::before {
+    opacity: 1;
 }
 
 nav ul li a.active {
     background: var(--gradient-primary);
     color: white;
-    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
 }
 
-/* Right side navigation items */
+/* Mega Menu */
+.mega-menu-item {
+    position: static;
+}
+
+.mega-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: var(--transition);
+    border-top: 3px solid var(--primary);
+    z-index: 1000;
+}
+
+.mega-menu-item:hover .mega-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mega-menu-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.mega-menu-column h4 {
+    color: var(--primary);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mega-menu-column h4 i {
+    color: var(--primary);
+}
+
+.mega-menu-column a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    color: var(--dark);
+    border-radius: 8px;
+    transition: var(--transition);
+    font-size: 0.95rem;
+    text-decoration: none;
+}
+
+.mega-menu-column a:hover {
+    background: var(--light);
+    color: var(--primary);
+    transform: translateX(5px);
+    padding-left: 17px;
+}
+
+.mega-menu-column a i {
+    width: 20px;
+    color: var(--primary);
+    font-size: 1rem;
+}
+
+/* Right side navigation */
 .nav-right {
     display: flex;
     align-items: center;
@@ -253,15 +379,13 @@ nav ul li a.active {
 /* Login Button */
 .login-link {
     border: 2px solid var(--primary);
-    padding: 8px 20px !important;
-    border-radius: 50px;
-    font-weight: 600;
+    padding: 10px 22px !important;
     background: transparent;
     color: var(--primary) !important;
 }
 
 .login-link:hover {
-    background: var(--primary);
+    background: var(--primary) !important;
     color: white !important;
 }
 
@@ -269,15 +393,13 @@ nav ul li a.active {
 .get-started-btn {
     background: var(--gradient-primary);
     color: white !important;
-    padding: 8px 22px !important;
-    border-radius: 50px;
-    font-weight: 600;
+    padding: 10px 22px !important;
     box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
 }
 
 .get-started-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(108, 99, 255, 0.4);
+    box-shadow: 0 15px 30px rgba(108, 99, 255, 0.4);
 }
 
 /* Menu Dropdown */
@@ -290,7 +412,7 @@ nav ul li a.active {
     background: var(--light);
     border: 2px solid var(--primary);
     color: var(--primary);
-    padding: 8px 22px;
+    padding: 10px 22px;
     border-radius: 50px;
     font-weight: 600;
     font-size: 1rem;
@@ -305,6 +427,7 @@ nav ul li a.active {
     background: var(--primary);
     color: white;
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
 }
 
 .dropdown-content {
@@ -313,9 +436,9 @@ nav ul li a.active {
     right: 0;
     top: 120%;
     background: white;
-    min-width: 220px;
+    min-width: 250px;
     border-radius: 15px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-hover);
     z-index: 1000;
     overflow: hidden;
     animation: slideDown 0.3s ease;
@@ -341,6 +464,7 @@ nav ul li a.active {
     text-decoration: none;
     transition: all 0.3s;
     border-bottom: 1px solid #f0f2ff;
+    font-weight: 500;
 }
 
 .dropdown-content a:last-child {
@@ -356,6 +480,7 @@ nav ul li a.active {
 .dropdown-content a i {
     width: 20px;
     color: var(--primary);
+    font-size: 1.1rem;
 }
 
 .menu-dropdown:hover .dropdown-content {
@@ -367,16 +492,13 @@ nav ul li a.active {
     display: none;
     font-size: 1.5rem;
     color: var(--primary);
-    cursor: pointer;
     background: none;
     border: none;
+    cursor: pointer;
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    align-items: center;
-    justify-content: center;
     transition: var(--transition);
-    z-index: 1001;
 }
 
 .mobile-menu-btn:hover {
@@ -610,29 +732,22 @@ nav ul li a.active {
     }
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
+/* Responsive */
+@media (max-width: 1024px) {
     .header-container {
-        padding: 10px 20px;
+        padding: 15px 20px;
     }
     
-    nav ul li a span {
-        display: none;
-    }
-    
-    nav ul li a {
-        padding: 10px 15px;
-        font-size: 1.2rem;
-    }
-    
-    .login-link span, .get-started-btn span {
-        display: inline !important;
+    .mega-menu-container {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
-    .header-container {
-        padding: 10px 15px;
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .wellmed-logo {
@@ -640,16 +755,12 @@ nav ul li a.active {
     }
     
     .kenya-flag {
-        height: 25px;
-    }
-    
-    .mobile-menu-btn {
-        display: flex;
+        height: 30px;
     }
     
     nav {
         position: fixed;
-        top: 70px;
+        top: 80px;
         left: 0;
         width: 100%;
         background: white;
@@ -657,11 +768,13 @@ nav ul li a.active {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.5s ease;
-        z-index: 999;
+        border-radius: 0 0 20px 20px;
+        z-index: 1000;
     }
     
     nav.active {
-        max-height: 400px;
+        max-height: 80vh;
+        overflow-y: auto;
     }
     
     nav ul {
@@ -674,13 +787,26 @@ nav ul li a.active {
     }
     
     nav ul li a {
-        justify-content: flex-start;
-        padding: 15px 20px;
-        font-size: 1rem;
+        justify-content: center;
     }
     
-    nav ul li a span {
-        display: inline-block;
+    .mega-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        box-shadow: none;
+        display: none;
+        border-top: none;
+    }
+    
+    .mega-menu-item.active .mega-menu {
+        display: block;
+    }
+    
+    .mega-menu-container {
+        grid-template-columns: 1fr;
+        padding: 20px;
     }
     
     .nav-right {
@@ -689,7 +815,7 @@ nav ul li a.active {
         width: 100%;
     }
     
-    .login-link, .get-started-btn {
+    .login-link, .get-started-btn, .menu-btn {
         width: 100%;
         text-align: center;
         justify-content: center;
@@ -697,11 +823,6 @@ nav ul li a.active {
     
     .menu-dropdown {
         width: 100%;
-    }
-    
-    .menu-btn {
-        width: 100%;
-        justify-content: center;
     }
     
     .dropdown-content {
@@ -720,29 +841,26 @@ nav ul li a.active {
     }
 }
 
-@media (max-width: 480px) {
-    .wellmed-logo {
-        height: 35px;
-    }
-    
-    .kenya-flag {
-        height: 20px;
-    }
-}
-
-/* Dark Mode Support */
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
     header {
-        background: rgba(30, 30, 40, 0.95);
+        background: rgba(30, 30, 40, 0.98);
     }
     
     nav ul li a {
         color: #e0e0e0;
     }
     
-    .menu-btn {
-        background: #2a2a35;
+    .mega-menu {
+        background: #1e1e28;
+    }
+    
+    .mega-menu-column a {
         color: #e0e0e0;
+    }
+    
+    .mega-menu-column a:hover {
+        background: #2a2a35;
     }
     
     .dropdown-content {
@@ -753,32 +871,9 @@ nav ul li a.active {
         color: #e0e0e0;
     }
     
-    .modal-content {
-        background: #1e1e28;
-    }
-    
-    .resource-card {
+    .menu-btn {
         background: #2a2a35;
-    }
-    
-    .resource-card h3 {
-        color: white;
-    }
-    
-    .resource-card p {
-        color: #aaa;
-    }
-    
-    .info-item {
-        background: #1e1e28;
-    }
-    
-    .info-item h4 {
-        color: white;
-    }
-    
-    .info-item p {
-        color: #aaa;
+        color: #e0e0e0;
     }
 }
 </style>
@@ -786,38 +881,30 @@ nav ul li a.active {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileBtn = document.getElementById('mobileMenuBtn');
     const mainNav = document.getElementById('mainNav');
     
-    if (mobileMenuBtn && mainNav) {
-        mobileMenuBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
+    if (mobileBtn && mainNav) {
+        mobileBtn.addEventListener('click', function() {
             mainNav.classList.toggle('active');
-            
             const icon = this.querySelector('i');
-            if (icon.classList.contains('fa-bars')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-        });
-        
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('#mainNav a').forEach(link => {
-            link.addEventListener('click', () => {
-                mainNav.classList.remove('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                if (icon) {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
         });
     }
     
-    // Menu dropdown toggle for mobile
+    // Mega Menu for mobile
+    const megaTriggers = document.querySelectorAll('.mega-menu-trigger');
+    megaTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                this.closest('.mega-menu-item').classList.toggle('active');
+            }
+        });
+    });
+    
+    // Menu dropdown for mobile
     const menuBtn = document.getElementById('menuBtn');
     if (menuBtn) {
         menuBtn.addEventListener('click', function(e) {
@@ -869,13 +956,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close mobile menu when clicking outside
     document.addEventListener('click', function(e) {
         if (window.innerWidth <= 768 && mainNav && mainNav.classList.contains('active')) {
-            if (!mainNav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+            if (!mainNav.contains(e.target) && !mobileBtn.contains(e.target)) {
                 mainNav.classList.remove('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                if (icon) {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
+                const icon = mobileBtn.querySelector('i');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
             }
         }
     });
@@ -886,6 +971,26 @@ document.addEventListener('DOMContentLoaded', function() {
             resourcesModal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
+    });
+    
+    // Close menu when clicking links on mobile
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                mainNav.classList.remove('active');
+                const icon = mobileBtn.querySelector('i');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+                
+                // Close any open dropdowns
+                document.querySelectorAll('.mega-menu-item.active').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelectorAll('.menu-dropdown.active').forEach(item => {
+                    item.classList.remove('active');
+                });
+            }
+        });
     });
 });
 </script>
