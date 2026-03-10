@@ -1,4 +1,4 @@
-# auth_routes.py - COMPLETE WITH ALL FEATURES RETAINED
+# auth_routes.py - COMPLETE WITH ALL FEATURES
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
@@ -260,7 +260,7 @@ def api_register_client():
 # API: Register professional
 @auth_bp.route('/api/register/professional', methods=['POST'])
 def api_register_professional():
-    """Register a new professional"""
+    """Register a new professional with profile photo"""
     try:
         # Handle multipart form data
         first_name = request.form.get('first_name')
@@ -272,6 +272,7 @@ def api_register_professional():
         years_experience = request.form.get('years_experience', 0)
         specializations = request.form.get('specializations', '[]')
         session_fee = request.form.get('session_fee')
+        bio = request.form.get('bio', '')
         password = request.form.get('password')
         
         # Validate required fields
@@ -302,6 +303,32 @@ def api_register_professional():
             username = f"{base_username}{counter}"
             counter += 1
         
+        # Handle profile photo upload
+        profile_photo = 'default-professional.jpg'  # Default photo
+        if 'profile_photo' in request.files:
+            photo = request.files['profile_photo']
+            if photo and photo.filename:
+                # Validate file type
+                allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+                ext = photo.filename.rsplit('.', 1)[1].lower() if '.' in photo.filename else ''
+                
+                if ext not in allowed_extensions:
+                    return jsonify({'success': False, 'message': 'Profile photo must be PNG, JPG, JPEG, or GIF'}), 400
+                
+                # Check file size (max 5MB)
+                photo.seek(0, os.SEEK_END)
+                size = photo.tell()
+                photo.seek(0)
+                
+                if size > 5 * 1024 * 1024:  # 5MB
+                    return jsonify({'success': False, 'message': 'Profile photo too large (max 5MB)'}), 400
+                
+                # Save photo
+                filename = secure_filename(f"prof_{int(datetime.utcnow().timestamp())}_{photo.filename}")
+                photo_path = os.path.join('static', 'uploads', 'profiles', filename)
+                photo.save(photo_path)
+                profile_photo = filename
+        
         # Create user
         user = User(
             username=username,
@@ -309,7 +336,9 @@ def api_register_professional():
             first_name=first_name,
             last_name=last_name,
             phone=phone,
-            role='professional'
+            role='professional',
+            profile_pic=profile_photo,
+            bio=bio
         )
         user.set_password(password)
         
@@ -330,7 +359,7 @@ def api_register_professional():
         try:
             specializations_list = json.loads(specializations) if specializations else []
         except:
-            specializations_list = []
+            specializations_list = [s.strip() for s in specializations.split(',') if s.strip()]
         
         # Create professional profile
         professional = Professional(
@@ -375,7 +404,7 @@ def api_register_professional():
 # API: Register organization
 @auth_bp.route('/api/register/organization', methods=['POST'])
 def api_register_organization():
-    """Register organization with role selection"""
+    """Register organization"""
     try:
         data = request.json
         
@@ -469,7 +498,7 @@ def api_register_organization():
 # API: Register department head
 @auth_bp.route('/api/register/department-head', methods=['POST'])
 def api_register_department_head():
-    """Register as department head (invited by organization admin)"""
+    """Register as department head"""
     try:
         data = request.json
         
