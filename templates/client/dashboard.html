@@ -766,4 +766,49 @@ function loadAppointments() {
         {
             day: '10',
             month: 'Mar',
-            title: 'Session with Dr
+            title: 'Session with Dr. Mary',
+            time: '11:00 AM',
+            status: 'completed'
+        },
+        {
+            day: '5',
+            month: 'Mar',
+            title: 'Group Therapy Session',
+            time: '3:00 PM',
+            status: 'completed'
+        }
+    ];
+
+    document.getElementById('upcomingAppointments').innerHTML = upcoming.map(a => `
+        <div class="appointment-item">
+            <div class="appointment-date">
+                <div class="day">${a.day}</div>
+                <div class="month">${a.month}</div>
+            </div>
+            <div class="appointment-details">
+                <h5>${a.title}</h5>
+                <p><i class="far fa-clock"></i> ${a.time}</p>
+            </div>
+            <div class="appointment-status status-${a.status}">${a.status}</div>
+        </div>
+    `).join('');
+
+    document.getElementById('pastAppointments').innerHTML = past.map(a => `
+        <div class="appointment-item">
+            <div class="appointment-date">
+                <div class="day">${a.day}</div>
+                <div class="month">${a.month}</div>
+            </div>
+            <div class="appointment-details">
+                <h5>${a.title}</h5>
+                <p><i class="far fa-clock"></i> ${a.time}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function bookSession(professionalId) {
+    alert('Booking feature coming soon! You will be able to schedule a session with this professional.');
+}
+</script>
+{% endblock %}
