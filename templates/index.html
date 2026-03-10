@@ -1,243 +1,538 @@
-<!-- templates/index.html - Lean & Beautiful Homepage -->
+<!-- templates/index.html - COMPLETE WITH ALL FEATURES -->
 {% extends "base.html" %}
 
-{% block title %}Elmed Wellmind Solutions | Mental Wellness in Kenya{% endblock %}
+{% block title %}Elmed Wellmind Solutions | Professional Mental Health Support in Kenya{% endblock %}
 
 {% block content %}
-<!-- Minimal Navigation -->
-<nav class="minimal-nav">
-    <div class="nav-container">
-        <div class="nav-logo">
-            <img src="{{ url_for('static', filename='images/wellmed.jpg') }}" alt="Elmed Wellmind">
-            <span>Elmed Wellmind</span>
+<!-- HERO SECTION - Modern & Impactful -->
+<section class="hero-section" id="home">
+    <div class="hero-slideshow">
+        <div class="slide active" style="background-image: url('{{ url_for('static', filename='images/hero-bg-1.jpg') }}');"></div>
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/hero-bg-2.jpg') }}');"></div>
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/hero-bg-3.jpg') }}');"></div>
+        <div class="overlay"></div>
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span class="badge-pulse"></span>
+            Trusted Mental Health Support in Kenya
         </div>
         
-        <div class="nav-menu">
-            <button class="menu-toggle" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            
-            <div class="nav-links" id="navLinks">
-                <a href="#home" class="active">Home</a>
-                
-                <!-- Services Dropdown -->
-                <div class="dropdown">
-                    <a href="#services" class="dropdown-toggle">Services <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-menu">
-                        <a href="#school-services">🏫 School Services</a>
-                        <a href="#individual">🧑 Individual Counseling</a>
-                        <a href="#group">👥 Group Therapy</a>
-                        <a href="#training">📚 Mental Health Training</a>
-                        <a href="#school-programs">🎓 School Programs</a>
-                        <a href="#crisis">🚨 Crisis Intervention</a>
-                        <a href="#community">🌍 Community Mental Health</a>
-                    </div>
-                </div>
-                
-                <a href="#resources">Resources</a>
-                <a href="{{ url_for('auth.register_page') }}">Register</a>
-                <a href="#about">About Us</a>
-                <a href="{{ url_for('auth.login_page') }}" class="login-link">Login</a>
-                <a href="#contact">Contact</a>
-                
-                <a href="{{ url_for('auth.get_started') }}" class="get-started-btn">
-                    Get Started
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+        <h1 class="hero-title">
+            Your Journey to 
+            <span class="gradient-text">Mental Wellness</span>
+            <br>Starts Here
+        </h1>
+        
+        <p class="hero-subtitle">
+            Professional, confidential, and compassionate mental health care tailored to Kenyan culture and values. 
+            We're here to listen, support, and guide you every step of the way.
+        </p>
+        
+        <div class="hero-cta">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-large">
+                <i class="fas fa-heart"></i>
+                Get Started
+            </a>
+            <a href="#how-it-works" class="btn btn-outline btn-large">
+                <i class="fas fa-play"></i>
+                See How It Works
+            </a>
+        </div>
+        
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-number">2,500+</div>
+                <div class="stat-label">People Helped</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Satisfaction Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support Available</div>
             </div>
         </div>
     </div>
-</nav>
 
-<!-- Main Content Sections with Expand/Collapse Arrows -->
-<main class="main-content">
-    <!-- Hero Section -->
-    <section class="section hero" id="home">
+    <div class="hero-scroll">
+        <span>Scroll to explore</span>
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- TRUST BADGES SECTION -->
+<section class="trust-badges">
+    <div class="container">
+        <div class="badges-grid">
+            <div class="badge-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>100% Confidential</span>
+            </div>
+            <div class="badge-item">
+                <i class="fas fa-user-md"></i>
+                <span>Licensed Therapists</span>
+            </div>
+            <div class="badge-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Kenya-Based Care</span>
+            </div>
+            <div class="badge-item">
+                <i class="fas fa-mobile-alt"></i>
+                <span>24/7 AI Support</span>
+            </div>
+            <div class="badge-item">
+                <i class="fas fa-hand-holding-heart"></i>
+                <span>Affordable Rates</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS SECTION -->
+<section class="how-it-works" id="how-it-works">
+    <div class="container">
         <div class="section-header">
-            <h1>Your Journey to <span class="gradient-text">Mental Wellness</span></h1>
-            <p>Professional, confidential mental health support tailored to Kenya</p>
-            <div class="hero-cta">
-                <a href="{{ url_for('auth.get_started') }}" class="btn-primary">
-                    Get Started
+            <span class="section-subtitle">Simple Process</span>
+            <h2 class="section-title">How It <span>Works</span></h2>
+            <p class="section-description">
+                Get the support you need in three simple steps. No complicated processes, just care when you need it.
+            </p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <div class="step-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h3>Create Account</h3>
+                <p>Sign up as an individual, employee, or corporation in under 2 minutes. All information is encrypted and secure.</p>
+                <div class="step-arrow">
+                    <i class="fas fa-long-arrow-alt-right"></i>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <div class="step-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Choose Your Path</h3>
+                <p>Select from individual counseling, group sessions, corporate packages, or chat with our AI assistant for immediate support.</p>
+                <div class="step-arrow">
+                    <i class="fas fa-long-arrow-alt-right"></i>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <div class="step-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Start Healing</h3>
+                <p>Connect with a therapist, join a support group, or access resources. Begin your journey to better mental health today.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES SECTION -->
+<section class="services-section" id="services">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">What We Offer</span>
+            <h2 class="section-title">Our <span>Services</span></h2>
+            <p class="section-description">
+                Comprehensive mental health solutions designed for individuals, families, and organizations in Kenya.
+            </p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card" onclick="window.location.href='#individual'">
+                <div class="service-icon">
+                    <i class="fas fa-user-md"></i>
+                    <div class="icon-glow"></div>
+                </div>
+                <h3>Individual Counseling</h3>
+                <p>One-on-one sessions with licensed therapists for anxiety, depression, trauma, and personal growth.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> 60-minute sessions</li>
+                    <li><i class="fas fa-check"></i> Online & in-person</li>
+                    <li><i class="fas fa-check"></i> Flexible scheduling</li>
+                </ul>
+                <a href="#individual" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card featured" onclick="window.location.href='#ai-chat'">
+                <div class="featured-badge">Most Popular</div>
+                <div class="service-icon">
+                    <i class="fas fa-robot"></i>
+                    <div class="icon-glow"></div>
+                </div>
+                <h3>AI Mental Health Assistant</h3>
+                <p>24/7 AI-powered support for immediate guidance, coping strategies, and mental health information.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Instant responses</li>
+                    <li><i class="fas fa-check"></i> Confidential chat</li>
+                    <li><i class="fas fa-check"></i> Evidence-based info</li>
+                </ul>
+                <a href="/chat" class="service-link">Try Now <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card" onclick="window.location.href='#corporate'">
+                <div class="service-icon">
+                    <i class="fas fa-building"></i>
+                    <div class="icon-glow"></div>
+                </div>
+                <h3>Corporate Wellness</h3>
+                <p>Comprehensive mental health packages for businesses. Support your employees' wellbeing and productivity.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Employee counseling</li>
+                    <li><i class="fas fa-check"></i> Team workshops</li>
+                    <li><i class="fas fa-check"></i> Management training</li>
+                </ul>
+                <a href="#corporate" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card" onclick="window.location.href='#group'">
+                <div class="service-icon">
+                    <i class="fas fa-users"></i>
+                    <div class="icon-glow"></div>
+                </div>
+                <h3>Group Therapy</h3>
+                <p>Support groups for anxiety, depression, grief, addiction recovery, and more. Led by trained facilitators.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Peer support</li>
+                    <li><i class="fas fa-check"></i> Safe environment</li>
+                    <li><i class="fas fa-check"></i> Weekly sessions</li>
+                </ul>
+                <a href="#group" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card" onclick="window.location.href='#schools'">
+                <div class="service-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="icon-glow"></div>
+                </div>
+                <h3>School Programs</h3>
+                <p>Mental health support for students, teachers, and parents. Age-appropriate counseling and workshops.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Student counseling</li>
+                    <li><i class="fas fa-check"></i> Teacher training</li>
+                    <li><i class="fas fa-check"></i> Parent workshops</li>
+                </ul>
+                <a href="#schools" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="service-card" onclick="window.location.href='#crisis'">
+                <div class="service-icon">
+                    <i class="fas fa-first-aid"></i>
+                    <div class="icon-glow"></div>
+                </div>
+                <h3>Crisis Support</h3>
+                <p>Immediate help for mental health emergencies, suicide prevention, and acute psychological distress.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> 24/7 availability</li>
+                    <li><i class="fas fa-check"></i> Emergency response</li>
+                    <li><i class="fas fa-check"></i> Follow-up care</li>
+                </ul>
+                <a href="tel:+254759226354" class="service-link emergency">Call Now <i class="fas fa-phone"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ASSESSMENT SECTION -->
+<section class="assessment-section" id="assessment">
+    <div class="container">
+        <div class="assessment-card">
+            <div class="assessment-content">
+                <span class="badge">Free Assessment</span>
+                <h2>Not sure where to start?</h2>
+                <p>Take our free 5-minute mental health assessment and get personalized recommendations for your needs.</p>
+                
+                <div class="assessment-features">
+                    <div class="feature">
+                        <i class="fas fa-clock"></i>
+                        <span>Takes only 5 minutes</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-lock"></i>
+                        <span>100% confidential</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Personalized report</span>
+                    </div>
+                </div>
+
+                <a href="#assessment-start" class="btn btn-primary btn-large">
+                    Start Free Assessment
                     <i class="fas fa-arrow-right"></i>
                 </a>
-                <a href="#how-it-works" class="btn-outline">Learn More</a>
+            </div>
+            <div class="assessment-image">
+                <img src="{{ url_for('static', filename='images/assessment-illustration.svg') }}" alt="Assessment">
             </div>
         </div>
-        <button class="section-expand" onclick="toggleSection('home-content')">
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        <div class="section-content" id="home-content">
-            <!-- Hidden until expanded -->
-        </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Services Section -->
-    <section class="section services" id="services">
+<!-- TESTIMONIALS SECTION -->
+<section class="testimonials-section">
+    <div class="container">
         <div class="section-header">
-            <h2>Our <span>Services</span></h2>
-            <p>Comprehensive mental health solutions</p>
+            <span class="section-subtitle">Stories of Hope</span>
+            <h2 class="section-title">What Our <span>Clients Say</span></h2>
         </div>
-        <button class="section-expand" onclick="toggleSection('services-content')">
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        
-        <div class="section-content expanded" id="services-content">
-            <div class="services-grid">
-                <!-- School Services -->
-                <div class="service-item" onclick="window.location.href='#school-services'">
-                    <div class="service-icon">🏫</div>
-                    <h3>School Services</h3>
-                    <p>Comprehensive mental health support for educational institutions</p>
-                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+
+        <div class="testimonials-slider">
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
                 </div>
-                
-                <!-- Individual Counseling -->
-                <div class="service-item" onclick="window.location.href='#individual'">
-                    <div class="service-icon">🧑</div>
-                    <h3>Individual Counseling</h3>
-                    <p>One-on-one sessions with licensed therapists</p>
-                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                <p class="testimonial-text">
+                    "The AI assistant was there for me at 2 AM when I was having a panic attack. It guided me through breathing exercises and connected me with a therapist the next morning. Truly life-changing."
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MK</div>
+                    <div class="author-info">
+                        <h4>Mary Kamau</h4>
+                        <p>Nairobi • Client for 6 months</p>
+                    </div>
                 </div>
-                
-                <!-- Group Therapy -->
-                <div class="service-item" onclick="window.location.href='#group'">
-                    <div class="service-icon">👥</div>
-                    <h3>Group Therapy</h3>
-                    <p>Support groups for shared experiences</p>
-                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
                 </div>
-                
-                <!-- Mental Health Training -->
-                <div class="service-item" onclick="window.location.href='#training'">
-                    <div class="service-icon">📚</div>
-                    <h3>Mental Health Training</h3>
-                    <p>Workshops and certification programs</p>
-                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                <p class="testimonial-text">
+                    "As a company, we wanted to support our employees' mental health. The corporate package was perfect - easy to manage, and our team loves the flexibility. Productivity has noticeably improved."
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JO</div>
+                    <div class="author-info">
+                        <h4>James Omondi</h4>
+                        <p>HR Manager, TechCorp</p>
+                    </div>
                 </div>
-                
-                <!-- School Programs -->
-                <div class="service-item" onclick="window.location.href='#school-programs'">
-                    <div class="service-icon">🎓</div>
-                    <h3>School Programs</h3>
-                    <p>Student wellness initiatives</p>
-                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
                 </div>
-                
-                <!-- Crisis Intervention -->
-                <div class="service-item" onclick="window.location.href='#crisis'">
-                    <div class="service-icon">🚨</div>
-                    <h3>Crisis Intervention</h3>
-                    <p>24/7 emergency support</p>
-                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
-                </div>
-                
-                <!-- Community Mental Health -->
-                <div class="service-item" onclick="window.location.href='#community'">
-                    <div class="service-icon">🌍</div>
-                    <h3>Community Mental Health</h3>
-                    <p>Grassroots wellness programs</p>
-                    <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+                <p class="testimonial-text">
+                    "The group therapy sessions helped me realize I'm not alone in my struggles. The facilitator is amazing, and I've made genuine connections. Thank you for creating this safe space."
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">AW</div>
+                    <div class="author-info">
+                        <h4>Anne Wanjiku</h4>
+                        <p>Mombasa • Group Member</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- How It Works Section -->
-    <section class="section how-it-works" id="how-it-works">
-        <div class="section-header">
-            <h2>How It <span>Works</span></h2>
-            <p>Simple steps to better mental health</p>
-        </div>
-        <button class="section-expand" onclick="toggleSection('how-content')">
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        
-        <div class="section-content expanded" id="how-content">
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Sign Up</h3>
-                    <p>Choose your role: Client, Professional, or Organization</p>
+<!-- CORPORATE SECTION -->
+<section class="corporate-section" id="corporate">
+    <div class="container">
+        <div class="corporate-grid">
+            <div class="corporate-content">
+                <span class="badge">For Businesses</span>
+                <h2>Support Your Team's Mental Wellness</h2>
+                <p>Create a healthier, more productive workplace with our comprehensive corporate wellness packages.</p>
+                
+                <ul class="corporate-benefits">
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Employee Counseling Credits</strong>
+                            <span>Give your team access to professional support</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Management Training</strong>
+                            <span>Equip leaders to support mental health</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Wellness Workshops</strong>
+                            <span>Interactive sessions for your teams</span>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Usage Analytics</strong>
+                            <span>Track engagement and impact</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="corporate-cta">
+                    <a href="{{ url_for('auth.register') }}?role=organization" class="btn btn-primary">
+                        Register Your Organization
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#contact" class="btn btn-outline">
+                        Talk to Sales
+                    </a>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Get Matched</h3>
-                    <p>Our AI matches you with the right professional</p>
+            </div>
+            
+            <div class="corporate-stats">
+                <div class="stat-box">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Corporate Clients</div>
                 </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Start Healing</h3>
-                    <p>Begin your journey to wellness</p>
+                <div class="stat-box">
+                    <div class="stat-number">2,000+</div>
+                    <div class="stat-label">Employees Supported</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Employee Satisfaction</div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Resources Section -->
-    <section class="section resources" id="resources">
-        <div class="section-header">
-            <h2>Mental Health <span>Resources</span></h2>
-            <p>Tools and information for your journey</p>
-        </div>
-        <button class="section-expand" onclick="toggleSection('resources-content')">
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        
-        <div class="section-content" id="resources-content">
-            <!-- Resources content (hidden initially) -->
-        </div>
-    </section>
+<!-- AI CHAT PREVIEW SECTION -->
+<section class="ai-preview-section" id="ai-chat">
+    <div class="container">
+        <div class="ai-preview-card">
+            <div class="ai-preview-content">
+                <div class="ai-badge">
+                    <i class="fas fa-robot"></i>
+                    <span>24/7 AI Support</span>
+                </div>
+                <h2>Chat with Elmed AI Assistant</h2>
+                <p>Get instant, confidential support anytime, anywhere. Our AI assistant is trained in evidence-based mental health techniques and Kenyan cultural context.</p>
+                
+                <div class="ai-features">
+                    <div class="ai-feature">
+                        <i class="fas fa-bolt"></i>
+                        <span>Instant responses</span>
+                    </div>
+                    <div class="ai-feature">
+                        <i class="fas fa-lock"></i>
+                        <span>Private & secure</span>
+                    </div>
+                    <div class="ai-feature">
+                        <i class="fas fa-brain"></i>
+                        <span>Evidence-based</span>
+                    </div>
+                </div>
 
-    <!-- About Us Section -->
-    <section class="section about" id="about">
-        <div class="section-header">
-            <h2>About <span>Us</span></h2>
-            <p>Your trusted mental health partner in Kenya</p>
-        </div>
-        <button class="section-expand" onclick="toggleSection('about-content')">
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        
-        <div class="section-content" id="about-content">
-            <!-- About content (hidden initially) -->
-        </div>
-    </section>
+                <a href="/chat" class="btn btn-primary btn-large">
+                    Start Chatting Now
+                    <i class="fas fa-comments"></i>
+                </a>
+            </div>
 
-    <!-- Contact Section -->
-    <section class="section contact" id="contact">
-        <div class="section-header">
-            <h2>Get In <span>Touch</span></h2>
-            <p>We're here to help 24/7</p>
-        </div>
-        <button class="section-expand" onclick="toggleSection('contact-content')">
-            <i class="fas fa-chevron-down"></i>
-        </button>
-        
-        <div class="section-content" id="contact-content">
-            <!-- Contact content (hidden initially) -->
-            <div class="contact-info">
-                <p><i class="fas fa-phone"></i> +254 759 226354</p>
-                <p><i class="fas fa-envelope"></i> elijahokware@gmail.com</p>
-                <p><i class="fas fa-map-marker-alt"></i> Kahawa Wendani, Thika Road</p>
+            <div class="ai-preview-demo">
+                <div class="chat-bubble bot">
+                    <div class="avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message">
+                        Hello! I'm your mental health assistant. How can I support you today?
+                    </div>
+                </div>
+                <div class="chat-bubble user">
+                    <div class="message">
+                        I've been feeling anxious about work
+                    </div>
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <div class="chat-bubble bot">
+                    <div class="avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message">
+                        I hear you. Work stress is common. Let's try a quick breathing exercise together...
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
-</main>
+    </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card">
+            <h2>Ready to start your healing journey?</h2>
+            <p>Join thousands of Kenyans who've found support and healing with Elmed Wellmind Solutions.</p>
+            <div class="cta-buttons">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-large">
+                    <i class="fas fa-user-plus"></i>
+                    Create Free Account
+                </a>
+                <a href="tel:+254759226354" class="btn btn-outline-light btn-large">
+                    <i class="fas fa-phone"></i>
+                    Call Us Now
+                </a>
+            </div>
+            <div class="cta-note">
+                <i class="fas fa-shield-alt"></i>
+                Free 15-minute consultation with every new client
+            </div>
+        </div>
+    </div>
+</section>
 
 <style>
-/* Minimal & Beautiful CSS */
+/* ===== GLOBAL STYLES ===== */
 :root {
     --primary: #6C63FF;
+    --primary-dark: #5A52D5;
+    --primary-light: #8C85FF;
     --secondary: #FF6584;
+    --accent: #36D1DC;
+    --success: #4CAF50;
+    --warning: #FFC107;
+    --danger: #FF4757;
     --dark: #2D2B5E;
     --light: #F8F9FF;
     --gray: #6B7280;
     --white: #FFFFFF;
-    --shadow: 0 10px 40px rgba(108, 99, 255, 0.1);
-    --transition: all 0.3s ease;
+    --gradient-primary: linear-gradient(135deg, #6C63FF 0%, #36D1DC 100%);
+    --gradient-secondary: linear-gradient(135deg, #FF6584 0%, #FFC107 100%);
+    --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 10px 25px rgba(108, 99, 255, 0.15);
+    --shadow-lg: 0 20px 50px rgba(108, 99, 255, 0.25);
+    --shadow-hover: 0 30px 60px rgba(108, 99, 255, 0.3);
+    --border-radius: 20px;
+    --border-radius-sm: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -247,491 +542,1098 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: var(--dark);
     line-height: 1.6;
-    background: var(--light);
+    overflow-x: hidden;
 }
 
-/* Minimal Navigation */
-.minimal-nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
-}
-
-.nav-container {
+.container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 0 20px;
 }
 
-.nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.nav-logo img {
-    height: 40px;
-    width: auto;
-}
-
-.nav-logo span {
-    font-weight: 600;
-    font-size: 1.2rem;
-}
-
-.menu-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 6px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.menu-toggle span {
-    width: 30px;
-    height: 3px;
-    background: var(--primary);
-    transition: var(--transition);
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.nav-links a {
-    text-decoration: none;
-    color: var(--dark);
-    font-weight: 500;
-    transition: var(--transition);
-    position: relative;
-}
-
-.nav-links a:hover,
-.nav-links a.active {
-    color: var(--primary);
-}
-
-.nav-links a.active::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--primary);
-}
-
-/* Dropdown */
-.dropdown {
-    position: relative;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    min-width: 250px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: var(--transition);
-    z-index: 100;
-}
-
-.dropdown:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: 12px 20px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.dropdown-menu a:last-child {
-    border-bottom: none;
-}
-
-/* Get Started Button */
-.get-started-btn {
-    background: linear-gradient(135deg, var(--primary), #36D1DC);
-    color: white !important;
-    padding: 10px 25px !important;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.get-started-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow);
-}
-
-/* Login Link */
-.login-link {
-    border: 2px solid var(--primary);
-    padding: 8px 20px !important;
-    border-radius: 50px;
-}
-
-.login-link:hover {
-    background: var(--primary);
-    color: white !important;
-}
-
-/* Main Content */
-.main-content {
-    margin-top: 80px;
-}
-
-/* Sections */
-.section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 80px 2rem;
-    position: relative;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.section:last-child {
-    border-bottom: none;
-}
-
+/* ===== SECTION HEADERS ===== */
 .section-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
 }
 
-.section-header h1 {
-    font-size: 3.5rem;
+.section-subtitle {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--primary);
+    background: rgba(108, 99, 255, 0.1);
+    padding: 8px 20px;
+    border-radius: 30px;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    font-size: 2.8rem;
+    font-weight: 700;
     margin-bottom: 20px;
+    line-height: 1.2;
 }
 
-.section-header h2 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-}
-
-.gradient-text {
-    background: linear-gradient(135deg, var(--primary), #36D1DC);
+.section-title span {
+    background: var(--gradient-primary);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
 }
 
-.section-header p {
+.section-description {
     font-size: 1.2rem;
     color: var(--gray);
+    max-width: 700px;
+    margin: 0 auto;
 }
 
-/* Expand Button */
-.section-expand {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    box-shadow: var(--shadow);
-    cursor: pointer;
-    transition: var(--transition);
-    color: var(--primary);
-    z-index: 10;
-}
-
-.section-expand:hover {
-    transform: translateX(-50%) translateY(5px);
-    background: var(--primary);
-    color: white;
-}
-
-/* Section Content */
-.section-content {
-    max-height: 0;
+/* ===== HERO SECTION ===== */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
     overflow: hidden;
-    transition: max-height 0.5s ease;
+    padding: 120px 0;
 }
 
-.section-content.expanded {
-    max-height: 2000px;
+.hero-slideshow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 
-/* Hero CTA */
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(45, 43, 94, 0.95) 0%, rgba(108, 99, 255, 0.9) 100%);
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    max-width: 800px;
+    color: white;
+    padding: 0 20px;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.badge-pulse {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 25px;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+    max-width: 600px;
+    line-height: 1.8;
+}
+
 .hero-cta {
     display: flex;
     gap: 20px;
-    justify-content: center;
-    margin-top: 40px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
 }
 
-.btn-primary, .btn-outline {
-    padding: 15px 35px;
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 32px;
     border-radius: 50px;
-    text-decoration: none;
     font-weight: 600;
+    font-size: 1.1rem;
     transition: var(--transition);
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-large {
+    padding: 18px 40px;
+    font-size: 1.2rem;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), #36D1DC);
+    background: var(--gradient-primary);
     color: white;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 20px 40px rgba(108, 99, 255, 0.3);
+    box-shadow: var(--shadow-hover);
 }
 
 .btn-outline {
-    border: 2px solid var(--primary);
-    color: var(--primary);
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
 }
 
 .btn-outline:hover {
-    background: var(--primary);
-    color: white;
-}
-
-/* Services Grid */
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.service-item {
     background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: var(--shadow);
-    cursor: pointer;
-    transition: var(--transition);
-    position: relative;
-    overflow: hidden;
+    color: var(--primary);
+    border-color: white;
+    transform: translateY(-3px);
 }
 
-.service-item:hover {
-    transform: translateY(-10px);
+.btn-outline-light {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
 }
 
-.service-icon {
-    font-size: 3rem;
-    margin-bottom: 20px;
-}
-
-.service-item h3 {
-    margin-bottom: 10px;
-}
-
-.service-item p {
-    color: var(--gray);
-    font-size: 0.95rem;
-}
-
-.service-arrow {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    opacity: 0;
-    transition: var(--transition);
+.btn-outline-light:hover {
+    background: white;
     color: var(--primary);
 }
 
-.service-item:hover .service-arrow {
-    opacity: 1;
-    transform: translateX(5px);
+.hero-stats {
+    display: flex;
+    gap: 50px;
 }
 
-/* Steps */
-.steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    margin-top: 40px;
-}
-
-.step {
+.stat-item {
     text-align: center;
 }
 
-.step-number {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, var(--primary), #36D1DC);
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
     color: white;
+    text-align: center;
+    animation: bounce 2s infinite;
+    cursor: pointer;
+}
+
+.hero-scroll span {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    opacity: 0.8;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-20px); }
+    60% { transform: translateX(-50%) translateY(-10px); }
+}
+
+/* ===== TRUST BADGES ===== */
+.trust-badges {
+    padding: 60px 0;
+    background: white;
+    border-bottom: 1px solid rgba(108, 99, 255, 0.1);
+}
+
+.badges-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.badge-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.badge-item i {
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+
+/* ===== HOW IT WORKS ===== */
+.how-it-works {
+    padding: 100px 0;
+    background: var(--light);
+}
+
+.steps-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.step-card {
+    background: white;
+    padding: 50px 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: var(--transition);
+    border: 1px solid rgba(108, 99, 255, 0.1);
+}
+
+.step-card:hover {
+    transform: translateY(-15px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.step-number {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 4rem;
+    font-weight: 800;
+    color: rgba(108, 99, 255, 0.1);
+    line-height: 1;
+}
+
+.step-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0 auto 20px;
+    margin-bottom: 30px;
+    position: relative;
 }
 
-.step h3 {
-    margin-bottom: 10px;
+.step-icon i {
+    font-size: 2rem;
+    color: white;
+    z-index: 2;
 }
 
-.step p {
+.step-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.step-card p {
     color: var(--gray);
+    margin-bottom: 20px;
+    line-height: 1.8;
+    position: relative;
+    z-index: 2;
 }
 
-/* Contact Info */
-.contact-info {
+.step-arrow {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 40px;
+    color: var(--primary);
+    font-size: 1.2rem;
+    box-shadow: var(--shadow-md);
+    border: 2px solid var(--primary);
+}
+
+/* ===== SERVICES SECTION ===== */
+.services-section {
+    padding: 100px 0;
+    background: white;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.service-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 40px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid rgba(108, 99, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.service-card.featured {
+    border: 2px solid var(--primary);
+    transform: scale(1.05);
+}
+
+.featured-badge {
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: var(--gradient-primary);
+    color: white;
+    padding: 8px 40px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transform: rotate(45deg);
+}
+
+.service-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(108, 99, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.service-icon i {
+    font-size: 2rem;
+    color: var(--primary);
+    z-index: 2;
+}
+
+.icon-glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(108, 99, 255, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+.service-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+}
+
+.service-card p {
+    color: var(--gray);
+    margin-bottom: 25px;
+    line-height: 1.7;
+}
+
+.service-features {
+    list-style: none;
+    margin-bottom: 25px;
+}
+
+.service-features li {
+    padding: 8px 0;
+    color: var(--gray);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.service-features li i {
+    color: var(--success);
+}
+
+.service-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.service-link:hover {
+    gap: 12px;
+    color: var(--primary-dark);
+}
+
+.service-link.emergency {
+    color: var(--danger);
+}
+
+/* ===== ASSESSMENT SECTION ===== */
+.assessment-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, var(--light) 0%, #eef2ff 100%);
+}
+
+.assessment-card {
+    background: white;
+    border-radius: 40px;
+    padding: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.assessment-content .badge {
+    display: inline-block;
+    background: var(--gradient-primary);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.assessment-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.assessment-content p {
+    color: var(--gray);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.assessment-features {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
     flex-wrap: wrap;
 }
 
-.contact-info p {
+.assessment-features .feature {
     display: flex;
     align-items: center;
     gap: 10px;
     color: var(--gray);
 }
 
-.contact-info i {
-    color: var(--primary);
+.assessment-features .feature i {
+    color: var(--success);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: flex;
-    }
-    
-    .nav-links {
-        position: fixed;
-        top: 80px;
-        left: 0;
-        width: 100%;
-        background: white;
-        flex-direction: column;
-        padding: 2rem;
-        gap: 1rem;
-        transform: translateY(-100%);
+.assessment-image img {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ===== TESTIMONIALS SECTION ===== */
+.testimonials-section {
+    padding: 100px 0;
+    background: white;
+}
+
+.testimonials-slider {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.testimonial-card {
+    background: var(--light);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    transition: var(--transition);
+    border: 1px solid rgba(108, 99, 255, 0.1);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-md);
+}
+
+.testimonial-rating {
+    color: var(--warning);
+    margin-bottom: 20px;
+}
+
+.testimonial-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--gray);
+    margin-bottom: 25px;
+    font-style: italic;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+.author-info h4 {
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.author-info p {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* ===== CORPORATE SECTION ===== */
+.corporate-section {
+    padding: 100px 0;
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.corporate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.corporate-content .badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.corporate-content h2 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+}
+
+.corporate-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+}
+
+.corporate-benefits {
+    list-style: none;
+    margin-bottom: 40px;
+}
+
+.corporate-benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.corporate-benefits li i {
+    font-size: 1.5rem;
+    color: var(--success);
+}
+
+.corporate-benefits li strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.corporate-benefits li span {
+    opacity: 0.8;
+}
+
+.corporate-cta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.corporate-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+}
+
+.stat-box .stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.stat-box .stat-label {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* ===== AI PREVIEW SECTION ===== */
+.ai-preview-section {
+    padding: 100px 0;
+    background: var(--light);
+}
+
+.ai-preview-card {
+    background: white;
+    border-radius: 40px;
+    padding: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(108, 99, 255, 0.1);
+    color: var(--primary);
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.ai-preview-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.ai-preview-content p {
+    color: var(--gray);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.ai-features {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.ai-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gray);
+}
+
+.ai-feature i {
+    color: var(--success);
+}
+
+.ai-preview-demo {
+    background: var(--light);
+    border-radius: 30px;
+    padding: 30px;
+}
+
+.chat-bubble {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    animation: slideIn 0.5s ease;
+}
+
+.chat-bubble.bot {
+    justify-content: flex-start;
+}
+
+.chat-bubble.user {
+    justify-content: flex-end;
+}
+
+.chat-bubble .avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+.chat-bubble.user .avatar {
+    background: var(--gradient-secondary);
+}
+
+.chat-bubble .message {
+    max-width: 70%;
+    padding: 15px 20px;
+    border-radius: 20px;
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.chat-bubble.bot .message {
+    border-bottom-left-radius: 5px;
+}
+
+.chat-bubble.user .message {
+    background: var(--gradient-primary);
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+
+@keyframes slideIn {
+    from {
         opacity: 0;
-        visibility: hidden;
-        transition: var(--transition);
-        box-shadow: var(--shadow);
+        transform: translateY(20px);
     }
-    
-    .nav-links.active {
+    to {
+        opacity: 1;
         transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
+    }
+}
+
+/* ===== CTA SECTION ===== */
+.cta-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, var(--dark) 0%, var(--primary-dark) 100%);
+}
+
+.cta-card {
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-card h2 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.cta-card p {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 40px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.cta-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0.8;
+    font-size: 1rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 3rem;
     }
     
-    .dropdown-menu {
-        position: static;
-        opacity: 1;
-        visibility: visible;
-        transform: none;
-        box-shadow: none;
+    .section-title {
+        font-size: 2.2rem;
+    }
+    
+    .steps-container,
+    .testimonials-slider,
+    .corporate-grid,
+    .ai-preview-card {
+        grid-template-columns: 1fr;
+    }
+    
+    .step-arrow {
         display: none;
     }
     
-    .dropdown:hover .dropdown-menu {
-        display: block;
+    .corporate-stats {
+        order: -1;
     }
-    
-    .section-header h1 {
+}
+
+@media (max-width: 768px) {
+    .hero-title {
         font-size: 2.5rem;
     }
     
-    .section-header h2 {
-        font-size: 2rem;
-    }
-    
-    .steps {
-        grid-template-columns: 1fr;
+    .hero-subtitle {
+        font-size: 1.1rem;
     }
     
     .hero-cta {
         flex-direction: column;
-        align-items: center;
     }
     
-    .btn-primary, .btn-outline {
-        width: 100%;
-        text-align: center;
-    }
-    
-    .contact-info {
+    .hero-stats {
         flex-direction: column;
-        align-items: center;
         gap: 20px;
+    }
+    
+    .badges-grid {
+        justify-content: center;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-card.featured {
+        transform: scale(1);
+    }
+    
+    .assessment-card {
+        grid-template-columns: 1fr;
+        padding: 40px 30px;
+    }
+    
+    .assessment-image {
+        display: none;
+    }
+    
+    .corporate-cta {
+        flex-direction: column;
+    }
+    
+    .ai-preview-card {
+        padding: 40px 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .badge-item {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .step-card {
+        padding: 40px 30px;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
     }
 }
 </style>
 
 <script>
-function toggleSection(id) {
-    const content = document.getElementById(id);
-    content.classList.toggle('expanded');
+document.addEventListener('DOMContentLoaded', function() {
+    // Hero Slideshow
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
     
-    const button = event.currentTarget;
-    const icon = button.querySelector('i');
-    
-    if (content.classList.contains('expanded')) {
-        icon.classList.remove('fa-chevron-down');
-        icon.classList.add('fa-chevron-up');
-    } else {
-        icon.classList.remove('fa-chevron-up');
-        icon.classList.add('fa-chevron-down');
+    function nextSlide() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
     }
-}
-
-// Mobile menu toggle
-document.getElementById('menuToggle').addEventListener('click', function() {
-    document.getElementById('navLinks').classList.toggle('active');
     
-    const spans = this.querySelectorAll('span');
-    if (document.getElementById('navLinks').classList.contains('active')) {
-        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-        spans[1].style.opacity = '0';
-        spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
-    } else {
-        spans[0].style.transform = 'none';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'none';
+    setInterval(nextSlide, 5000);
+    
+    // Smooth scroll for hero scroll button
+    const scrollBtn = document.querySelector('.hero-scroll');
+    if (scrollBtn) {
+        scrollBtn.addEventListener('click', function() {
+            const howItWorks = document.getElementById('how-it-works');
+            if (howItWorks) {
+                howItWorks.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
     }
-});
-
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-            // Close mobile menu if open
-            document.getElementById('navLinks').classList.remove('active');
+    
+    // Animate stats on scroll
+    const stats = document.querySelectorAll('.stat-number');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateValue(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    stats.forEach(stat => observer.observe(stat));
+    
+    function animateValue(element) {
+        const value = element.textContent;
+        if (value.includes('+')) {
+            const num = parseInt(value);
+            let current = 0;
+            const increment = num / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= num) {
+                    element.textContent = num + '+';
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + '+';
+                }
+            }, 30);
+        } else if (value.includes('%')) {
+            const num = parseInt(value);
+            let current = 0;
+            const increment = num / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= num) {
+                    element.textContent = num + '%';
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + '%';
+                }
+            }, 30);
+        }
+    }
+    
+    // Add click handlers to service cards
+    document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Don't trigger if clicking on a link inside the card
+            if (e.target.closest('a')) return;
+            
+            const link = this.querySelector('.service-link');
+            if (link) {
+                window.location.href = link.getAttribute('href');
+            }
+        });
+    });
+    
+    // Parallax effect
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const heroSlideshow = document.querySelector('.hero-slideshow');
+        if (heroSlideshow) {
+            heroSlideshow.style.transform = `translateY(${scrolled * -0.3}px)`;
         }
     });
 });
