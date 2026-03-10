@@ -1,68 +1,672 @@
-<!-- templates/index.html - BEAUTIFUL HOMEPAGE WITH WORKING AI CHAT -->
+<!-- templates/index.html - BEAUTIFUL HOMEPAGE WITH HANDWRITING STYLE -->
 {% extends "base.html" %}
 
-{% block title %}Elmed Wellmind Solutions | Professional Mental Health Support in Kenya{% endblock %}
+{% block title %}Elmed Wellmind Solutions | Your Journey to Mental Wellness{% endblock %}
 
 {% block content %}
-<!-- HERO SECTION - STUNNING VISUAL -->
-<section class="hero" id="home">
+<!-- Google Fonts for Handwriting -->
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* Handwriting and Aesthetic Styles */
+    :root {
+        --primary: #8B5CF6;
+        --primary-light: #A78BFA;
+        --primary-dark: #7C3AED;
+        --secondary: #EC4899;
+        --accent: #06B6D4;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --dark: #1F2937;
+        --light: #F9FAFB;
+        --gray: #6B7280;
+        --gradient-primary: linear-gradient(135deg, #8B5CF6, #EC4899);
+        --gradient-accent: linear-gradient(135deg, #06B6D4, #10B981);
+        --shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.3);
+        --shadow-lg: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
+        --border-radius: 30px;
+        --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        font-family: 'Quicksand', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .handwriting {
+        font-family: 'Caveat', cursive;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    /* Hero Section - Stunning Visual */
+    .hero-section {
+        min-height: 100vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .hero-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .hero-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.4;
+        animation: zoomInOut 20s infinite alternate;
+    }
+
+    @keyframes zoomInOut {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.1); }
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(236, 72, 153, 0.8));
+        z-index: 2;
+    }
+
+    .floating-shapes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+    }
+
+    .shape {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 15s infinite;
+    }
+
+    .shape1 {
+        width: 300px;
+        height: 300px;
+        top: -100px;
+        right: -100px;
+        animation-delay: 0s;
+    }
+
+    .shape2 {
+        width: 200px;
+        height: 200px;
+        bottom: -50px;
+        left: -50px;
+        animation-delay: 3s;
+    }
+
+    .shape3 {
+        width: 150px;
+        height: 150px;
+        top: 30%;
+        left: 10%;
+        animation-delay: 6s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-30px) rotate(10deg); }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 4;
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        color: white;
+        padding: 0 20px;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 12px 30px;
+        border-radius: 50px;
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        animation: fadeInDown 1s ease;
+    }
+
+    .hero-title {
+        font-size: 5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        line-height: 1.1;
+        animation: fadeInUp 1s ease 0.2s both;
+    }
+
+    .hero-title .handwriting {
+        font-size: 6rem;
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: block;
+        margin-top: -10px;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.95;
+        margin-bottom: 40px;
+        line-height: 1.8;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        animation: fadeInUp 1s ease 0.4s both;
+    }
+
+    .hero-cta {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeInUp 1s ease 0.6s both;
+    }
+
+    .btn {
+        padding: 18px 40px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: var(--transition);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-primary {
+        background: white;
+        color: var(--primary);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-outline:hover {
+        background: white;
+        color: var(--primary);
+        border-color: white;
+    }
+
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 60px;
+        margin-top: 60px;
+        animation: fadeInUp 1s ease 0.8s both;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        font-family: 'Caveat', cursive;
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        opacity: 0.9;
+        letter-spacing: 1px;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero-scroll {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 4;
+        color: white;
+        text-align: center;
+        animation: bounce 2s infinite;
+        cursor: pointer;
+    }
+
+    .hero-scroll span {
+        display: block;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        opacity: 0.8;
+        font-family: 'Caveat', cursive;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    /* Trust Badges */
+    .trust-section {
+        padding: 60px 0;
+        background: white;
+        position: relative;
+    }
+
+    .trust-grid {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .trust-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--gray);
+        font-weight: 500;
+        padding: 10px 20px;
+        background: var(--light);
+        border-radius: 50px;
+        transition: var(--transition);
+    }
+
+    .trust-item:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+        background: white;
+    }
+
+    .trust-item i {
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    /* Handwritten Quote Section */
+    .quote-section {
+        padding: 100px 0;
+        background: linear-gradient(135deg, #f5f0ff, #fff0f5);
+        text-align: center;
+    }
+
+    .quote {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .quote-icon {
+        font-size: 4rem;
+        color: var(--primary);
+        opacity: 0.3;
+        margin-bottom: 20px;
+    }
+
+    .quote-text {
+        font-size: 2.5rem;
+        line-height: 1.4;
+        margin-bottom: 30px;
+        font-family: 'Caveat', cursive;
+        color: var(--dark);
+    }
+
+    .quote-author {
+        font-size: 1.2rem;
+        color: var(--gray);
+    }
+
+    /* Services Section */
+    .services-section {
+        padding: 100px 0;
+        background: white;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+
+    .section-subtitle {
+        font-size: 1.2rem;
+        color: var(--primary);
+        font-family: 'Caveat', cursive;
+        margin-bottom: 10px;
+    }
+
+    .section-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 20px;
+    }
+
+    .section-title span {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+    }
+
+    .service-card {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(139, 92, 246, 0.1);
+    }
+
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--gradient-primary);
+        transition: height 0.4s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-15px);
+        box-shadow: var(--shadow);
+    }
+
+    .service-card:hover::before {
+        height: 100%;
+        opacity: 0.05;
+    }
+
+    .service-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 25px;
+    }
+
+    .service-icon i {
+        font-size: 2.5rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .service-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: var(--dark);
+    }
+
+    .service-card p {
+        color: var(--gray);
+        line-height: 1.8;
+        margin-bottom: 20px;
+    }
+
+    .service-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+    }
+
+    .service-link:hover {
+        gap: 12px;
+    }
+
+    /* AI Chat Preview */
+    .chat-preview-section {
+        padding: 100px 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .chat-preview {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+    }
+
+    .chat-preview-content h2 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    .chat-preview-content h2 span {
+        font-family: 'Caveat', cursive;
+        font-size: 3.5rem;
+        display: block;
+        color: #FFD700;
+    }
+
+    .chat-bubble {
+        background: white;
+        border-radius: 30px;
+        padding: 20px;
+        margin: 20px 0;
+        position: relative;
+        animation: slideIn 0.5s ease;
+        max-width: 400px;
+    }
+
+    .chat-bubble::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        transform: rotate(45deg);
+    }
+
+    .chat-bubble.user {
+        margin-left: auto;
+        background: var(--gradient-primary);
+        color: white;
+    }
+
+    .chat-bubble.user::before {
+        left: auto;
+        right: -10px;
+        background: var(--primary);
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .hero-title {
+            font-size: 4rem;
+        }
+        .hero-title .handwriting {
+            font-size: 5rem;
+        }
+        .chat-preview {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 3rem;
+        }
+        .hero-title .handwriting {
+            font-size: 4rem;
+        }
+        .hero-stats {
+            flex-direction: column;
+            gap: 20px;
+        }
+        .trust-grid {
+            justify-content: center;
+        }
+        .quote-text {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
     <div class="hero-background">
-        <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
-        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1527689368864-3a821db6a2f0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
-        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+             alt="Peaceful therapy session" 
+             class="hero-image">
         <div class="hero-overlay"></div>
-        <div class="hero-particles"></div>
+        <div class="floating-shapes">
+            <div class="shape shape1"></div>
+            <div class="shape shape2"></div>
+            <div class="shape shape3"></div>
+        </div>
     </div>
-    
+
     <div class="hero-content">
         <div class="hero-badge">
-            <span class="badge-dot"></span>
-            Trusted Mental Health Support in Kenya
+            <i class="fas fa-heart"></i> Trusted Mental Health Support in Kenya
         </div>
         
         <h1 class="hero-title">
             Your Journey to 
-            <span class="gradient-text">Mental Wellness</span>
+            <span class="handwriting">Inner Peace</span>
+            Starts Here
         </h1>
         
         <p class="hero-subtitle">
-            Professional, confidential, and compassionate mental health care tailored to Kenyan culture and values.
+            Professional, confidential, and compassionate mental health care tailored to your unique story. 
+            We're here to listen, support, and guide you every step of the way.
         </p>
         
         <div class="hero-cta">
-            <a href="/auth/register" class="btn btn-primary">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
                 <i class="fas fa-heart"></i>
-                Get Started
+                Begin Your Journey
             </a>
             <a href="#services" class="btn btn-outline">
                 <i class="fas fa-play"></i>
-                Watch Video
+                Watch Story
             </a>
         </div>
         
         <div class="hero-stats">
             <div class="stat-item">
-                <div class="stat-number" data-target="2500">0</div>
-                <div class="stat-label">People Helped</div>
+                <div class="stat-number">2,500+</div>
+                <div class="stat-label">Hearts Healed</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" data-target="98">0%</div>
-                <div class="stat-label">Satisfaction</div>
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Found Peace</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">24/7</div>
-                <div class="stat-label">Support</div>
+                <div class="stat-label">Always Here</div>
             </div>
         </div>
     </div>
-    
+
     <div class="hero-scroll">
-        <span>Discover More</span>
+        <span>Scroll to explore</span>
         <i class="fas fa-chevron-down"></i>
     </div>
 </section>
 
-<!-- TRUST BADGES -->
+<!-- Trust Badges -->
 <section class="trust-section">
     <div class="container">
         <div class="trust-grid">
@@ -90,1213 +694,97 @@
     </div>
 </section>
 
-<!-- SERVICES PREVIEW -->
-<section class="services-preview" id="services">
+<!-- Handwritten Quote -->
+<section class="quote-section">
+    <div class="container">
+        <div class="quote">
+            <i class="fas fa-quote-left quote-icon"></i>
+            <p class="quote-text">
+                "Mental health is not a destination, but a journey. 
+                And every journey begins with a single step — taken together."
+            </p>
+            <p class="quote-author">— Elijah Okware, Founder</p>
+        </div>
+    </div>
+</section>
+
+<!-- Services Preview -->
+<section class="services-section" id="services">
     <div class="container">
         <div class="section-header">
-            <span class="section-subtitle">What We Offer</span>
-            <h2 class="section-title">Our <span>Services</span></h2>
-            <p class="section-description">
-                Comprehensive mental health solutions for individuals, families, and organizations
-            </p>
+            <p class="section-subtitle">What We Offer</p>
+            <h2 class="section-title">Paths to <span>Healing</span></h2>
         </div>
-        
+
         <div class="services-grid">
-            <div class="service-card" onclick="location.href='#individual'">
+            <div class="service-card">
                 <div class="service-icon">
                     <i class="fas fa-user-md"></i>
                 </div>
                 <h3>Individual Counseling</h3>
-                <p>One-on-one sessions with licensed therapists</p>
-                <span class="service-link">Learn More <i class="fas fa-arrow-right"></i></span>
+                <p>One-on-one sessions with licensed therapists for anxiety, depression, trauma, and personal growth.</p>
+                <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
             </div>
-            
-            <div class="service-card featured" onclick="location.href='#ai-chat'">
-                <div class="featured-badge">Popular</div>
+
+            <div class="service-card">
                 <div class="service-icon">
                     <i class="fas fa-robot"></i>
                 </div>
                 <h3>AI Assistant</h3>
-                <p>24/7 instant mental health support</p>
-                <span class="service-link">Chat Now <i class="fas fa-arrow-right"></i></span>
+                <p>24/7 AI-powered support for immediate guidance and coping strategies when you need it most.</p>
+                <a href="#ai-chat" class="service-link">Chat Now <i class="fas fa-arrow-right"></i></a>
             </div>
-            
-            <div class="service-card" onclick="location.href='#group'">
+
+            <div class="service-card">
                 <div class="service-icon">
                     <i class="fas fa-users"></i>
                 </div>
                 <h3>Group Therapy</h3>
-                <p>Support groups with professional facilitators</p>
-                <span class="service-link">Learn More <i class="fas fa-arrow-right"></i></span>
-            </div>
-            
-            <div class="service-card" onclick="location.href='#corporate'">
-                <div class="service-icon">
-                    <i class="fas fa-building"></i>
-                </div>
-                <h3>Corporate Wellness</h3>
-                <p>Employee mental health programs</p>
-                <span class="service-link">Learn More <i class="fas fa-arrow-right"></i></span>
+                <p>Support groups for shared experiences, led by professional facilitators in a safe environment.</p>
+                <a href="#" class="service-link">Join a Group <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- AI CHAT SECTION - FULLY FUNCTIONAL -->
-<section class="ai-chat-section" id="ai-chat">
+<!-- AI Chat Preview -->
+<section class="chat-preview-section" id="ai-chat">
     <div class="container">
-        <div class="chat-wrapper">
-            <div class="chat-info">
-                <div class="chat-badge">
-                    <i class="fas fa-robot"></i>
-                    <span>24/7 AI Support</span>
-                </div>
-                <h2>Chat with Elmed AI Assistant</h2>
-                <p>Get instant, confidential support anytime, anywhere. Our AI is trained in evidence-based mental health techniques and Kenyan cultural context.</p>
-                
-                <div class="chat-features">
-                    <div class="chat-feature">
-                        <i class="fas fa-bolt"></i>
-                        <span>Instant Responses</span>
-                    </div>
-                    <div class="chat-feature">
-                        <i class="fas fa-lock"></i>
-                        <span>Private & Secure</span>
-                    </div>
-                    <div class="chat-feature">
-                        <i class="fas fa-brain"></i>
-                        <span>Evidence-Based</span>
-                    </div>
-                </div>
-                
-                <div class="chat-prompts">
-                    <button class="prompt-btn" onclick="setPrompt('I feel anxious')">😰 Anxiety</button>
-                    <button class="prompt-btn" onclick="setPrompt('I feel sad')">😔 Depression</button>
-                    <button class="prompt-btn" onclick="setPrompt('Stress at work')">💼 Work Stress</button>
-                    <button class="prompt-btn" onclick="setPrompt('Sleep problems')">😴 Sleep</button>
-                </div>
-            </div>
-            
-            <div class="chat-container">
-                <div class="chat-header">
-                    <div class="chat-status">
-                        <span class="status-dot"></span>
-                        <span>Online - Ready to help</span>
-                    </div>
-                </div>
-                
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message bot">
-                        <div class="message-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <div class="message-text">
-                                Hello! I'm your mental health assistant. How can I support you today?
-                            </div>
-                            <div class="message-time">Just now</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="chat-input-area">
-                    <textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea>
-                    <button id="sendMessage" onclick="sendMessage()">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-                
-                <div class="typing-indicator" id="typingIndicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span>AI is thinking...</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-subtitle">Stories of Hope</span>
-            <h2 class="section-title">What Our <span>Clients Say</span></h2>
-        </div>
-        
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <i class="fas fa-quote-left quote-icon"></i>
-                <p class="testimonial-text">
-                    "The AI assistant was there for me at 2 AM during a panic attack. It guided me through breathing exercises and connected me with a therapist."
+        <div class="chat-preview">
+            <div class="chat-preview-content">
+                <h2>
+                    Chat with Our 
+                    <span>AI Companion</span>
+                </h2>
+                <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 30px;">
+                    Available 24/7, always listening, always caring. Start a conversation anytime.
                 </p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">MK</div>
-                    <div class="author-info">
-                        <h4>Mary Kamau</h4>
-                        <p>Nairobi</p>
-                    </div>
+                
+                <div class="chat-bubble">
+                    <i class="fas fa-robot" style="margin-right: 10px; color: var(--primary);"></i>
+                    Hello! I'm here to listen. How are you feeling today?
                 </div>
-            </div>
-            
-            <div class="testimonial-card">
-                <i class="fas fa-quote-left quote-icon"></i>
-                <p class="testimonial-text">
-                    "Our company's productivity improved 40% after implementing the corporate wellness program. The team loves the flexibility."
-                </p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">JO</div>
-                    <div class="author-info">
-                        <h4>James Omondi</h4>
-                        <p>HR Manager</p>
-                    </div>
+                
+                <div class="chat-bubble user">
+                    I've been feeling anxious about work...
+                    <i class="fas fa-user" style="margin-left: 10px;"></i>
                 </div>
-            </div>
-            
-            <div class="testimonial-card">
-                <i class="fas fa-quote-left quote-icon"></i>
-                <p class="testimonial-text">
-                    "Group therapy helped me realize I'm not alone. The facilitator is amazing and I've made genuine connections."
-                </p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">AW</div>
-                    <div class="author-info">
-                        <h4>Anne Wanjiku</h4>
-                        <p>Mombasa</p>
-                    </div>
+                
+                <div class="chat-bubble">
+                    I hear you. Let's try a breathing exercise together. Breathe in... and out...
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA SECTION -->
-<section class="cta-section">
-    <div class="container">
-        <div class="cta-card">
-            <h2>Ready to Start Your Healing Journey?</h2>
-            <p>Join thousands of Kenyans who've found support with Elmed Wellmind</p>
-            <div class="cta-buttons">
-                <a href="/auth/register" class="btn btn-primary btn-large">
-                    <i class="fas fa-user-plus"></i>
-                    Create Free Account
-                </a>
-                <a href="tel:+254759226354" class="btn btn-outline-light btn-large">
-                    <i class="fas fa-phone"></i>
-                    Call Now
+                
+                <a href="/chat" class="btn btn-primary" style="margin-top: 30px; display: inline-block;">
+                    Start Chatting <i class="fas fa-comments"></i>
                 </a>
             </div>
-            <div class="cta-note">
-                <i class="fas fa-shield-alt"></i>
-                Free 15-minute consultation with every new client
+            
+            <div style="text-align: center;">
+                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                     alt="Peaceful meditation" 
+                     style="width: 100%; max-width: 400px; border-radius: 30px; box-shadow: var(--shadow-lg);">
             </div>
         </div>
     </div>
 </section>
-
-<style>
-/* ===== GLOBAL STYLES ===== */
-:root {
-    --primary: #6C63FF;
-    --primary-dark: #5A52D5;
-    --primary-light: #8C85FF;
-    --secondary: #FF6584;
-    --accent: #36D1DC;
-    --success: #4CAF50;
-    --warning: #FFC107;
-    --danger: #FF4757;
-    --dark: #2D2B5E;
-    --light: #F8F9FF;
-    --gray: #6B7280;
-    --white: #FFFFFF;
-    --gradient-primary: linear-gradient(135deg, #6C63FF, #36D1DC);
-    --gradient-secondary: linear-gradient(135deg, #FF6584, #FFC107);
-    --gradient-hero: linear-gradient(135deg, rgba(45, 43, 94, 0.95), rgba(108, 99, 255, 0.9));
-    --shadow: 0 20px 40px rgba(108, 99, 255, 0.15);
-    --shadow-hover: 0 30px 60px rgba(108, 99, 255, 0.25);
-    --border-radius: 20px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    color: var(--dark);
-    line-height: 1.6;
-    overflow-x: hidden;
-    background: var(--white);
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* ===== HERO SECTION ===== */
-.hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    padding: 120px 0;
-}
-
-.hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-.hero-slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 1.5s ease;
-    transform: scale(1.1);
-}
-
-.hero-slide.active {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--gradient-hero);
-    z-index: 2;
-}
-
-.hero-particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><circle cx="10" cy="10" r="1" fill="white"/><circle cx="90" cy="30" r="1" fill="white"/><circle cx="30" cy="80" r="1" fill="white"/><circle cx="70" cy="70" r="1" fill="white"/></svg>');
-    z-index: 3;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 4;
-    max-width: 800px;
-    color: white;
-    padding: 0 20px;
-    animation: fadeInUp 1s ease;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    padding: 10px 25px;
-    border-radius: 50px;
-    font-size: 1rem;
-    margin-bottom: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.badge-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--success);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-}
-
-.hero-title {
-    font-size: 4.5rem;
-    font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 25px;
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-}
-
-.gradient-text {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.hero-subtitle {
-    font-size: 1.3rem;
-    opacity: 0.95;
-    margin-bottom: 40px;
-    max-width: 600px;
-    line-height: 1.8;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.hero-cta {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 50px;
-    flex-wrap: wrap;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 18px 38px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: var(--transition);
-    cursor: pointer;
-    text-decoration: none;
-    border: none;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.btn:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-.btn-large {
-    padding: 20px 45px;
-    font-size: 1.2rem;
-}
-
-.btn-primary {
-    background: var(--gradient-primary);
-    color: white;
-    box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
-}
-
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px rgba(108, 99, 255, 0.6);
-}
-
-.btn-outline {
-    background: transparent;
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-}
-
-.btn-outline:hover {
-    background: white;
-    color: var(--primary);
-    border-color: white;
-}
-
-.btn-outline-light {
-    background: transparent;
-    color: white;
-    border: 2px solid white;
-}
-
-.btn-outline-light:hover {
-    background: white;
-    color: var(--primary);
-}
-
-.hero-stats {
-    display: flex;
-    gap: 50px;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 5px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.stat-label {
-    font-size: 1rem;
-    opacity: 0.9;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.hero-scroll {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 4;
-    color: white;
-    text-align: center;
-    animation: bounce 2s infinite;
-    cursor: pointer;
-}
-
-.hero-scroll span {
-    display: block;
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-    opacity: 0.8;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(-10px); }
-}
-
-/* ===== TRUST SECTION ===== */
-.trust-section {
-    padding: 60px 0;
-    background: white;
-}
-
-.trust-grid {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 30px;
-}
-
-.trust-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: var(--gray);
-    font-weight: 500;
-}
-
-.trust-item i {
-    font-size: 1.8rem;
-    color: var(--primary);
-}
-
-/* ===== SERVICES PREVIEW ===== */
-.services-preview {
-    padding: 80px 0;
-    background: var(--light);
-}
-
-.section-header {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.section-subtitle {
-    display: inline-block;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--primary);
-    background: rgba(108, 99, 255, 0.1);
-    padding: 8px 20px;
-    border-radius: 30px;
-    margin-bottom: 15px;
-}
-
-.section-title {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-}
-
-.section-title span {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.section-description {
-    font-size: 1.2rem;
-    color: var(--gray);
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.service-card {
-    background: white;
-    border-radius: var(--border-radius);
-    padding: 40px 30px;
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(108, 99, 255, 0.1);
-}
-
-.service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-hover);
-    border-color: var(--primary);
-}
-
-.service-card.featured {
-    border: 2px solid var(--primary);
-    transform: scale(1.02);
-}
-
-.featured-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: var(--gradient-primary);
-    color: white;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.service-icon {
-    width: 70px;
-    height: 70px;
-    background: rgba(108, 99, 255, 0.1);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 25px;
-}
-
-.service-icon i {
-    font-size: 2rem;
-    color: var(--primary);
-}
-
-.service-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-}
-
-.service-card p {
-    color: var(--gray);
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.service-link {
-    color: var(--primary);
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* ===== AI CHAT SECTION ===== */
-.ai-chat-section {
-    padding: 100px 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.chat-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    align-items: center;
-}
-
-.chat-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    padding: 8px 20px;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-}
-
-.chat-info h2 {
-    font-size: 2.8rem;
-    margin-bottom: 20px;
-    color: white;
-}
-
-.chat-info p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    margin-bottom: 30px;
-    line-height: 1.8;
-}
-
-.chat-features {
-    display: flex;
-    gap: 25px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-}
-
-.chat-feature {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.chat-feature i {
-    color: var(--success);
-}
-
-.chat-prompts {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.prompt-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.95rem;
-}
-
-.prompt-btn:hover {
-    background: white;
-    color: var(--primary);
-    transform: translateY(-2px);
-}
-
-.chat-container {
-    background: white;
-    border-radius: 30px;
-    overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-header {
-    padding: 20px;
-    background: #f8f9ff;
-    border-bottom: 1px solid #eef0ff;
-}
-
-.chat-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--dark);
-}
-
-.status-dot {
-    width: 10px;
-    height: 10px;
-    background: var(--success);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
-
-.chat-messages {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.message {
-    display: flex;
-    gap: 10px;
-    max-width: 80%;
-}
-
-.message.user {
-    margin-left: auto;
-    flex-direction: row-reverse;
-}
-
-.message-avatar {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: var(--gradient-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-}
-
-.message.user .message-avatar {
-    background: var(--gradient-secondary);
-}
-
-.message-content {
-    background: #f0f2ff;
-    padding: 12px 18px;
-    border-radius: 18px;
-    border-bottom-left-radius: 5px;
-}
-
-.message.user .message-content {
-    background: var(--gradient-primary);
-    color: white;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 18px;
-}
-
-.message-text {
-    line-height: 1.5;
-    font-size: 0.95rem;
-}
-
-.message-time {
-    font-size: 0.7rem;
-    color: #999;
-    margin-top: 5px;
-}
-
-.chat-input-area {
-    padding: 20px;
-    border-top: 1px solid #eef0ff;
-    display: flex;
-    gap: 10px;
-    background: white;
-}
-
-#chatInput {
-    flex: 1;
-    padding: 15px 20px;
-    border: 2px solid #eef0ff;
-    border-radius: 30px;
-    resize: none;
-    font-family: inherit;
-    font-size: 0.95rem;
-    transition: var(--transition);
-}
-
-#chatInput:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
-}
-
-#sendMessage {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: var(--gradient-primary);
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-#sendMessage:hover {
-    transform: scale(1.1);
-    box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
-}
-
-.typing-indicator {
-    display: none;
-    padding: 15px 20px;
-    background: #f0f2ff;
-    margin: 0 20px 20px;
-    border-radius: 20px;
-    align-items: center;
-    gap: 10px;
-}
-
-.typing-indicator span {
-    width: 8px;
-    height: 8px;
-    background: var(--primary);
-    border-radius: 50%;
-    animation: typing 1.4s infinite;
-}
-
-.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes typing {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-10px); }
-}
-
-/* ===== TESTIMONIALS ===== */
-.testimonials {
-    padding: 100px 0;
-    background: white;
-}
-
-.testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.testimonial-card {
-    background: var(--light);
-    border-radius: 20px;
-    padding: 40px 30px;
-    transition: var(--transition);
-    position: relative;
-}
-
-.testimonial-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow);
-}
-
-.quote-icon {
-    font-size: 2rem;
-    color: var(--primary);
-    opacity: 0.2;
-    margin-bottom: 20px;
-}
-
-.testimonial-text {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: var(--gray);
-    margin-bottom: 25px;
-    font-style: italic;
-}
-
-.testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.author-avatar {
-    width: 50px;
-    height: 50px;
-    background: var(--gradient-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-}
-
-.author-info h4 {
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-}
-
-.author-info p {
-    color: var(--gray);
-    font-size: 0.9rem;
-}
-
-/* ===== CTA SECTION ===== */
-.cta-section {
-    padding: 80px 0;
-    background: linear-gradient(135deg, var(--dark), var(--primary-dark));
-}
-
-.cta-card {
-    text-align: center;
-    color: white;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.cta-card h2 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    color: white;
-}
-
-.cta-card p {
-    font-size: 1.2rem;
-    opacity: 0.9;
-    margin-bottom: 40px;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-}
-
-.cta-note {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    opacity: 0.8;
-    font-size: 1rem;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-    .hero-title {
-        font-size: 3.5rem;
-    }
-    
-    .chat-wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    .chat-container {
-        max-width: 500px;
-        margin: 0 auto;
-    }
-}
-
-@media (max-width: 768px) {
-    .hero-title {
-        font-size: 2.8rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-    
-    .hero-cta {
-        flex-direction: column;
-    }
-    
-    .hero-stats {
-        flex-direction: column;
-        gap: 20px;
-    }
-    
-    .trust-grid {
-        justify-content: center;
-    }
-    
-    .section-title {
-        font-size: 2.2rem;
-    }
-    
-    .cta-buttons {
-        flex-direction: column;
-    }
-}
-</style>
-
-<script>
-// Hero Slideshow
-const slides = document.querySelectorAll('.hero-slide');
-let currentSlide = 0;
-
-function nextSlide() {
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add('active');
-}
-setInterval(nextSlide, 6000);
-
-// Animated Counters
-const counters = document.querySelectorAll('.stat-number');
-const speed = 200;
-
-counters.forEach(counter => {
-    const updateCount = () => {
-        const target = parseInt(counter.getAttribute('data-target'));
-        const count = parseInt(counter.innerText);
-        
-        const increment = target / speed;
-        
-        if (count < target) {
-            counter.innerText = Math.ceil(count + increment);
-            setTimeout(updateCount, 10);
-        } else {
-            if (counter.innerText.includes('%')) {
-                counter.innerText = target + '%';
-            } else {
-                counter.innerText = target + '+';
-            }
-        }
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-            updateCount();
-            observer.unobserve(counter);
-        }
-    });
-    observer.observe(counter);
-});
-
-// AI Chat Functionality
-let sessionId = localStorage.getItem('chatSessionId') || 'session_' + Date.now();
-localStorage.setItem('chatSessionId', sessionId);
-
-function setPrompt(text) {
-    document.getElementById('chatInput').value = text;
-    document.getElementById('chatInput').focus();
-}
-
-async function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    if (!message) return;
-    
-    const messagesDiv = document.getElementById('chatMessages');
-    const typingIndicator = document.getElementById('typingIndicator');
-    
-    // Add user message
-    messagesDiv.innerHTML += `
-        <div class="message user">
-            <div class="message-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="message-content">
-                <div class="message-text">${escapeHtml(message)}</div>
-                <div class="message-time">Just now</div>
-            </div>
-        </div>
-    `;
-    
-    input.value = '';
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    
-    // Show typing indicator
-    typingIndicator.style.display = 'flex';
-    
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                message: message,
-                session_id: sessionId 
-            })
-        });
-        
-        const data = await response.json();
-        
-        // Hide typing indicator
-        typingIndicator.style.display = 'none';
-        
-        // Add bot response
-        messagesDiv.innerHTML += `
-            <div class="message bot">
-                <div class="message-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="message-content">
-                    <div class="message-text">${escapeHtml(data.response || 'I\'m here to help.')}</div>
-                    <div class="message-time">Just now</div>
-                </div>
-            </div>
-        `;
-    } catch (error) {
-        typingIndicator.style.display = 'none';
-        messagesDiv.innerHTML += `
-            <div class="message bot">
-                <div class="message-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="message-content">
-                    <div class="message-text">I'm having trouble connecting. Please try again or call our helpline at +254759226354.</div>
-                    <div class="message-time">Just now</div>
-                </div>
-            </div>
-        `;
-    }
-    
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// Enter key to send
-document.getElementById('chatInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-    }
-});
-
-// Auto-resize textarea
-document.getElementById('chatInput').addEventListener('input', function() {
-    this.style.height = 'auto';
-    this.style.height = (this.scrollHeight) + 'px';
-});
-
-// Smooth scroll
-document.querySelector('.hero-scroll').addEventListener('click', () => {
-    document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
-});
-</script>
 {% endblock %}
