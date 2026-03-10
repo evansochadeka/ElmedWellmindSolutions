@@ -1,0 +1,447 @@
+<!-- templates/auth/register_professional.html - Enhanced with camera/upload -->
+{% extends "base.html" %}
+
+{% block title %}Register as Professional | Elmed Wellmind{% endblock %}
+
+{% block content %}
+<style>
+    .camera-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        color: white;
+    }
+    
+    .photo-upload-area {
+        border: 3px dashed rgba(255,255,255,0.3);
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(255,255,255,0.1);
+    }
+    
+    .photo-upload-area:hover {
+        border-color: white;
+        background: rgba(255,255,255,0.2);
+    }
+    
+    .photo-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 20px;
+        border: 5px solid white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .camera-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    
+    .camera-btn {
+        background: white;
+        color: var(--primary);
+        border: none;
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .camera-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    .camera-btn i {
+        font-size: 1.2rem;
+    }
+    
+    #camera {
+        display: none;
+        width: 100%;
+        max-width: 500px;
+        margin: 20px auto;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    #camera video {
+        width: 100%;
+        border-radius: 15px;
+    }
+    
+    .capture-btn {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    
+    .photo-options {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+</style>
+
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Become a <span>Professional</span></h2>
+                <p>Join our network of mental health experts</p>
+            </div>
+
+            <!-- Alert Container -->
+            <div id="alertContainer"></div>
+
+            <!-- Professional Registration Form -->
+            <form id="professionalForm" enctype="multipart/form-data">
+                <!-- Profile Photo Section with Camera -->
+                <div class="camera-section">
+                    <h3 style="color: white; margin-bottom: 20px;">Profile Photo</h3>
+                    <p style="margin-bottom: 20px;">Add a professional photo so clients can see your face</p>
+                    
+                    <div class="photo-preview" id="photoPreview">
+                        <img src="{{ url_for('static', filename='images/default-avatar.jpg') }}" 
+                             style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    </div>
+                    
+                    <div class="photo-options">
+                        <button type="button" class="camera-btn" onclick="document.getElementById('profilePhoto').click()">
+                            <i class="fas fa-upload"></i> Upload Photo
+                        </button>
+                        <button type="button" class="camera-btn" onclick="openCamera()">
+                            <i class="fas fa-camera"></i> Take Photo
+                        </button>
+                    </div>
+                    
+                    <input type="file" id="profilePhoto" name="profile_photo" accept="image/*" style="display: none;" onchange="previewPhoto(this)">
+                    
+                    <div id="camera">
+                        <video id="video" autoplay></video>
+                        <canvas id="canvas" style="display: none;"></canvas>
+                        <button type="button" class="capture-btn" onclick="capturePhoto()">
+                            <i class="fas fa-camera"></i> Capture
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> First Name</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Last Name</label>
+                        <input type="text" class="form-control" id="lastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="+254..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-briefcase"></i> Professional Type</label>
+                    <select class="form-control" id="professionalType" required>
+                        <option value="">Select your profession</option>
+                        <option value="psychiatrist">Psychiatrist</option>
+                        <option value="psychologist">Psychologist</option>
+                        <option value="counselor">Counselor</option>
+                        <option value="therapist">Therapist</option>
+                        <option value="social_worker">Social Worker</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> License Number</label>
+                        <input type="text" class="form-control" id="licenseNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-chart-line"></i> Years Experience</label>
+                        <input type="number" class="form-control" id="yearsExperience" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-tags"></i> Specializations</label>
+                    <input type="text" class="form-control" id="specializations" placeholder="e.g., Anxiety, Depression, Trauma (comma separated)">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-comment"></i> Professional Bio</label>
+                    <textarea class="form-control" id="bio" rows="4" placeholder="Tell clients about yourself, your approach, and experience..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-money-bill"></i> Session Fee (KES)</label>
+                    <input type="number" class="form-control" id="sessionFee" min="0" step="100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-file-upload"></i> Upload Documents (License, Certificates)</label>
+                    <div class="file-upload">
+                        <label for="documents" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Click to upload or drag and drop</span>
+                        </label>
+                        <input type="file" class="file-upload-input" id="documents" multiple accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+                    <small class="password-hint">Accepted formats: PDF, JPG, PNG. Max 5MB each.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" class="form-control" id="password" required>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="passwordStrength"></div>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="/terms" target="_blank">Terms of Service</a> and 
+                        <a href="/privacy" target="_blank">Privacy Policy</a>
+                    </label>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Your account will be verified by admin before you can start offering services.
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span>Register as Professional</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Camera functionality
+let videoStream = null;
+
+function openCamera() {
+    const cameraDiv = document.getElementById('camera');
+    cameraDiv.style.display = 'block';
+    
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(function(stream) {
+            videoStream = stream;
+            const video = document.getElementById('video');
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function(err) {
+            showAlert('Could not access camera: ' + err.message, 'error');
+        });
+}
+
+function capturePhoto() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Convert to blob and create file
+    canvas.toBlob(function(blob) {
+        const file = new File([blob], "camera_photo.jpg", { type: "image/jpeg" });
+        
+        // Create file input and set file
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        document.getElementById('profilePhoto').files = dataTransfer.files;
+        
+        // Preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.querySelector('#photoPreview img').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        
+        // Stop camera
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+            document.getElementById('camera').style.display = 'none';
+        }
+        
+        showAlert('Photo captured successfully!', 'success');
+    }, 'image/jpeg');
+}
+
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.querySelector('#photoPreview img').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+        
+        // Stop camera if open
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+            document.getElementById('camera').style.display = 'none';
+        }
+    }
+}
+
+// File upload list
+document.getElementById('documents').addEventListener('change', function() {
+    const fileList = document.getElementById('fileList');
+    const files = this.files;
+    let html = '';
+    
+    for (let i = 0; i < files.length; i++) {
+        html += `<div><i class="fas fa-file"></i> ${files[i].name} (${(files[i].size / 1024).toFixed(2)} KB)</div>`;
+    }
+    
+    fileList.innerHTML = html;
+});
+
+// Password strength
+document.getElementById('password').addEventListener('input', function() {
+    const password = this.value;
+    const strengthBar = document.getElementById('passwordStrength');
+    
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+    strengthBar.className = 'password-strength-bar';
+    if (strength <= 2) {
+        strengthBar.classList.add('weak');
+    } else if (strength <= 4) {
+        strengthBar.classList.add('medium');
+    } else {
+        strengthBar.classList.add('strong');
+    }
+});
+
+// Form submission
+document.getElementById('professionalForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('first_name', document.getElementById('firstName').value);
+    formData.append('last_name', document.getElementById('lastName').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('phone', document.getElementById('phone').value);
+    formData.append('professional_type', document.getElementById('professionalType').value);
+    formData.append('license_number', document.getElementById('licenseNumber').value);
+    formData.append('years_experience', document.getElementById('yearsExperience').value);
+    
+    const specializations = document.getElementById('specializations').value.split(',').map(s => s.trim());
+    formData.append('specializations', JSON.stringify(specializations));
+    
+    formData.append('bio', document.getElementById('bio').value);
+    formData.append('session_fee', document.getElementById('sessionFee').value);
+    formData.append('password', document.getElementById('password').value);
+    
+    // Add profile photo
+    const profilePhoto = document.getElementById('profilePhoto').files[0];
+    if (profilePhoto) {
+        formData.append('profile_photo', profilePhoto);
+    }
+    
+    // Add documents
+    const documents = document.getElementById('documents').files;
+    for (let i = 0; i < documents.length; i++) {
+        formData.append('documents', documents[i]);
+    }
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loader"></span> Submitting...';
+    submitBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/auth/api/register/professional', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showAlert('Registration successful! Redirecting to login...', 'success');
+            setTimeout(() => {
+                window.location.href = result.redirect;
+            }, 2000);
+        } else {
+            showAlert(result.message || 'Registration failed', 'error');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        showAlert('Connection error. Please try again.', 'error');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+function showAlert(message, type) {
+    const alertContainer = document.getElementById('alertContainer');
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    
+    const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        info: 'fa-info-circle'
+    };
+    
+    alertDiv.innerHTML = `
+        <i class="fas ${icons[type] || 'fa-info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    alertContainer.innerHTML = '';
+    alertContainer.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}
