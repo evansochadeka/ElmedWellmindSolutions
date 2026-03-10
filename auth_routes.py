@@ -1,4 +1,4 @@
-# auth_routes.py - COMPLETE with login and all features
+# auth_routes.py - COMPLETE with ALL features and FIXED endpoints
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
@@ -56,17 +56,17 @@ def log_activity(user_id, action, description=None, entity_type=None, entity_id=
     db.session.add(log)
     db.session.commit()
 
-# Registration page with role selection
+# Registration page with role selection - FIXED endpoint name
 @auth_bp.route('/register')
-def register_page():
+def register():
     """Registration page"""
     if current_user.is_authenticated:
         return redirect(url_for('dashboard_redirect'))
     return render_template('auth/register.html')
 
-# Login page
+# Login page - FIXED endpoint name
 @auth_bp.route('/login')
-def login_page():
+def login():
     """Login page"""
     if current_user.is_authenticated:
         return redirect(url_for('dashboard_redirect'))
@@ -76,7 +76,7 @@ def login_page():
 @auth_bp.route('/get-started')
 def get_started():
     """Get started redirect"""
-    return redirect(url_for('auth.register_page'))
+    return redirect(url_for('auth.register'))
 
 # API: Login
 @auth_bp.route('/api/login', methods=['POST'])
@@ -144,6 +144,7 @@ def api_logout():
     """Logout user"""
     log_activity(current_user.id, 'LOGOUT', 'User logged out')
     logout_user()
+    session.clear()
     return jsonify({'success': True, 'message': 'Logged out successfully'})
 
 # API: Register client
@@ -162,13 +163,25 @@ def api_register_client():
         if not validate_email(data['email']):
             return jsonify({'success': False, 'message': 'Invalid email format'}), 400
         
+        # Validate phone if provided
+        if data.get('phone') and not validate_phone(data['phone']):
+            return jsonify({'success': False, 'message': 'Invalid phone number format. Use +254XXXXXXXXX or 07XXXXXXXX'}), 400
+        
         # Check if user exists
         if User.query.filter_by(email=data['email']).first():
             return jsonify({'success': False, 'message': 'Email already registered'}), 400
         
+        # Create username
+        base_username = data['email'].split('@')[0]
+        username = base_username
+        counter = 1
+        while User.query.filter_by(username=username).first():
+            username = f"{base_username}{counter}"
+            counter += 1
+        
         # Create user
         user = User(
-            username=data['email'].split('@')[0] + secrets.token_hex(2),
+            username=username,
             email=data['email'],
             first_name=data['first_name'],
             last_name=data['last_name'],
@@ -231,7 +244,7 @@ def api_register_client():
         return jsonify({
             'success': True,
             'message': 'Registration successful! Please login.',
-            'redirect': url_for('auth.login_page')
+            'redirect': url_for('auth.login')
         })
         
     except Exception as e:
@@ -263,13 +276,25 @@ def api_register_professional():
         if not validate_email(email):
             return jsonify({'success': False, 'message': 'Invalid email format'}), 400
         
+        # Validate phone
+        if not validate_phone(phone):
+            return jsonify({'success': False, 'message': 'Invalid phone number format. Use +254XXXXXXXXX or 07XXXXXXXX'}), 400
+        
         # Check if user exists
         if User.query.filter_by(email=email).first():
             return jsonify({'success': False, 'message': 'Email already registered'}), 400
         
+        # Create username
+        base_username = email.split('@')[0]
+        username = base_username
+        counter = 1
+        while User.query.filter_by(username=username).first():
+            username = f"{base_username}{counter}"
+            counter += 1
+        
         # Create user
         user = User(
-            username=email.split('@')[0] + secrets.token_hex(2),
+            username=username,
             email=email,
             first_name=first_name,
             last_name=last_name,
@@ -291,13 +316,19 @@ def api_register_professional():
                     if filename:
                         documents.append(filename)
         
+        # Parse specializations
+        try:
+            specializations_list = json.loads(specializations) if specializations else []
+        except:
+            specializations_list = []
+        
         # Create professional profile
         professional = Professional(
             user_id=user.id,
             professional_type=professional_type,
             license_number=license_number,
             years_experience=int(years_experience) if years_experience else 0,
-            specialization=specializations,
+            specialization=json.dumps(specializations_list),
             session_fee=float(session_fee),
             documents=json.dumps(documents),
             is_verified=False  # Requires admin approval
@@ -323,7 +354,7 @@ def api_register_professional():
         return jsonify({
             'success': True,
             'message': 'Registration successful! Your account will be verified by admin.',
-            'redirect': url_for('auth.login_page')
+            'redirect': url_for('auth.login')
         })
         
     except Exception as e:
@@ -351,16 +382,32 @@ def api_register_organization():
         if not validate_email(data['email']):
             return jsonify({'success': False, 'message': 'Invalid email format'}), 400
         
+        # Validate phone
+        if not validate_phone(data['phone']):
+            return jsonify({'success': False, 'message': 'Invalid phone number format. Use +254XXXXXXXXX or 07XXXXXXXX'}), 400
+        
         # Check if user exists
         if User.query.filter_by(email=data['email']).first():
             return jsonify({'success': False, 'message': 'Email already registered'}), 400
         
+        # Create username
+        base_username = data['email'].split('@')[0]
+        username = base_username
+        counter = 1
+        while User.query.filter_by(username=username).first():
+            username = f"{base_username}{counter}"
+            counter += 1
+        
         # Create user (contact person)
+        name_parts = data['contact_person'].split()
+        first_name = name_parts[0] if name_parts else data['contact_person']
+        last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else ''
+        
         user = User(
-            username=data['email'].split('@')[0] + secrets.token_hex(2),
+            username=username,
             email=data['email'],
-            first_name=data['contact_person'].split()[0] if ' ' in data['contact_person'] else data['contact_person'],
-            last_name=data['contact_person'].split()[-1] if len(data['contact_person'].split()) > 1 else '',
+            first_name=first_name,
+            last_name=last_name,
             phone=data['phone'],
             role='organization'
         )
@@ -392,7 +439,7 @@ def api_register_organization():
             'success': True,
             'message': 'Organization registered successfully!',
             'employee_code': employee_code,
-            'redirect': url_for('auth.login_page')
+            'redirect': url_for('auth.login')
         })
         
     except Exception as e:
@@ -416,9 +463,12 @@ def api_get_current_user():
         'role': current_user.role,
         'is_verified': current_user.is_verified,
         'email_verified': current_user.email_verified,
+        'phone_verified': current_user.phone_verified,
         'profile_pic': current_user.profile_pic,
+        'bio': current_user.bio,
         'created_at': current_user.created_at.isoformat() if current_user.created_at else None,
-        'last_login': current_user.last_login.isoformat() if current_user.last_login else None
+        'last_login': current_user.last_login.isoformat() if current_user.last_login else None,
+        'last_active': current_user.last_active.isoformat() if current_user.last_active else None
     }
     
     # Add role-specific data
@@ -430,7 +480,9 @@ def api_get_current_user():
             'is_verified': prof.is_verified,
             'session_fee': prof.session_fee,
             'client_facing_fee': prof.client_facing_fee,
-            'average_rating': prof.average_rating
+            'average_rating': prof.average_rating,
+            'total_sessions': prof.total_sessions,
+            'specializations': prof.get_specializations()
         }
     
     elif current_user.role == 'organization' and current_user.organization_profile:
@@ -439,7 +491,9 @@ def api_get_current_user():
             'id': org.id,
             'company_name': org.company_name,
             'employee_code': org.employee_registration_code,
-            'total_employees': org.total_employees
+            'total_employees': org.total_employees,
+            'active_this_month': org.active_this_month,
+            'average_wellness_score': org.average_wellness_score
         }
     
     elif current_user.role == 'client' and current_user.client_profile:
@@ -448,7 +502,8 @@ def api_get_current_user():
             'id': client.id,
             'organization_id': client.organization_id,
             'department': client.department,
-            'wellness_score': client.wellness_score
+            'wellness_score': client.wellness_score,
+            'risk_level': client.risk_level
         }
     
     return jsonify(user_data)
@@ -468,6 +523,9 @@ def api_forgot_password():
             
             # Here you would send email with reset link
             print(f"Password reset token for {email}: {token}")
+            
+            # In production, you would send an email
+            # email_service.send_password_reset(user, f"/auth/reset-password?token={token}")
             
             return jsonify({
                 'success': True,
@@ -489,6 +547,12 @@ def api_reset_password():
         token = data.get('token')
         new_password = data.get('password')
         
+        if not token or not new_password:
+            return jsonify({'success': False, 'message': 'Token and password required'}), 400
+        
+        if len(new_password) < 8:
+            return jsonify({'success': False, 'message': 'Password must be at least 8 characters'}), 400
+        
         user = User.query.filter_by(reset_token=token).first()
         if not user or not user.verify_reset_token(token):
             return jsonify({'success': False, 'message': 'Invalid or expired token'}), 400
@@ -497,6 +561,9 @@ def api_reset_password():
         user.reset_token = None
         user.reset_token_expiry = None
         db.session.commit()
+        
+        # Log activity
+        log_activity(user.id, 'PASSWORD_RESET', 'Password reset completed')
         
         return jsonify({'success': True, 'message': 'Password reset successful'})
         
@@ -512,6 +579,24 @@ def api_check_session():
         return jsonify({
             'authenticated': True,
             'user_id': current_user.id,
-            'role': current_user.role
+            'role': current_user.role,
+            'name': current_user.get_full_name()
         })
     return jsonify({'authenticated': False})
+
+# API: Verify email
+@auth_bp.route('/api/verify-email/<token>', methods=['GET'])
+def api_verify_email(token):
+    """Verify email with token"""
+    user = User.query.filter_by(verification_token=token).first()
+    if not user:
+        return jsonify({'success': False, 'message': 'Invalid verification token'}), 400
+    
+    user.email_verified = True
+    user.verification_token = None
+    db.session.commit()
+    
+    # Log activity
+    log_activity(user.id, 'EMAIL_VERIFIED', 'Email verified')
+    
+    return jsonify({'success': True, 'message': 'Email verified successfully'})
