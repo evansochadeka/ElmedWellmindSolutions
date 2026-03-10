@@ -1,0 +1,589 @@
+<!-- templates/assessment/results.html -->
+{% extends "base.html" %}
+
+{% block title %}Assessment Results | Elmed Wellmind{% endblock %}
+
+{% block content %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #667eea;
+        --primary-dark: #5a67d8;
+        --secondary: #764ba2;
+        --success: #10B981;
+        --warning: #F59E0B;
+        --danger: #EF4444;
+        --critical: #7F1D1D;
+        --dark: #1F2937;
+        --light: #F9FAFB;
+        --gray: #6B7280;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+
+    .results-wrapper {
+        padding: 100px 20px 60px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Header Card */
+    .header-card {
+        background: white;
+        border-radius: 30px;
+        padding: 50px;
+        margin-bottom: 40px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        text-align: center;
+        animation: fadeInDown 0.5s ease;
+    }
+
+    .header-card h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 20px;
+        font-family: 'Caveat', cursive;
+    }
+
+    .date-badge {
+        display: inline-block;
+        background: var(--light);
+        padding: 10px 25px;
+        border-radius: 50px;
+        color: var(--gray);
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    /* Overall Score Circle */
+    .overall-score-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 40px 0;
+    }
+
+    .score-circle {
+        width: 200px;
+        height: 200px;
+        position: relative;
+    }
+
+    .score-circle svg {
+        width: 200px;
+        height: 200px;
+        transform: rotate(-90deg);
+    }
+
+    .score-circle circle {
+        fill: none;
+        stroke-width: 10;
+        stroke-linecap: round;
+    }
+
+    .circle-bg {
+        stroke: #E5E7EB;
+    }
+
+    .circle-progress {
+        stroke: url(#gradient);
+        transition: stroke-dashoffset 1s ease;
+    }
+
+    .score-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .score-number {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        line-height: 1;
+    }
+
+    .score-label {
+        color: var(--gray);
+        font-size: 1rem;
+    }
+
+    /* Risk Badge */
+    .risk-badge {
+        display: inline-block;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin: 20px 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .risk-low { 
+        background: var(--success); 
+        color: white;
+    }
+    .risk-medium { 
+        background: var(--warning); 
+        color: white;
+    }
+    .risk-high { 
+        background: var(--danger); 
+        color: white;
+    }
+    .risk-critical { 
+        background: var(--critical); 
+        color: white;
+    }
+
+    /* Section Scores Grid */
+    .sections-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 50px;
+    }
+
+    .section-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        animation: fadeInUp 0.5s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .section-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .section-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.8rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .section-score {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin: 15px 0;
+    }
+
+    .severity-indicator {
+        display: inline-block;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .severity-low { background: #D1FAE5; color: #065F46; }
+    .severity-medium { background: #FEF3C7; color: #92400E; }
+    .severity-high { background: #FEE2E2; color: #991B1B; }
+    .severity-critical { background: #FEE2E2; color: #7F1D1D; }
+
+    .recommendations-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .recommendations-list li {
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--gray);
+        border-bottom: 1px solid #F3F4F6;
+    }
+
+    .recommendations-list li:last-child {
+        border-bottom: none;
+    }
+
+    .recommendations-list i {
+        color: var(--success);
+        font-size: 1.1rem;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 50px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 18px 40px;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    .btn-success {
+        background: var(--success);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #059669;
+        transform: translateY(-3px);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .results-wrapper {
+            padding: 80px 15px 40px;
+        }
+
+        .header-card {
+            padding: 30px;
+        }
+
+        .header-card h1 {
+            font-size: 2.2rem;
+        }
+
+        .sections-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="results-wrapper">
+    {% if assessment %}
+        {% set scores = {
+            'overall': assessment.overall_score,
+            'stress': assessment.stress_score,
+            'burnout': (assessment.stress_score + assessment.anxiety_score) / 2,
+            'anxiety': assessment.anxiety_score,
+            'mood': assessment.depression_score,
+            'performance': assessment.work_stress_score or 50,
+            'environment': assessment.relationship_score or 50
+        } %}
+        
+        {% set recommendations = assessment.recommendations|from_json %}
+    {% else %}
+        {% set scores = session_results.scores %}
+        {% set recommendations = session_results.recommendations %}
+    {% endif %}
+
+    <!-- Header Card -->
+    <div class="header-card">
+        <h1>Your Wellness Assessment Results</h1>
+        <div class="date-badge">
+            <i class="far fa-calendar-alt"></i> 
+            {{ assessment.created_at.strftime('%B %d, %Y') if assessment else 'March 10, 2026' }}
+        </div>
+
+        <!-- Overall Score Circle -->
+        <div class="overall-score-container">
+            <div class="score-circle">
+                <svg viewBox="0 0 200 200">
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#667eea" />
+                            <stop offset="100%" stop-color="#764ba2" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="circle-bg" cx="100" cy="100" r="90" />
+                    <circle class="circle-progress" cx="100" cy="100" r="90" 
+                            stroke-dasharray="565.48" 
+                            stroke-dashoffset="{{ 565.48 * (1 - scores.overall/100) }}"
+                            stroke="url(#gradient)" />
+                </svg>
+                <div class="score-text">
+                    <div class="score-number">{{ "%.1f"|format(scores.overall) }}</div>
+                    <div class="score-label">Overall Score</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Level -->
+        {% set risk_level = assessment.risk_level if assessment else 'medium' %}
+        <div class="risk-badge risk-{{ risk_level }}">
+            {% if risk_level == 'low' %}
+                🌟 Low Risk - You're doing great!
+            {% elif risk_level == 'medium' %}
+                ⚠️ Medium Risk - Some areas need attention
+            {% elif risk_level == 'high' %}
+                🔴 High Risk - Please seek support
+            {% else %}
+                🆘 Critical Risk - Immediate support recommended
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Section Scores Grid -->
+    <div class="sections-grid">
+        <!-- Stress Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="section-title">Stress Level</div>
+            </div>
+            <div class="section-score">{{ "%.1f"|format(scores.stress) }}%</div>
+            <div class="severity-indicator severity-{{ 'high' if scores.stress > 60 else 'medium' if scores.stress > 40 else 'low' }}">
+                {{ 'High' if scores.stress > 60 else 'Moderate' if scores.stress > 40 else 'Low' }} Stress
+            </div>
+            <ul class="recommendations-list">
+                <li><i class="fas fa-check-circle"></i> Practice deep breathing exercises</li>
+                <li><i class="fas fa-check-circle"></i> Take regular breaks during work</li>
+                <li><i class="fas fa-check-circle"></i> Consider mindfulness meditation</li>
+            </ul>
+        </div>
+
+        <!-- Burnout Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="section-title">Burnout Risk</div>
+            </div>
+            <div class="section-score">{{ "%.1f"|format(scores.burnout) }}%</div>
+            <div class="severity-indicator severity-{{ 'high' if scores.burnout > 60 else 'medium' if scores.burnout > 40 else 'low' }}">
+                {{ 'High' if scores.burnout > 60 else 'Moderate' if scores.burnout > 40 else 'Low' }} Risk
+            </div>
+            <ul class="recommendations-list">
+                <li><i class="fas fa-check-circle"></i> Establish work-life boundaries</li>
+                <li><i class="fas fa-check-circle"></i> Take your full lunch break</li>
+                <li><i class="fas fa-check-circle"></i> Use vacation days for rest</li>
+            </ul>
+        </div>
+
+        <!-- Anxiety Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="section-title">Anxiety Level</div>
+            </div>
+            <div class="section-score">{{ "%.1f"|format(scores.anxiety) }}%</div>
+            <div class="severity-indicator severity-{{ 'high' if scores.anxiety > 50 else 'medium' if scores.anxiety > 30 else 'low' }}">
+                {{ 'High' if scores.anxiety > 50 else 'Moderate' if scores.anxiety > 30 else 'Low' }} Anxiety
+            </div>
+            <ul class="recommendations-list">
+                <li><i class="fas fa-check-circle"></i> Practice grounding techniques</li>
+                <li><i class="fas fa-check-circle"></i> Limit caffeine intake</li>
+                <li><i class="fas fa-check-circle"></i> Break tasks into smaller steps</li>
+            </ul>
+        </div>
+
+        <!-- Mood Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <div class="section-title">Mood & Motivation</div>
+            </div>
+            <div class="section-score">{{ "%.1f"|format(scores.mood) }}%</div>
+            <div class="severity-indicator severity-{{ 'high' if scores.mood > 60 else 'medium' if scores.mood > 40 else 'low' }}">
+                {{ 'Concerning' if scores.mood > 60 else 'Moderate' if scores.mood > 40 else 'Positive' }}
+            </div>
+            <ul class="recommendations-list">
+                <li><i class="fas fa-check-circle"></i> Set small daily goals</li>
+                <li><i class="fas fa-check-circle"></i> Connect with colleagues</li>
+                <li><i class="fas fa-check-circle"></i> Practice gratitude journaling</li>
+            </ul>
+        </div>
+
+        <!-- Performance Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="section-title">Work Performance</div>
+            </div>
+            <div class="section-score">{{ "%.1f"|format(scores.performance) }}%</div>
+            <div class="severity-indicator severity-{{ 'high' if scores.performance < 40 else 'medium' if scores.performance < 60 else 'low' }}">
+                {{ 'Impacted' if scores.performance < 40 else 'Moderate' if scores.performance < 60 else 'Strong' }}
+            </div>
+            <ul class="recommendations-list">
+                <li><i class="fas fa-check-circle"></i> Use time-blocking technique</li>
+                <li><i class="fas fa-check-circle"></i> Minimize distractions</li>
+                <li><i class="fas fa-check-circle"></i> Prioritize tasks effectively</li>
+            </ul>
+        </div>
+
+        <!-- Environment Section -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="section-title">Workplace Environment</div>
+            </div>
+            <div class="section-score">{{ "%.1f"|format(scores.environment) }}%</div>
+            <div class="severity-indicator severity-{{ 'high' if scores.environment < 40 else 'medium' if scores.environment < 60 else 'low' }}">
+                {{ 'Needs Improvement' if scores.environment < 40 else 'Moderate' if scores.environment < 60 else 'Supportive' }}
+            </div>
+            <ul class="recommendations-list">
+                <li><i class="fas fa-check-circle"></i> Schedule chat with HR</li>
+                <li><i class="fas fa-check-circle"></i> Build allyship with colleagues</li>
+                <li><i class="fas fa-check-circle"></i> Document workplace concerns</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Personalized Recommendations -->
+    {% if recommendations %}
+    <div class="header-card" style="margin-top: 30px;">
+        <h2 style="margin-bottom: 30px;">Personalized Recommendations</h2>
+        {% for rec in recommendations %}
+        <div style="margin-bottom: 20px; text-align: left; border-left: 4px solid {% if rec.severity == 'critical' %}#7F1D1D{% elif rec.severity == 'high' %}#EF4444{% elif rec.severity == 'medium' %}#F59E0B{% else %}#10B981{% endif %}; padding-left: 20px;">
+            <h3 style="color: var(--dark); margin-bottom: 10px;">
+                {% if rec.severity == 'critical' %}🚨{% endif %}
+                {% if rec.severity == 'high' %}🔴{% endif %}
+                {% if rec.severity == 'medium' %}⚠️{% endif %}
+                {{ rec.area }}
+            </h3>
+            <ul style="list-style: none; padding: 0;">
+                {% for tip in rec.tips %}
+                <li style="padding: 5px 0;"><i class="fas fa-check-circle" style="color: var(--success); margin-right: 10px;"></i>{{ tip }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="/chat" class="btn btn-primary">
+            <i class="fas fa-comments"></i> Chat with AI Assistant
+        </a>
+        <a href="/professional/list" class="btn btn-secondary">
+            <i class="fas fa-calendar-plus"></i> Book a Session
+        </a>
+        <a href="/assessment/take" class="btn btn-success">
+            <i class="fas fa-redo"></i> Take Another Assessment
+        </a>
+        <a href="/dashboard" class="btn btn-secondary">
+            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+        </a>
+    </div>
+</div>
+
+<script>
+// Animate progress circle on load
+document.addEventListener('DOMContentLoaded', function() {
+    const circle = document.querySelector('.circle-progress');
+    if (circle) {
+        const offset = circle.getAttribute('stroke-dashoffset');
+        circle.style.strokeDashoffset = offset;
+    }
+});
+</script>
+{% endblock %}
