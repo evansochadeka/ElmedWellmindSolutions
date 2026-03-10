@@ -1,4 +1,4 @@
-# models.py - COMPLETE WITH ALL ORIGINAL AND NEW FEATURES
+# models.py - COMPLETE WITH ALL ORIGINAL AND NEW FEATURES - RELATIONSHIPS FIXED
 from extensions import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
@@ -47,16 +47,26 @@ class User(UserMixin, db.Model):
     verification_token = db.Column(db.String(100), nullable=True)
     impersonated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # For admin impersonation
     
-    # Relationships - FIXED with explicit foreign_keys
+    # Relationships - FIXED with explicit foreign_keys for ALL relationships
     client_profile = db.relationship('Client', foreign_keys='Client.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
     professional_profile = db.relationship('Professional', foreign_keys='Professional.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
     organization_profile = db.relationship('Organization', foreign_keys='Organization.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
     department_head_profile = db.relationship('DepartmentHead', foreign_keys='DepartmentHead.user_id', back_populates='user', uselist=False, cascade='all, delete-orphan')
-    notifications = db.relationship('Notification', back_populates='user', cascade='all, delete-orphan')
+    notifications = db.relationship('Notification', foreign_keys='Notification.user_id', back_populates='user', cascade='all, delete-orphan')
     reviews_given = db.relationship('Review', foreign_keys='Review.reviewer_id', back_populates='reviewer')
     reviews_received = db.relationship('Review', foreign_keys='Review.reviewee_id', back_populates='reviewee')
-    chat_messages = db.relationship('ChatMessage', back_populates='user', cascade='all, delete-orphan')
-    activity_logs = db.relationship('ActivityLog', back_populates='user', cascade='all, delete-orphan')
+    chat_messages = db.relationship('ChatMessage', foreign_keys='ChatMessage.user_id', back_populates='user', cascade='all, delete-orphan')
+    
+    # FIXED: activity_logs relationship with explicit foreign_keys to avoid ambiguity
+    activity_logs = db.relationship('ActivityLog', 
+                                   foreign_keys='ActivityLog.user_id', 
+                                   back_populates='user', 
+                                   cascade='all, delete-orphan')
+    
+    # FIXED: Add relationship for impersonation
+    impersonated_users = db.relationship('User', 
+                                        foreign_keys='User.impersonated_by', 
+                                        backref='impersonator')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -129,7 +139,7 @@ class Client(db.Model):
     
     # Organization association (if they belong to one)
     organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=True)
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=True)  # FIXED: Added foreign key
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.id'), nullable=True)
     employee_id = db.Column(db.String(100), nullable=True)
     
     # Privacy settings
@@ -148,12 +158,12 @@ class Client(db.Model):
     # Relationships
     user = db.relationship('User', foreign_keys=[user_id], back_populates='client_profile')
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='employees')
-    department = db.relationship('Department', foreign_keys=[department_id], back_populates='employees_list')  # FIXED: Added relationship
-    sessions = db.relationship('Session', back_populates='client')
-    session_requests = db.relationship('SessionRequest', back_populates='client')
-    assessments = db.relationship('WellnessAssessment', back_populates='client')
-    community_posts = db.relationship('CommunityPost', back_populates='author', cascade='all, delete-orphan')
-    post_comments = db.relationship('PostComment', back_populates='author', cascade='all, delete-orphan')
+    department = db.relationship('Department', foreign_keys=[department_id], back_populates='employees_list')
+    sessions = db.relationship('Session', foreign_keys='Session.client_id', back_populates='client')
+    session_requests = db.relationship('SessionRequest', foreign_keys='SessionRequest.client_id', back_populates='client')
+    assessments = db.relationship('WellnessAssessment', foreign_keys='WellnessAssessment.client_id', back_populates='client')
+    community_posts = db.relationship('CommunityPost', foreign_keys='CommunityPost.author_id', back_populates='author', cascade='all, delete-orphan')
+    post_comments = db.relationship('PostComment', foreign_keys='PostComment.author_id', back_populates='author', cascade='all, delete-orphan')
     
     def get_anonymized_data(self):
         return {
@@ -210,11 +220,11 @@ class Professional(db.Model):
     # Relationships
     user = db.relationship('User', foreign_keys=[user_id], back_populates='professional_profile')
     verifier = db.relationship('User', foreign_keys=[verified_by], backref='verified_professionals')
-    sessions = db.relationship('Session', back_populates='professional')
+    sessions = db.relationship('Session', foreign_keys='Session.professional_id', back_populates='professional')
     session_requests = db.relationship('SessionRequest', foreign_keys='SessionRequest.professional_id', back_populates='professional')
     matched_requests = db.relationship('SessionRequest', foreign_keys='SessionRequest.matched_professional_id', backref='matched_professional_ref')
-    webinars = db.relationship('Webinar', back_populates='professional')
-    availability = db.relationship('ProfessionalAvailability', back_populates='professional')
+    webinars = db.relationship('Webinar', foreign_keys='Webinar.professional_id', back_populates='professional')
+    availability = db.relationship('ProfessionalAvailability', foreign_keys='ProfessionalAvailability.professional_id', back_populates='professional')
     
     @property
     def client_facing_fee(self):
@@ -264,9 +274,9 @@ class Organization(db.Model):
     # Relationships
     user = db.relationship('User', foreign_keys=[user_id], back_populates='organization_profile')
     employees = db.relationship('Client', foreign_keys='Client.organization_id', back_populates='organization')
-    departments = db.relationship('Department', back_populates='organization')
-    department_heads = db.relationship('DepartmentHead', back_populates='organization')
-    wellness_data = db.relationship('OrganizationWellnessData', back_populates='organization')
+    departments = db.relationship('Department', foreign_keys='Department.organization_id', back_populates='organization')
+    department_heads = db.relationship('DepartmentHead', foreign_keys='DepartmentHead.organization_id', back_populates='organization')
+    wellness_data = db.relationship('OrganizationWellnessData', foreign_keys='OrganizationWellnessData.organization_id', back_populates='organization')
     
     def generate_employee_code(self):
         self.employee_registration_code = secrets.token_hex(4).upper()
@@ -298,10 +308,10 @@ class Department(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships - FIXED: Simplified relationships
+    # Relationships
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='departments')
     head = db.relationship('DepartmentHead', foreign_keys=[head_id], back_populates='department')
-    employees_list = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')  # FIXED: Added relationship
+    employees_list = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')
     
     def update_stats(self):
         employees = Client.query.filter_by(department_id=self.id).all()
@@ -395,7 +405,7 @@ class CommunityPost(db.Model):
     is_featured = db.Column(db.Boolean, default=False)
     
     author = db.relationship('Client', foreign_keys=[author_id], back_populates='community_posts')
-    comments = db.relationship('PostComment', back_populates='post', cascade='all, delete-orphan')
+    comments = db.relationship('PostComment', foreign_keys='PostComment.post_id', back_populates='post', cascade='all, delete-orphan')
     
     def to_dict(self):
         return {
@@ -461,7 +471,7 @@ class SessionRequest(db.Model):
     professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='session_requests')
     matched_professional = db.relationship('Professional', foreign_keys=[matched_professional_id])
     matcher = db.relationship('User', foreign_keys=[matched_by])
-    session = db.relationship('Session', back_populates='request', uselist=False)
+    session = db.relationship('Session', foreign_keys='Session.request_id', back_populates='request', uselist=False)
 
 class Session(db.Model):
     __tablename__ = 'sessions'
@@ -498,8 +508,8 @@ class Session(db.Model):
     client = db.relationship('Client', foreign_keys=[client_id], back_populates='sessions')
     professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='sessions')
     request = db.relationship('SessionRequest', foreign_keys=[request_id], back_populates='session')
-    feedback = db.relationship('SessionFeedback', back_populates='session', uselist=False)
-    review = db.relationship('Review', back_populates='session', uselist=False)
+    feedback = db.relationship('SessionFeedback', foreign_keys='SessionFeedback.session_id', back_populates='session', uselist=False)
+    review = db.relationship('Review', foreign_keys='Review.session_id', back_populates='session', uselist=False)
 
 class Webinar(db.Model):
     __tablename__ = 'webinars'
@@ -527,7 +537,7 @@ class Webinar(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     professional = db.relationship('Professional', foreign_keys=[professional_id], back_populates='webinars')
-    participants = db.relationship('WebinarParticipant', back_populates='webinar')
+    participants = db.relationship('WebinarParticipant', foreign_keys='WebinarParticipant.webinar_id', back_populates='webinar')
     
     @property
     def available_spots(self):
@@ -546,7 +556,7 @@ class WebinarParticipant(db.Model):
     joined_at = db.Column(db.DateTime, default=datetime.utcnow)
     left_at = db.Column(db.DateTime, nullable=True)
     
-    webinar = db.relationship('Webinar', back_populates='participants')
+    webinar = db.relationship('Webinar', foreign_keys=[webinar_id], back_populates='participants')
     client = db.relationship('Client', foreign_keys=[client_id])
     organization = db.relationship('Organization', foreign_keys=[organization_id])
 
@@ -695,5 +705,6 @@ class ActivityLog(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
+    # FIXED: Relationships with explicit foreign_keys
     user = db.relationship('User', foreign_keys=[user_id], back_populates='activity_logs')
-    impersonator = db.relationship('User', foreign_keys=[impersonated_by])
+    impersonator = db.relationship('User', foreign_keys=[impersonated_by], backref='impersonation_logs')
