@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}HR Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard {
+        padding: 100px 30px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #EC4899, #DB2777);
+        border-radius: 20px;
+        padding: 30px;
+        color: white;
+        margin-bottom: 30px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #EC4899;
+    }
+    
+    .metric-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 10px;
+        background: #E5E7EB;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #EC4899, #DB2777);
+        border-radius: 5px;
+    }
+</style>
+
+<div class="dashboard">
+    <div class="header">
+        <h1 id="orgName">Loading...</h1>
+        <p>HR Dashboard - Employee Engagement</p>
+    </div>
+    
+    <div class="stats-grid" id="statsGrid"></div>
+    
+    <div class="metric-card">
+        <h3>Engagement Metrics</h3>
+        <div id="engagementMetrics"></div>
+    </div>
+    
+    <div class="metric-card">
+        <h3>Department Summary</h3>
+        <div id="deptSummary"></div>
+    </div>
+</div>
+
+<script>
+async function loadDashboard() {
+    const response = await fetch('/organization/api/dashboard/data');
+    const data = await response.json();
+    
+    document.getElementById('orgName').textContent = data.organization.name;
+    
+    document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card">
+            <div class="stat-value">${data.organization.total_employees}</div>
+            <div>Total Employees</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${data.engagement.active_this_month}</div>
+            <div>Active This Month</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${data.engagement.active_percentage}%</div>
+            <div>Active Rate</div>
+        </div>
+    `;
+    
+    document.getElementById('engagementMetrics').innerHTML = `
+        <div style="margin: 15px 0;">
+            <strong>Assessment Rate:</strong> ${data.engagement.assessment_rate}%
+            <div class="progress-bar"><div class="progress-fill" style="width: ${data.engagement.assessment_rate}%"></div></div>
+        </div>
+        <div style="margin: 15px 0;">
+            <strong>Sessions per Employee:</strong> ${data.engagement.sessions_per_employee}
+        </div>
+        <div style="margin: 15px 0;">
+            <strong>Current Wellness Avg:</strong> ${data.wellness.current_avg}
+        </div>
+        <div style="margin: 15px 0;">
+            <strong>Trend:</strong> ${data.wellness.trend_avg > data.wellness.current_avg ? 'Improving 📈' : 'Declining 📉'}
+        </div>
+    `;
+    
+    document.getElementById('deptSummary').innerHTML = data.department_summary.map(dept => `
+        <div style="border-bottom: 1px solid #E5E7EB; padding: 15px 0;">
+            <h4>${dept.name}</h4>
+            <p>Employees: ${dept.employee_count} | Avg Wellness: ${dept.avg_wellness.toFixed(1)} | High Risk: ${dept.high_risk}</p>
+        </div>
+    `).join('');
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+{% endblock %}

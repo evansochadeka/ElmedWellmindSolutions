@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}IT Support Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard {
+        padding: 100px 30px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #3B82F6, #2563EB);
+        border-radius: 20px;
+        padding: 30px;
+        color: white;
+        margin-bottom: 30px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3B82F6;
+    }
+    
+    .employee-table {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        overflow-x: auto;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th {
+        text-align: left;
+        padding: 15px;
+        background: #F3F4F6;
+    }
+    
+    td {
+        padding: 15px;
+        border-bottom: 1px solid #E5E7EB;
+    }
+    
+    .reset-btn {
+        background: #3B82F6;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    
+    .reset-btn:hover {
+        background: #2563EB;
+    }
+    
+    .code-display {
+        background: #F3F4F6;
+        padding: 15px;
+        border-radius: 10px;
+        font-family: monospace;
+        font-size: 1.2rem;
+        margin: 20px 0;
+    }
+</style>
+
+<div class="dashboard">
+    <div class="header">
+        <h1 id="orgName">Loading...</h1>
+        <p>IT Support Dashboard</p>
+        <div class="code-display" id="orgCode"></div>
+        <button class="reset-btn" onclick="generateNewCode()">Generate New Code</button>
+    </div>
+    
+    <div class="stats-grid" id="statsGrid"></div>
+    
+    <div class="employee-table">
+        <h3 style="margin-bottom: 20px;">Employee Accounts</h3>
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Email</th>
+                    <th>Last Login</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="employeeTableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+async function loadDashboard() {
+    const response = await fetch('/organization/api/dashboard/data');
+    const data = await response.json();
+    
+    document.getElementById('orgName').textContent = data.organization.name;
+    document.getElementById('orgCode').textContent = `Employee Code: ${data.organization.employee_code}`;
+    
+    document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card">
+            <div class="stat-value">${data.organization.employee_count}</div>
+            <div>Total Employees</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${data.system_stats.active_users_today}</div>
+            <div>Active Today</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${data.system_stats.total_logins}</div>
+            <div>Total Logins</div>
+        </div>
+    `;
+    
+    document.getElementById('employeeTableBody').innerHTML = data.employees.map(emp => `
+        <tr>
+            <td>EMP-${emp.id}</td>
+            <td>${emp.email}</td>
+            <td>${emp.last_login ? new Date(emp.last_login).toLocaleString() : 'Never'}</td>
+            <td><span style="color: ${emp.account_status === 'active' ? '#10B981' : '#EF4444'}">${emp.account_status}</span></td>
+            <td><button class="reset-btn" onclick="resetPassword(${emp.id})">Reset Password</button></td>
+        </tr>
+    `).join('');
+}
+
+async function resetPassword(employeeId) {
+    const newPassword = prompt('Enter new password (min 8 characters):');
+    if (!newPassword || newPassword.length < 8) {
+        alert('Password must be at least 8 characters');
+        return;
+    }
+    
+    const response = await fetch('/organization/api/reset-password', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({employee_id: employeeId, new_password: newPassword})
+    });
+    
+    const result = await response.json();
+    alert(result.message);
+}
+
+async function generateNewCode() {
+    const response = await fetch('/organization/api/generate-new-code', {
+        method: 'POST'
+    });
+    const result = await response.json();
+    if (result.success) {
+        document.getElementById('orgCode').textContent = `Employee Code: ${result.employee_code}`;
+        alert('New employee code generated!');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+{% endblock %}

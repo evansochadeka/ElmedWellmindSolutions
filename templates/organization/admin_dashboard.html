@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Organization Admin Dashboard{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard {
+        padding: 100px 30px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        background: linear-gradient(135deg, #1F2937, #111827);
+        border-radius: 20px;
+        padding: 30px;
+        color: white;
+        margin-bottom: 30px;
+    }
+    
+    .settings-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    
+    .btn-save {
+        background: #10B981;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    
+    .btn-save:hover {
+        background: #059669;
+    }
+    
+    .role-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .role-card {
+        background: #F3F4F6;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .role-count {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #10B981;
+    }
+</style>
+
+<div class="dashboard">
+    <div class="header">
+        <h1 id="orgName">Loading...</h1>
+        <p>Organization Admin Dashboard</p>
+    </div>
+    
+    <div class="settings-card">
+        <h3>Organization Settings</h3>
+        <form onsubmit="updateSettings(event)">
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" class="form-control" id="companyName" required>
+            </div>
+            <div class="form-group">
+                <label>Industry</label>
+                <input type="text" class="form-control" id="industry">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="anonymizeData" checked>
+                    Anonymize Employee Data (Recommended)
+                </label>
+            </div>
+            <button type="submit" class="btn-save">Save Changes</button>
+        </form>
+    </div>
+    
+    <div class="settings-card">
+        <h3>User Roles Overview</h3>
+        <div class="role-grid" id="roleGrid"></div>
+    </div>
+</div>
+
+<script>
+async function loadDashboard() {
+    const response = await fetch('/organization/api/dashboard/data');
+    const data = await response.json();
+    
+    document.getElementById('orgName').textContent = data.organization.name;
+    document.getElementById('companyName').value = data.organization.name;
+    
+    document.getElementById('roleGrid').innerHTML = `
+        <div class="role-card">
+            <div class="role-count">${data.organization.total_employees}</div>
+            <div>Total Employees</div>
+        </div>
+        <div class="role-card">
+            <div class="role-count">${data.metrics.risk_distribution.high}</div>
+            <div>High Risk</div>
+        </div>
+        <div class="role-card">
+            <div class="role-count">${data.metrics.sessions_this_month}</div>
+            <div>Sessions</div>
+        </div>
+    `;
+}
+
+async function updateSettings(event) {
+    event.preventDefault();
+    
+    const response = await fetch('/organization/api/update-organization', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            company_name: document.getElementById('companyName').value,
+            industry: document.getElementById('industry').value,
+            anonymize_employee_data: document.getElementById('anonymizeData').checked
+        })
+    });
+    
+    const result = await response.json();
+    if (result.success) {
+        alert('Settings updated successfully!');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+{% endblock %}
