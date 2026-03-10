@@ -1,40 +1,81 @@
-<!-- templates/auth/register.html -->
+<!-- templates/auth/register.html - COMPLETE WITH ALL FEATURES -->
 {% extends "base.html" %}
 
-{% block title %}Get Started | Elmed Wellmind{% endblock %}
+{% block title %}Register | Elmed Wellmind Solutions{% endblock %}
 
 {% block content %}
 <style>
-.register-container {
+:root {
+    --primary: #6C63FF;
+    --secondary: #FF6584;
+    --accent: #36D1DC;
+    --success: #4CAF50;
+    --light: #f8f9ff;
+    --dark: #2d2b5e;
+}
+
+.auth-section {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 120px 20px 60px;
-    background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
+    background: linear-gradient(135deg, var(--light) 0%, #eef2ff 100%);
+    position: relative;
+    overflow: hidden;
 }
 
-.register-card {
+.auth-section::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(108, 99, 255, 0.03) 0%, transparent 50%);
+    animation: rotate 30s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    z-index: 2;
+}
+
+.auth-card {
     background: white;
     border-radius: 30px;
     padding: 50px;
-    max-width: 600px;
-    width: 100%;
     box-shadow: 0 30px 70px rgba(108, 99, 255, 0.15);
+    border: 1px solid rgba(108, 99, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-.register-header {
+.auth-header {
     text-align: center;
     margin-bottom: 40px;
 }
 
-.register-header h1 {
+.auth-header h2 {
     font-size: 2.5rem;
+    color: var(--dark);
     margin-bottom: 10px;
 }
 
-.register-header p {
-    color: #6B7280;
+.auth-header h2 span {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.auth-header p {
+    color: #666;
+    font-size: 1.1rem;
 }
 
 .role-selector {
@@ -47,41 +88,45 @@
 
 .role-btn {
     flex: 1;
-    min-width: 150px;
-    padding: 20px;
+    min-width: 120px;
+    padding: 15px 25px;
     border: 2px solid #e0e2ff;
-    border-radius: 15px;
-    background: white;
+    border-radius: 50px;
+    background: transparent;
+    color: var(--dark);
+    font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s;
-    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.role-btn i {
+    font-size: 1.5rem;
 }
 
 .role-btn:hover {
-    border-color: #6C63FF;
+    border-color: var(--primary);
+    background: rgba(108, 99, 255, 0.05);
     transform: translateY(-3px);
 }
 
 .role-btn.active {
-    background: linear-gradient(135deg, #6C63FF, #36D1DC);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
     border-color: transparent;
     color: white;
-}
-
-.role-btn .icon {
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 10px;
+    box-shadow: 0 10px 25px rgba(108, 99, 255, 0.3);
 }
 
 .role-btn .title {
     font-weight: 600;
-    display: block;
-    margin-bottom: 5px;
 }
 
 .role-btn .desc {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     opacity: 0.8;
 }
 
@@ -111,22 +156,29 @@
 .form-group label {
     display: block;
     margin-bottom: 8px;
+    color: var(--dark);
     font-weight: 500;
-    color: #2D2B5E;
+    font-size: 0.95rem;
+}
+
+.form-group label i {
+    color: var(--primary);
+    margin-right: 8px;
 }
 
 .form-control {
     width: 100%;
-    padding: 15px;
+    padding: 15px 20px;
     border: 2px solid #e0e2ff;
     border-radius: 12px;
     font-size: 1rem;
     transition: all 0.3s;
+    background: white;
 }
 
 .form-control:focus {
     outline: none;
-    border-color: #6C63FF;
+    border-color: var(--primary);
     box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
 }
 
@@ -136,286 +188,687 @@
     gap: 20px;
 }
 
-.btn-submit {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, #6C63FF, #36D1DC);
-    color: white;
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
+}
+
+.password-strength {
+    margin-top: 10px;
+    height: 4px;
+    background: #e0e2ff;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s, background 0.3s;
+}
+
+.password-strength-bar.weak { background: #ff4757; width: 33.33%; }
+.password-strength-bar.medium { background: #ffa502; width: 66.66%; }
+.password-strength-bar.strong { background: #26de81; width: 100%; }
+
+.password-hint {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 5px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+.checkbox-group label {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.checkbox-group a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.checkbox-group a:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    padding: 16px 32px;
     border: none;
     border-radius: 12px;
-    font-size: 1.1rem;
     font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s;
-    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
 }
 
-.btn-submit:hover {
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    box-shadow: 0 10px 25px rgba(108, 99, 255, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(108, 99, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(108, 99, 255, 0.4);
 }
 
-.organization-code-note {
-    background: #f0f2ff;
-    padding: 15px;
-    border-radius: 10px;
-    margin: 20px 0;
-    font-size: 0.95rem;
-    color: #6C63FF;
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+.btn-secondary:hover {
+    background: rgba(108, 99, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.steps-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0 20px;
+    position: relative;
+}
+
+.steps-indicator::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #e0e2ff;
+    z-index: 1;
+}
+
+.step {
+    position: relative;
+    z-index: 2;
+    background: white;
+    padding: 0 10px;
     text-align: center;
 }
 
-.login-link {
+.step-number {
+    width: 30px;
+    height: 30px;
+    background: #e0e2ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 5px;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s;
+}
+
+.step.active .step-number {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+}
+
+.step.completed .step-number {
+    background: var(--success);
+    color: white;
+}
+
+.step-label {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.step.active .step-label {
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.auth-footer {
     text-align: center;
     margin-top: 30px;
-    color: #6B7280;
+    color: #666;
 }
 
-.login-link a {
-    color: #6C63FF;
+.auth-footer a {
+    color: var(--primary);
     text-decoration: none;
     font-weight: 600;
 }
 
-.login-link a:hover {
+.auth-footer a:hover {
     text-decoration: underline;
 }
 
+.alert {
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.alert-success {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid var(--success);
+    color: #2e7d32;
+}
+
+.alert-error {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid #ff4757;
+    color: #c0392b;
+}
+
+.alert-warning {
+    background: rgba(255, 165, 2, 0.1);
+    border: 1px solid #ffa502;
+    color: #b85c00;
+}
+
+.alert-info {
+    background: rgba(108, 99, 255, 0.1);
+    border: 1px solid var(--primary);
+    color: var(--dark);
+}
+
+.alert i {
+    font-size: 1.2rem;
+}
+
+.loader {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.corporation-fields,
+.employee-fields,
+.professional-fields {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.corporation-fields.active,
+.employee-fields.active,
+.professional-fields.active {
+    display: block;
+}
+
+.file-upload {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.file-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    background: var(--light);
+    border: 2px dashed #e0e2ff;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.file-upload-label:hover {
+    border-color: var(--primary);
+    background: rgba(108, 99, 255, 0.05);
+}
+
+.file-upload-label i {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.file-upload-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.file-list {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.file-list i {
+    color: var(--success);
+    margin-right: 5px;
+}
+
+.organization-code-note {
+    background: linear-gradient(135deg, #f0f2ff, #e8eaff);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 0.95rem;
+    color: var(--primary);
+    text-align: center;
+    border: 1px solid var(--primary);
+}
+
 @media (max-width: 768px) {
-    .register-card {
+    .auth-card {
         padding: 30px 20px;
+    }
+    
+    .auth-header h2 {
+        font-size: 2rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
     }
     
     .role-selector {
         flex-direction: column;
     }
     
-    .form-row {
-        grid-template-columns: 1fr;
+    .role-btn {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
     }
 }
 </style>
 
-<div class="register-container">
-    <div class="register-card">
-        <div class="register-header">
-            <h1>Get <span class="gradient-text">Started</span></h1>
-            <p>Choose how you want to use Elmed Wellmind</p>
-        </div>
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Create <span>Account</span></h2>
+                <p>Join our community of mental wellness</p>
+            </div>
 
-        <!-- Role Selection -->
-        <div class="role-selector">
-            <div class="role-btn active" onclick="selectRole('client')">
-                <span class="icon">🧑</span>
-                <span class="title">Client</span>
-                <span class="desc">Seek mental health support</span>
-            </div>
-            <div class="role-btn" onclick="selectRole('organization')">
-                <span class="icon">🏢</span>
-                <span class="title">Organization</span>
-                <span class="desc">Support your employees</span>
-            </div>
-            <div class="role-btn" onclick="selectRole('professional')">
-                <span class="icon">👨‍⚕️</span>
-                <span class="title">Professional</span>
-                <span class="desc">Offer your services</span>
-            </div>
-        </div>
+            <!-- Alert Container -->
+            <div id="alertContainer"></div>
 
-        <!-- Registration Forms -->
-        <div class="registration-forms">
-            <!-- Client Form -->
-            <form class="registration-form active" id="clientForm" onsubmit="registerClient(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <div class="form-row">
-                        <input type="text" class="form-control" placeholder="First Name" id="clientFirstName" required>
-                        <input type="text" class="form-control" placeholder="Last Name" id="clientLastName" required>
+            <!-- Role Selector -->
+            <div class="role-selector">
+                <button type="button" class="role-btn active" data-role="client">
+                    <i class="fas fa-user"></i>
+                    <div>
+                        <span class="title">Individual</span>
+                        <span class="desc">Seek mental health support</span>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-control" id="clientEmail" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Phone</label>
-                    <input type="tel" class="form-control" id="clientPhone" placeholder="+254...">
-                </div>
-                
-                <div class="form-group">
-                    <label>Briefly describe your concern</label>
-                    <textarea class="form-control" id="clientIssue" rows="3" placeholder="What brings you here?"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Organization Code (if applicable)</label>
-                    <input type="text" class="form-control" id="orgCode" placeholder="Enter code from your employer">
-                </div>
-                
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" id="clientPassword" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <input type="password" class="form-control" id="clientConfirmPassword" required>
-                </div>
-                
-                <button type="submit" class="btn-submit">
-                    Create Client Account
-                    <i class="fas fa-arrow-right"></i>
                 </button>
-            </form>
-
-            <!-- Organization Form -->
-            <form class="registration-form" id="organizationForm" onsubmit="registerOrganization(event)">
-                <div class="organization-code-note">
-                    <i class="fas fa-lock"></i>
-                    Registration Code: <strong>Papai123</strong>
-                </div>
-                
-                <div class="form-group">
-                    <label>Company Name</label>
-                    <input type="text" class="form-control" id="orgCompanyName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Registration Number</label>
-                    <input type="text" class="form-control" id="orgRegNumber" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Industry</label>
-                    <input type="text" class="form-control" id="orgIndustry">
-                </div>
-                
-                <div class="form-group">
-                    <label>Number of Employees</label>
-                    <input type="number" class="form-control" id="orgEmployeeCount" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Contact Person Name</label>
-                    <input type="text" class="form-control" id="orgContactName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Contact Email</label>
-                    <input type="email" class="form-control" id="orgEmail" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Contact Phone</label>
-                    <input type="tel" class="form-control" id="orgPhone" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Registration Code</label>
-                    <input type="text" class="form-control" id="orgRegCode" placeholder="Enter Papai123" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" id="orgPassword" required>
-                </div>
-                
-                <button type="submit" class="btn-submit">
-                    Register Organization
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </form>
-
-            <!-- Professional Form -->
-            <form class="registration-form" id="professionalForm" onsubmit="registerProfessional(event)">
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <div class="form-row">
-                        <input type="text" class="form-control" placeholder="First Name" id="profFirstName" required>
-                        <input type="text" class="form-control" placeholder="Last Name" id="profLastName" required>
+                <button type="button" class="role-btn" data-role="professional">
+                    <i class="fas fa-user-md"></i>
+                    <div>
+                        <span class="title">Professional</span>
+                        <span class="desc">Offer your services</span>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Professional Type</label>
-                    <select class="form-control" id="profType" required>
-                        <option value="">Select type</option>
-                        <option value="counselor">Counselor</option>
-                        <option value="psychologist">Psychologist</option>
-                        <option value="psychiatrist">Psychiatrist</option>
-                        <option value="therapist">Therapist</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>License Number</label>
-                    <input type="text" class="form-control" id="profLicense" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Years of Experience</label>
-                    <input type="number" class="form-control" id="profExperience">
-                </div>
-                
-                <div class="form-group">
-                    <label>Specializations (comma separated)</label>
-                    <input type="text" class="form-control" id="profSpecializations" placeholder="e.g., Anxiety, Depression, Trauma">
-                </div>
-                
-                <div class="form-group">
-                    <label>Session Fee (KES)</label>
-                    <input type="number" class="form-control" id="profFee" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-control" id="profEmail" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Phone</label>
-                    <input type="tel" class="form-control" id="profPhone" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Upload Documents (License, Certificates)</label>
-                    <input type="file" class="form-control" id="profDocuments" multiple accept=".pdf,.jpg,.png">
-                </div>
-                
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" id="profPassword" required>
-                </div>
-                
-                <button type="submit" class="btn-submit">
-                    Register as Professional
-                    <i class="fas fa-arrow-right"></i>
                 </button>
-                
-                <p style="text-align: center; margin-top: 15px; color: #6B7280; font-size: 0.9rem;">
-                    <i class="fas fa-info-circle"></i>
-                    Your account will be verified by admin before you can start offering services
-                </p>
-            </form>
-        </div>
+                <button type="button" class="role-btn" data-role="organization">
+                    <i class="fas fa-building"></i>
+                    <div>
+                        <span class="title">Organization</span>
+                        <span class="desc">Support your employees</span>
+                    </div>
+                </button>
+            </div>
 
-        <div class="login-link">
-            Already have an account? <a href="{{ url_for('auth.login_page') }}">Login here</a>
+            <!-- Registration Forms -->
+            <div class="registration-forms">
+                <!-- Client Form -->
+                <form class="registration-form active" id="clientForm" onsubmit="registerClient(event)">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name</label>
+                        <div class="form-row">
+                            <input type="text" class="form-control" placeholder="First Name" id="clientFirstName" required>
+                            <input type="text" class="form-control" placeholder="Last Name" id="clientLastName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" class="form-control" id="clientEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" class="form-control" id="clientPhone" placeholder="e.g., +254712345678" required>
+                        <small class="password-hint">Format: +254XXXXXXXXX or 07XXXXXXXX</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-comment"></i> Briefly describe your concern (Optional)</label>
+                        <textarea class="form-control" id="clientIssue" rows="3" placeholder="What brings you here?"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-building"></i> Organization Code (if applicable)</label>
+                        <input type="text" class="form-control" id="orgCode" placeholder="Enter code from your employer">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" class="form-control" id="clientPassword" required>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="clientPasswordStrength"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Confirm Password</label>
+                        <input type="password" class="form-control" id="clientConfirmPassword" required>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="clientTerms" required>
+                        <label for="clientTerms">
+                            I agree to the <a href="/terms" target="_blank">Terms of Service</a> and 
+                            <a href="/privacy" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="clientSubmitBtn">
+                        <span>Create Client Account</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <!-- Professional Form -->
+                <form class="registration-form" id="professionalForm" onsubmit="registerProfessional(event)" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name</label>
+                        <div class="form-row">
+                            <input type="text" class="form-control" placeholder="First Name" id="profFirstName" required>
+                            <input type="text" class="form-control" placeholder="Last Name" id="profLastName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" class="form-control" id="profEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone Number</label>
+                        <input type="tel" class="form-control" id="profPhone" placeholder="e.g., +254712345678" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-briefcase"></i> Professional Type</label>
+                            <select class="form-control" id="profType" required>
+                                <option value="">Select type</option>
+                                <option value="counselor">Counselor</option>
+                                <option value="psychologist">Psychologist</option>
+                                <option value="psychiatrist">Psychiatrist</option>
+                                <option value="therapist">Therapist</option>
+                                <option value="social_worker">Social Worker</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> License Number</label>
+                            <input type="text" class="form-control" id="profLicense" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-chart-line"></i> Years Experience</label>
+                            <input type="number" class="form-control" id="profExperience" min="0" max="50">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Session Fee (KES)</label>
+                            <input type="number" class="form-control" id="profFee" min="0" step="100" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-tags"></i> Specializations (comma separated)</label>
+                        <input type="text" class="form-control" id="profSpecializations" placeholder="e.g., Anxiety, Depression, Trauma">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-file-upload"></i> Upload Documents (License, Certificates)</label>
+                        <div class="file-upload">
+                            <label for="profDocuments" class="file-upload-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Click to upload or drag and drop</span>
+                            </label>
+                            <input type="file" class="file-upload-input" id="profDocuments" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="updateFileList(this)">
+                        </div>
+                        <div class="file-list" id="profFileList"></div>
+                        <small class="password-hint">Accepted formats: PDF, JPG, PNG. Max 5MB each.</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" class="form-control" id="profPassword" required>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="profPasswordStrength"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="profTerms" required>
+                        <label for="profTerms">
+                            I agree to the <a href="/terms" target="_blank">Terms of Service</a> and 
+                            <a href="/privacy" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Your account will be verified by admin before you can start offering services.
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="profSubmitBtn">
+                        <span>Register as Professional</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <!-- Organization Form -->
+                <form class="registration-form" id="organizationForm" onsubmit="registerOrganization(event)">
+                    <div class="organization-code-note">
+                        <i class="fas fa-lock"></i>
+                        Registration Code: <strong>Papai123</strong>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-building"></i> Company Name</label>
+                        <input type="text" class="form-control" id="orgCompanyName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> Registration Number</label>
+                        <input type="text" class="form-control" id="orgRegNumber" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-industry"></i> Industry</label>
+                            <input type="text" class="form-control" id="orgIndustry" placeholder="e.g., Technology, Healthcare">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-users"></i> Number of Employees</label>
+                            <input type="number" class="form-control" id="orgEmployeeCount" min="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-user-tie"></i> Contact Person Name</label>
+                        <input type="text" class="form-control" id="orgContactName" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Contact Email</label>
+                            <input type="email" class="form-control" id="orgEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Contact Phone</label>
+                            <input type="tel" class="form-control" id="orgPhone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-key"></i> Registration Code</label>
+                        <input type="text" class="form-control" id="orgRegCode" placeholder="Enter Papai123" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" class="form-control" id="orgPassword" required>
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="orgPasswordStrength"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="orgTerms" required>
+                        <label for="orgTerms">
+                            I agree to the <a href="/terms" target="_blank">Terms of Service</a> and 
+                            <a href="/privacy" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="orgSubmitBtn">
+                        <span>Register Organization</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="auth-footer">
+                Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <script>
-function selectRole(role) {
-    // Update active state
-    document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+// Role selection
+document.querySelectorAll('.role-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const role = this.dataset.role;
+        document.querySelectorAll('.registration-form').forEach(form => form.classList.remove('active'));
+        document.getElementById(role + 'Form').classList.add('active');
+    });
+});
+
+// Password strength checker
+function setupPasswordStrength(inputId, barId) {
+    document.getElementById(inputId).addEventListener('input', function() {
+        const password = this.value;
+        const strengthBar = document.getElementById(barId);
+        
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        
+        strengthBar.className = 'password-strength-bar';
+        if (strength <= 2) {
+            strengthBar.classList.add('weak');
+        } else if (strength <= 4) {
+            strengthBar.classList.add('medium');
+        } else {
+            strengthBar.classList.add('strong');
+        }
+    });
+}
+
+setupPasswordStrength('clientPassword', 'clientPasswordStrength');
+setupPasswordStrength('profPassword', 'profPasswordStrength');
+setupPasswordStrength('orgPassword', 'orgPasswordStrength');
+
+// File upload handler
+function updateFileList(input) {
+    const fileList = document.getElementById('profFileList');
+    const files = input.files;
+    let html = '';
     
-    // Show corresponding form
-    document.querySelectorAll('.registration-form').forEach(form => form.classList.remove('active'));
-    document.getElementById(role + 'Form').classList.add('active');
+    for (let i = 0; i < files.length; i++) {
+        html += `<div><i class="fas fa-file"></i> ${files[i].name} (${(files[i].size / 1024).toFixed(2)} KB)</div>`;
+    }
+    
+    fileList.innerHTML = html;
+}
+
+function showAlert(message, type) {
+    const alertContainer = document.getElementById('alertContainer');
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    
+    const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+    };
+    
+    alertDiv.innerHTML = `
+        <i class="fas ${icons[type] || 'fa-info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    alertContainer.innerHTML = '';
+    alertContainer.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
 }
 
 async function registerClient(event) {
@@ -425,7 +878,7 @@ async function registerClient(event) {
     const confirm = document.getElementById('clientConfirmPassword').value;
     
     if (password !== confirm) {
-        alert('Passwords do not match');
+        showAlert('Passwords do not match', 'error');
         return;
     }
     
@@ -439,6 +892,11 @@ async function registerClient(event) {
         password: password
     };
     
+    const submitBtn = document.getElementById('clientSubmitBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loader"></span> Creating Account...';
+    submitBtn.disabled = true;
+    
     try {
         const response = await fetch('/auth/api/register/client', {
             method: 'POST',
@@ -449,13 +907,74 @@ async function registerClient(event) {
         const result = await response.json();
         
         if (result.success) {
-            alert('Registration successful! Please login.');
-            window.location.href = result.redirect;
+            showAlert('Registration successful! Redirecting to login...', 'success');
+            setTimeout(() => {
+                window.location.href = result.redirect;
+            }, 2000);
         } else {
-            alert(result.message);
+            showAlert(result.message || 'Registration failed', 'error');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
         }
     } catch (error) {
-        alert('Registration failed. Please try again.');
+        console.error('Registration error:', error);
+        showAlert('Connection error. Please try again.', 'error');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+}
+
+async function registerProfessional(event) {
+    event.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('first_name', document.getElementById('profFirstName').value);
+    formData.append('last_name', document.getElementById('profLastName').value);
+    formData.append('email', document.getElementById('profEmail').value);
+    formData.append('phone', document.getElementById('profPhone').value);
+    formData.append('professional_type', document.getElementById('profType').value);
+    formData.append('license_number', document.getElementById('profLicense').value);
+    formData.append('years_experience', document.getElementById('profExperience').value);
+    
+    const specializations = document.getElementById('profSpecializations').value.split(',').map(s => s.trim());
+    formData.append('specializations', JSON.stringify(specializations));
+    
+    formData.append('session_fee', document.getElementById('profFee').value);
+    formData.append('password', document.getElementById('profPassword').value);
+    
+    const files = document.getElementById('profDocuments').files;
+    for (let i = 0; i < files.length; i++) {
+        formData.append('documents', files[i]);
+    }
+    
+    const submitBtn = document.getElementById('profSubmitBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loader"></span> Submitting...';
+    submitBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/auth/api/register/professional', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showAlert('Registration successful! Redirecting to login...', 'success');
+            setTimeout(() => {
+                window.location.href = result.redirect;
+            }, 2000);
+        } else {
+            showAlert(result.message || 'Registration failed', 'error');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        showAlert('Connection error. Please try again.', 'error');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
     }
 }
 
@@ -474,6 +993,11 @@ async function registerOrganization(event) {
         password: document.getElementById('orgPassword').value
     };
     
+    const submitBtn = document.getElementById('orgSubmitBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="loader"></span> Creating Organization...';
+    submitBtn.disabled = true;
+    
     try {
         const response = await fetch('/auth/api/register/organization', {
             method: 'POST',
@@ -484,56 +1008,20 @@ async function registerOrganization(event) {
         const result = await response.json();
         
         if (result.success) {
-            alert(`Registration successful! Your employee registration code is: ${result.employee_code}\n\nPlease save this code.`);
-            window.location.href = result.redirect;
+            showAlert(`Registration successful! Your employee code is: ${result.employee_code}`, 'success');
+            setTimeout(() => {
+                window.location.href = result.redirect;
+            }, 2000);
         } else {
-            alert(result.message);
+            showAlert(result.message || 'Registration failed', 'error');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
         }
     } catch (error) {
-        alert('Registration failed. Please try again.');
-    }
-}
-
-async function registerProfessional(event) {
-    event.preventDefault();
-    
-    const formData = new FormData();
-    formData.append('first_name', document.getElementById('profFirstName').value);
-    formData.append('last_name', document.getElementById('profLastName').value);
-    formData.append('professional_type', document.getElementById('profType').value);
-    formData.append('license_number', document.getElementById('profLicense').value);
-    formData.append('years_experience', document.getElementById('profExperience').value);
-    
-    const specializations = document.getElementById('profSpecializations').value.split(',').map(s => s.trim());
-    formData.append('specializations', JSON.stringify(specializations));
-    
-    formData.append('session_fee', document.getElementById('profFee').value);
-    formData.append('email', document.getElementById('profEmail').value);
-    formData.append('phone', document.getElementById('profPhone').value);
-    formData.append('password', document.getElementById('profPassword').value);
-    
-    // Add documents
-    const files = document.getElementById('profDocuments').files;
-    for (let i = 0; i < files.length; i++) {
-        formData.append('documents', files[i]);
-    }
-    
-    try {
-        const response = await fetch('/auth/api/register/professional', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            alert('Registration successful! Your account will be verified by admin.');
-            window.location.href = result.redirect;
-        } else {
-            alert(result.message);
-        }
-    } catch (error) {
-        alert('Registration failed. Please try again.');
+        console.error('Registration error:', error);
+        showAlert('Connection error. Please try again.', 'error');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
     }
 }
 </script>
