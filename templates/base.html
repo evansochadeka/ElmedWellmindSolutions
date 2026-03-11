@@ -1,4 +1,4 @@
-<!-- templates/base.html - COMPLETE WITH ALL FEATURES RETAINED -->
+<!-- templates/base.html - COMPLETE WITH ALL FEATURES RETAINED AND CONDITIONAL HEADER -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,6 +146,225 @@
             box-shadow: 0 15px 30px rgba(255, 101, 132, 0.5);
         }
 
+        /* Header Styles */
+        .main-header {
+            background: white;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .nav-container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo span {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        /* Auth Links */
+        .auth-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-link {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-link.login {
+            background: var(--primary);
+            color: white;
+            border: 2px solid var(--primary);
+        }
+
+        .auth-link.login:hover {
+            background: transparent;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .auth-link.register {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .auth-link.register:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .auth-link i {
+            font-size: 0.9rem;
+        }
+
+        /* User Menu */
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .user-menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .user-menu-btn img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+            margin-top: 10px;
+        }
+
+        .user-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .user-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-bottom: 1px solid #f0f2ff;
+        }
+
+        .user-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        .user-dropdown a:hover {
+            background: var(--light);
+            color: var(--primary);
+            padding-left: 25px;
+        }
+
+        .user-dropdown a i {
+            width: 20px;
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Notification Badge */
+        .notification-badge {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
         /* Floating Buttons */
         .floating-buttons {
             position: fixed;
@@ -215,141 +434,50 @@
             transform: translateX(0);
         }
 
-        /* Auth Links */
-        .auth-links {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-left: 20px;
-        }
-
-        .auth-link {
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .auth-link.login {
-            background: var(--primary);
-            color: white;
-            border: 2px solid var(--primary);
-        }
-
-        .auth-link.login:hover {
-            background: transparent;
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .auth-link.register {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .auth-link.register:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .auth-link i {
-            font-size: 0.9rem;
-        }
-
-        .user-menu {
-            position: relative;
-            display: inline-block;
-        }
-
-        .user-menu-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 20px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .user-menu-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .user-menu-btn img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .user-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow-lg);
-            min-width: 200px;
+        /* Mobile Menu */
+        .mobile-menu-btn {
             display: none;
-            z-index: 1000;
-            margin-top: 10px;
-        }
-
-        .user-dropdown.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        .user-dropdown a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
-            color: var(--dark);
-            text-decoration: none;
-            transition: all 0.3s;
-            border-bottom: 1px solid #f0f2ff;
-        }
-
-        .user-dropdown a:last-child {
-            border-bottom: none;
-        }
-
-        .user-dropdown a:hover {
-            background: var(--light);
+            background: none;
+            border: none;
+            font-size: 1.5rem;
             color: var(--primary);
-            padding-left: 25px;
+            cursor: pointer;
         }
 
-        .user-dropdown a i {
-            width: 20px;
-            color: var(--primary);
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive Styles */
         @media (max-width: 992px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 80px);
+                background: white;
+                flex-direction: column;
+                padding: 40px 20px;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                overflow-y: auto;
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .auth-links {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .auth-link {
+                width: 100%;
+                justify-content: center;
+            }
+
             .section-title h2 {
                 font-size: 2.5rem;
             }
@@ -369,12 +497,6 @@
                 width: 55px;
                 height: 55px;
                 font-size: 1.3rem;
-            }
-
-            .auth-links {
-                margin-left: 0;
-                margin-top: 10px;
-                justify-content: center;
             }
         }
 
@@ -411,7 +533,7 @@
             border-radius: 10px;
             padding: 15px 25px;
             margin-bottom: 10px;
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
             gap: 15px;
@@ -493,15 +615,134 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    {% include 'header.html' %}
+    <!-- Main Header - Conditionally shows auth links or user menu -->
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <img src="/static/images/logo.png" alt="Elmed Wellmind" onerror="this.style.display='none'">
+                <span>Elmed Wellmind</span>
+            </a>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="/about" class="nav-link"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="/services" class="nav-link"><i class="fas fa-hand-holding-heart"></i> Services</a></li>
+                <li><a href="/community" class="nav-link"><i class="fas fa-users"></i> Community</a></li>
+                <li><a href="/contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
+                
+                {% if current_user.is_authenticated %}
+                <!-- User is logged in - Show user menu -->
+                <li class="user-menu">
+                    <button class="user-menu-btn" onclick="toggleUserMenu()">
+                        {% if current_user.profile_pic %}
+                        <img src="{{ current_user.profile_pic }}" alt="{{ current_user.get_full_name() }}">
+                        {% else %}
+                        <i class="fas fa-user-circle"></i>
+                        {% endif %}
+                        <span>{{ current_user.get_full_name().split()[0] }}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                        <a href="/profile"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="/notifications" class="notification-badge">
+                            <i class="fas fa-bell"></i> Notifications
+                            <span class="notification-count" id="notificationCount">0</span>
+                        </a>
+                        <div class="dropdown-divider" style="height: 1px; background: #f0f2ff; margin: 5px 0;"></div>
+                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </li>
+                {% else %}
+                <!-- User is not logged in - Show auth links -->
+                <li class="auth-links">
+                    <a href="/auth/login" class="auth-link login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="/auth/register" class="auth-link register">
+                        Get Started <i class="fas fa-arrow-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
     
     <main>
         {% block content %}{% endblock %}
     </main>
     
-    {% include 'footer.html' %}
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Elmed Wellmind</h4>
+                    <p>Your trusted partner in mental wellness across Kenya.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/services">Services</a></li>
+                        <li><a href="/professionals">Professionals</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/help">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +254 759 226354</li>
+                        <li><i class="fas fa-envelope"></i> elijahokware@gmail.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Elmed Wellmind Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
     
-    {% include 'floating-buttons.html' %}
+    <!-- Floating Action Buttons -->
+    <div class="floating-buttons">
+        <a href="https://wa.me/254759226354" class="floating-btn whatsapp-btn" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            <span class="btn-label">Chat on WhatsApp</span>
+        </a>
+        <a href="tel:+254759226354" class="floating-btn call-btn">
+            <i class="fas fa-phone-alt"></i>
+            <span class="btn-label">Call Helpline</span>
+        </a>
+        <a href="/chat" class="floating-btn ai-chat-btn">
+            <i class="fas fa-robot"></i>
+            <span class="btn-label">AI Chat Support</span>
+        </a>
+        <a href="/donate" class="floating-btn donate-btn-float">
+            <i class="fas fa-heart"></i>
+            <span class="btn-label">Support Us</span>
+        </a>
+    </div>
     
     <!-- Toast Notifications Container -->
     <div class="toast-container" id="toastContainer"></div>
@@ -513,52 +754,12 @@
         let chatSessionId = localStorage.getItem('chatSessionId') || 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('chatSessionId', chatSessionId);
         
-        // Check if user is logged in
-        let currentUser = null;
-        
-        async function checkAuth() {
-            try {
-                const response = await fetch('/auth/api/session');
-                const data = await response.json();
-                if (data.authenticated) {
-                    currentUser = data;
-                    updateUIForLoggedInUser(data);
-                }
-            } catch (error) {
-                console.error('Auth check failed:', error);
-            }
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            document.getElementById('navMenu').classList.toggle('active');
         }
         
-        function updateUIForLoggedInUser(user) {
-            // Update navigation to show user menu
-            const nav = document.querySelector('nav ul');
-            if (nav) {
-                // Remove existing auth links
-                const existingLogin = document.querySelector('.auth-links');
-                if (existingLogin) existingLogin.remove();
-                
-                // Add user menu
-                const userLi = document.createElement('li');
-                userLi.className = 'user-menu';
-                userLi.innerHTML = `
-                    <div class="user-menu">
-                        <button class="user-menu-btn" onclick="toggleUserMenu()">
-                            <i class="fas fa-user-circle"></i>
-                            <span>${user.name || 'My Account'}</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <div class="user-dropdown" id="userDropdown">
-                            <a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                            <a href="/profile"><i class="fas fa-user"></i> Profile</a>
-                            <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
-                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                        </div>
-                    </div>
-                `;
-                nav.appendChild(userLi);
-            }
-        }
-        
+        // Toggle user dropdown
         function toggleUserMenu() {
             document.getElementById('userDropdown').classList.toggle('show');
         }
@@ -569,8 +770,28 @@
                 const dropdown = document.getElementById('userDropdown');
                 if (dropdown) dropdown.classList.remove('show');
             }
+            
+            // Close mobile menu when clicking outside
+            if (!e.target.closest('.mobile-menu-btn') && !e.target.closest('.nav-menu')) {
+                document.getElementById('navMenu')?.classList.remove('active');
+            }
         });
         
+        // Load notifications count
+        async function loadNotificationCount() {
+            {% if current_user.is_authenticated %}
+            try {
+                const response = await fetch('/api/notifications');
+                const notifications = await response.json();
+                const count = notifications.length;
+                document.getElementById('notificationCount').textContent = count;
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+            {% endif %}
+        }
+        
+        // Logout function
         async function logout() {
             try {
                 const response = await fetch('/auth/api/logout', {
@@ -677,8 +898,13 @@
         
         // Prevent all anchor links from scrolling
         document.addEventListener('DOMContentLoaded', function() {
-            // Check authentication status
-            checkAuth();
+            // Load notification count
+            loadNotificationCount();
+            
+            // Refresh notifications every 30 seconds
+            {% if current_user.is_authenticated %}
+            setInterval(loadNotificationCount, 30000);
+            {% endif %}
             
             // Override all anchor link clicks
             document.addEventListener('click', function(e) {
@@ -688,11 +914,8 @@
                 const href = target.getAttribute('href');
                 
                 // Check if it's an anchor link (starts with #)
-                if (href && href.startsWith('#')) {
+                if (href && href.startsWith('#') && href !== '#') {
                     e.preventDefault();
-                    
-                    // Instead of scrolling, we just prevent default
-                    // This keeps the page at the top
                     console.log('Anchor link prevented:', href);
                     return false;
                 }
@@ -706,17 +929,6 @@
                     }
                 });
             });
-            
-            // Add CSRF token to all fetch requests
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            if (csrfToken) {
-                const originalFetch = window.fetch;
-                window.fetch = function(url, options = {}) {
-                    if (!options.headers) options.headers = {};
-                    options.headers['X-CSRFToken'] = csrfToken;
-                    return originalFetch(url, options);
-                };
-            }
             
             console.log('Elmed Wellmind Solutions loaded successfully');
         });
