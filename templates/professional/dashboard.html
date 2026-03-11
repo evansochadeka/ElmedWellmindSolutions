@@ -5,22 +5,34 @@
 
 {% block content %}
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
     :root {
-        --primary: #8B5CF6;
-        --primary-light: #A78BFA;
-        --secondary: #EC4899;
-        --accent: #06B6D4;
+        --primary: #667eea;
+        --primary-dark: #5a67d8;
+        --secondary: #764ba2;
+        --accent: #10B981;
         --success: #10B981;
         --warning: #F59E0B;
         --danger: #EF4444;
+        --info: #3B82F6;
         --dark: #1F2937;
         --light: #F9FAFB;
         --gray: #6B7280;
-        --gradient-primary: linear-gradient(135deg, #8B5CF6, #EC4899);
-        --shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
-        --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+        --gradient-primary: linear-gradient(135deg, #667eea, #764ba2);
+        --gradient-success: linear-gradient(135deg, #10B981, #34D399);
+        --gradient-warning: linear-gradient(135deg, #F59E0B, #FBBF24);
+        --gradient-danger: linear-gradient(135deg, #EF4444, #F87171);
+        --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+        --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+        --shadow-lg: 0 20px 50px rgba(0,0,0,0.15);
         --border-radius: 20px;
         --transition: all 0.3s ease;
     }
@@ -36,35 +48,162 @@
         background: #F3F4F6;
     }
 
-    .dashboard {
+    .dashboard-container {
         padding: 100px 30px 40px;
-        max-width: 1400px;
+        max-width: 1600px;
         margin: 0 auto;
     }
 
-    /* Header */
-    .dashboard-header {
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #F3F4F6;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 10px;
+    }
+
+    /* Notification Bar */
+    .notification-bar {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 15px;
+        padding: 15px 25px;
+        margin-bottom: 25px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideDown 0.5s ease;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .notification-bar::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .notification-content {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .notification-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .notification-text h3 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+
+    .notification-text p {
+        opacity: 0.9;
+    }
+
+    .notification-actions {
+        display: flex;
+        gap: 15px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .notification-btn {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        padding: 10px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .notification-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: translateY(-2px);
+    }
+
+    .notification-btn.accept {
+        background: var(--success);
+    }
+
+    .notification-btn.decline {
+        background: var(--danger);
+    }
+
+    /* Welcome Header */
+    .welcome-header {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow-sm);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 40px;
         flex-wrap: wrap;
         gap: 20px;
     }
 
-    .header-title h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        margin-bottom: 5px;
+    .welcome-title h1 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: var(--dark);
     }
 
-    .header-title p {
+    .welcome-title p {
         color: var(--gray);
-        font-size: 1.1rem;
     }
 
     .verification-badge {
@@ -72,14 +211,48 @@
         color: white;
         padding: 10px 25px;
         border-radius: 50px;
-        display: inline-flex;
+        font-weight: 600;
+        display: flex;
         align-items: center;
         gap: 10px;
-        font-weight: 600;
+        box-shadow: var(--shadow-md);
     }
 
     .verification-badge.pending {
         background: linear-gradient(135deg, #F59E0B, #FBBF24);
+    }
+
+    /* Quick Menu */
+    .quick-menu {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+
+    .quick-menu-item {
+        background: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: var(--transition);
+        color: var(--dark);
+        text-decoration: none;
+    }
+
+    .quick-menu-item:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .quick-menu-item i {
+        font-size: 1.2rem;
     }
 
     /* Stats Grid */
@@ -87,56 +260,47 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 25px;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
     }
 
     .stat-card {
         background: white;
-        border-radius: var(--border-radius);
+        border-radius: 15px;
         padding: 25px;
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow-sm);
         transition: var(--transition);
-        border: 1px solid rgba(139, 92, 246, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid rgba(102, 126, 234, 0.1);
     }
 
     .stat-card:hover {
         transform: translateY(-5px);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .stat-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary);
     }
 
     .stat-icon {
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: white;
+        font-size: 1.8rem;
     }
 
-    .stat-icon i {
-        font-size: 1.5rem;
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    .stat-value {
-        font-size: 2rem;
+    .stat-content h3 {
+        font-size: 1.8rem;
         font-weight: 700;
-        color: var(--dark);
         margin-bottom: 5px;
+        color: var(--dark);
     }
 
-    .stat-label {
+    .stat-content p {
         color: var(--gray);
         font-size: 0.9rem;
     }
@@ -145,10 +309,11 @@
     .tabs {
         display: flex;
         gap: 10px;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
         border-bottom: 2px solid #E5E7EB;
         padding-bottom: 10px;
         overflow-x: auto;
+        flex-wrap: wrap;
     }
 
     .tab-btn {
@@ -161,6 +326,9 @@
         border-radius: 25px;
         transition: var(--transition);
         white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .tab-btn:hover {
@@ -169,29 +337,57 @@
     }
 
     .tab-btn.active {
-        background: var(--gradient-primary);
+        background: linear-gradient(135deg, #667eea, #764ba2);
         color: white;
     }
 
-    /* Session Requests */
+    .tab-content {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Session Requests Grid */
     .requests-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
         gap: 25px;
-        margin-bottom: 40px;
+        margin-top: 20px;
     }
 
     .request-card {
         background: white;
-        border-radius: var(--border-radius);
+        border-radius: 20px;
         padding: 25px;
-        box-shadow: var(--shadow);
-        border-left: 4px solid var(--primary);
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid;
         transition: var(--transition);
+        position: relative;
+        overflow: hidden;
     }
 
     .request-card.urgent {
         border-left-color: var(--danger);
+        animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+        0% { border-left-color: var(--danger); }
+        50% { border-left-color: #FCA5A5; }
+        100% { border-left-color: var(--danger); }
+    }
+
+    .request-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
     }
 
     .request-header {
@@ -203,7 +399,7 @@
 
     .request-type {
         background: #F3F4F6;
-        padding: 5px 12px;
+        padding: 5px 15px;
         border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 600;
@@ -214,6 +410,16 @@
         color: var(--danger);
         font-weight: 600;
         font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: #FEE2E2;
+        padding: 5px 12px;
+        border-radius: 20px;
+    }
+
+    .timer i {
+        font-size: 0.8rem;
     }
 
     .request-body {
@@ -231,6 +437,7 @@
         gap: 15px;
         font-size: 0.9rem;
         color: var(--gray);
+        flex-wrap: wrap;
     }
 
     .request-meta i {
@@ -241,145 +448,314 @@
     .request-actions {
         display: flex;
         gap: 10px;
+        margin-top: 20px;
     }
 
     .btn {
-        padding: 12px 20px;
+        padding: 12px 25px;
         border: none;
         border-radius: 10px;
         font-weight: 600;
         cursor: pointer;
         transition: var(--transition);
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 8px;
-        text-decoration: none;
-        font-size: 0.95rem;
+        flex: 1;
+        justify-content: center;
     }
 
-    .btn-primary {
-        background: var(--gradient-primary);
+    .btn-accept {
+        background: linear-gradient(135deg, #10B981, #34D399);
         color: white;
     }
 
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    .btn-accept:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
     }
 
-    .btn-outline {
-        background: transparent;
-        border: 2px solid var(--primary);
-        color: var(--primary);
+    .btn-decline {
+        background: #FEE2E2;
+        color: #991B1B;
     }
 
-    .btn-outline:hover {
-        background: var(--primary);
-        color: white;
+    .btn-decline:hover {
+        background: #FECACA;
+        transform: translateY(-3px);
     }
 
-    .btn-danger {
-        background: var(--danger);
-        color: white;
+    .btn-postpone {
+        background: #FEF3C7;
+        color: #92400E;
     }
 
-    /* Schedule */
-    .schedule-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 25px;
+    .btn-postpone:hover {
+        background: #FDE68A;
+        transform: translateY(-3px);
     }
 
-    .schedule-card {
+    .btn-dispute {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+
+    .btn-dispute:hover {
+        background: #FECACA;
+    }
+
+    /* Calendar */
+    .calendar-container {
         background: white;
-        border-radius: var(--border-radius);
+        border-radius: 20px;
         padding: 25px;
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow-md);
+        margin-bottom: 30px;
     }
 
-    .schedule-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .schedule-header h3 {
-        font-size: 1.3rem;
-        color: var(--dark);
-    }
-
-    .session-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid #F3F4F6;
-    }
-
-    .session-item:last-child {
-        border-bottom: none;
-    }
-
-    .session-time {
-        font-weight: 600;
-        color: var(--primary);
-    }
-
-    .session-title {
-        color: var(--dark);
-        font-weight: 500;
-    }
-
-    .join-link {
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    /* Availability */
-    .availability-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 15px;
-        margin-top: 20px;
-    }
-
-    .day-card {
-        background: #F9FAFB;
+    #calendar {
+        height: 600px;
+        background: white;
+        border-radius: 15px;
         padding: 15px;
-        border-radius: 12px;
-        text-align: center;
+    }
+
+    /* Chat Section */
+    .chat-section {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .message {
+        display: flex;
+        gap: 10px;
+        max-width: 70%;
+        animation: slideIn 0.3s ease;
+    }
+
+    .message.sent {
+        margin-left: auto;
+        flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .message-content {
+        background: #F3F4F6;
+        padding: 12px 18px;
+        border-radius: 18px;
+        border-bottom-left-radius: 5px;
+    }
+
+    .message.sent .message-content {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 18px;
+    }
+
+    .message-time {
+        font-size: 0.7rem;
+        color: #999;
+        margin-top: 5px;
+    }
+
+    .chat-input-area {
+        display: flex;
+        gap: 10px;
+        padding: 15px;
+        border-top: 1px solid #F3F4F6;
+    }
+
+    #chatInput {
+        flex: 1;
+        padding: 12px 20px;
+        border: 2px solid #F3F4F6;
+        border-radius: 25px;
+        resize: none;
+        font-family: inherit;
+        transition: var(--transition);
+    }
+
+    #chatInput:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    #sendChatBtn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
         cursor: pointer;
         transition: var(--transition);
     }
 
-    .day-card:hover {
-        background: var(--primary);
-        color: white;
+    #sendChatBtn:hover {
+        transform: scale(1.1);
     }
 
-    .day-card.active {
-        background: var(--gradient-primary);
-        color: white;
+    /* Disputes Section */
+    .disputes-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
     }
 
-    .day-name {
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-
-    .day-time {
-        font-size: 0.8rem;
-    }
-
-    /* Webinar Form */
-    .webinar-form {
+    .dispute-card {
         background: white;
-        border-radius: var(--border-radius);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid var(--danger);
+        transition: var(--transition);
+    }
+
+    .dispute-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .dispute-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .dispute-id {
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .dispute-status {
+        padding: 3px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .status-resolved {
+        background: #D1FAE5;
+        color: #065F46;
+    }
+
+    .dispute-reason {
+        color: var(--gray);
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    .dispute-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Profile Edit Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 30px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: slideUp 0.4s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        padding: 25px 30px;
+        border-bottom: 1px solid #E5E7EB;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-radius: 30px 30px 0 0;
+    }
+
+    .modal-header h3 {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .modal-close {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+    }
+
+    .modal-close:hover {
+        background: rgba(255,255,255,0.3);
+        transform: rotate(90deg);
+    }
+
+    .modal-body {
         padding: 30px;
-        margin-top: 30px;
-        box-shadow: var(--shadow);
     }
 
     .form-group {
@@ -405,90 +781,334 @@
     .form-control:focus {
         outline: none;
         border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .avatar-upload {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .avatar-preview {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary);
+    }
+
+    .upload-btn {
+        background: #F3F4F6;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .upload-btn:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        font-size: 1.1rem;
+        transition: var(--transition);
+    }
+
+    .btn-save:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Webinar Form */
+    .webinar-form {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 30px;
+    }
+
+    .webinar-form h3 {
+        margin-bottom: 20px;
+        color: var(--dark);
+    }
+
+    /* Help Section */
+    .help-section {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+    }
+
+    .help-section h3 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        color: var(--dark);
+    }
+
+    .help-section p {
+        color: var(--gray);
+        margin-bottom: 30px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .help-options {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .help-card {
+        background: #F9FAFB;
+        padding: 25px;
+        border-radius: 15px;
+        width: 200px;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+    .help-card:hover {
+        transform: translateY(-5px);
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .help-card i {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: var(--primary);
+    }
+
+    .help-card:hover i {
+        color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .dashboard-container {
+            padding: 80px 20px 30px;
+        }
+
+        .notification-bar {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .notification-content {
+            flex-direction: column;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
     }
 
     @media (max-width: 768px) {
-        .dashboard {
-            padding: 80px 20px 30px;
+        .quick-menu {
+            justify-content: center;
         }
-        
-        .schedule-grid {
-            grid-template-columns: 1fr;
-        }
-        
+
         .stats-grid {
             grid-template-columns: 1fr;
+        }
+
+        .requests-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .modal-content {
+            width: 95%;
         }
     }
 </style>
 
-<div class="dashboard">
-    <!-- Header -->
-    <div class="dashboard-header">
-        <div class="header-title">
-            <h1>Welcome back, Dr. {{ current_user.get_full_name() }}</h1>
-            <p>Your healing practice continues</p>
+<div class="dashboard-container">
+    <!-- Notification Bar -->
+    <div class="notification-bar" id="notificationBar" style="display: none;">
+        <div class="notification-content">
+            <div class="notification-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="notification-text">
+                <h3 id="notificationTitle">New Session Request</h3>
+                <p id="notificationMessage">A client is requesting a session. You have 10 minutes to respond.</p>
+            </div>
         </div>
-        <div class="verification-badge" id="verificationBadge">
-            <i class="fas fa-check-circle"></i>
-            <span>Verified Professional</span>
+        <div class="notification-actions" id="notificationActions">
+            <button class="notification-btn accept" onclick="handleNotification('accept')">
+                <i class="fas fa-check"></i> Accept
+            </button>
+            <button class="notification-btn decline" onclick="handleNotification('decline')">
+                <i class="fas fa-times"></i> Decline
+            </button>
         </div>
+    </div>
+
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+        <div class="welcome-title">
+            <h1>Welcome back, Dr. {{ current_user.get_full_name() }}! 👋</h1>
+            <p>Your healing practice continues • {{ current_user.professional_profile.professional_type }}</p>
+        </div>
+        <div class="verification-badge {% if not current_user.professional_profile.is_verified %}pending{% endif %}">
+            <i class="fas {% if current_user.professional_profile.is_verified %}fa-check-circle{% else %}fa-clock{% endif %}"></i>
+            {% if current_user.professional_profile.is_verified %}
+                Verified Professional
+            {% else %}
+                Pending Verification
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Menu -->
+    <div class="quick-menu">
+        <a href="#" class="quick-menu-item" onclick="showTab('dashboard')">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('requests')">
+            <i class="fas fa-clock"></i> Requests
+            <span class="badge" id="requestBadge">0</span>
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('sessions')">
+            <i class="fas fa-calendar"></i> Sessions
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('earnings')">
+            <i class="fas fa-coins"></i> Earnings
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('webinars')">
+            <i class="fas fa-video"></i> Webinars
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('messages')">
+            <i class="fas fa-comments"></i> Messages
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('disputes')">
+            <i class="fas fa-gavel"></i> Disputes
+        </a>
+        <a href="#" class="quick-menu-item" onclick="openProfileModal()">
+            <i class="fas fa-user-edit"></i> Profile
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('settings')">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('help')">
+            <i class="fas fa-question-circle"></i> Help
+        </a>
     </div>
 
     <!-- Stats Grid -->
-    <div class="stats-grid" id="statsGrid"></div>
-
-    <!-- Tabs -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('requests')">Session Requests</button>
-        <button class="tab-btn" onclick="showTab('schedule')">My Schedule</button>
-        <button class="tab-btn" onclick="showTab('availability')">Set Availability</button>
-        <button class="tab-btn" onclick="showTab('webinars')">Manage Webinars</button>
-        <button class="tab-btn" onclick="showTab('earnings')">Earnings</button>
-    </div>
-
-    <!-- Session Requests Tab -->
-    <div class="tab-content active" id="requestsTab">
-        <div class="requests-grid" id="requestsGrid"></div>
-    </div>
-
-    <!-- Schedule Tab -->
-    <div class="tab-content" id="scheduleTab">
-        <div class="schedule-grid">
-            <div class="schedule-card">
-                <div class="schedule-header">
-                    <h3>Today's Sessions</h3>
-                    <span class="badge" id="todayCount">0</span>
-                </div>
-                <div id="todaySessions"></div>
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-content">
+                <h3 id="pendingRequests">0</h3>
+                <p>Pending Requests</p>
             </div>
-            <div class="schedule-card">
-                <div class="schedule-header">
-                    <h3>Upcoming Sessions</h3>
-                    <span class="badge" id="upcomingCount">0</span>
-                </div>
-                <div id="upcomingSessions"></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-content">
+                <h3 id="todaySessions">0</h3>
+                <p>Today's Sessions</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-video"></i></div>
+            <div class="stat-content">
+                <h3 id="upcomingSessions">0</h3>
+                <p>Upcoming Sessions</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-star"></i></div>
+            <div class="stat-content">
+                <h3 id="avgRating">0.0</h3>
+                <p>Average Rating</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-coins"></i></div>
+            <div class="stat-content">
+                <h3 id="totalEarnings">KES 0</h3>
+                <p>Total Earnings</p>
             </div>
         </div>
     </div>
 
-    <!-- Availability Tab -->
-    <div class="tab-content" id="availabilityTab">
-        <div class="schedule-card">
-            <h3>Set Your Weekly Availability</h3>
-            <div class="availability-grid" id="availabilityGrid"></div>
-            <button class="btn btn-primary" style="margin-top: 20px;" onclick="saveAvailability()">
-                <i class="fas fa-save"></i> Save Availability
-            </button>
+    <!-- Main Content Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
+        <button class="tab-btn" onclick="showTab('requests')">Session Requests</button>
+        <button class="tab-btn" onclick="showTab('sessions')">My Sessions</button>
+        <button class="tab-btn" onclick="showTab('earnings')">Earnings</button>
+        <button class="tab-btn" onclick="showTab('webinars')">Webinars</button>
+        <button class="tab-btn" onclick="showTab('messages')">Messages</button>
+        <button class="tab-btn" onclick="showTab('disputes')">Disputes</button>
+        <button class="tab-btn" onclick="showTab('calendar')">Calendar</button>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div class="tab-content active" id="dashboardTab">
+        <div class="calendar-container">
+            <h3 style="margin-bottom: 20px;">Your Schedule</h3>
+            <div id="dashboardCalendar"></div>
+        </div>
+    </div>
+
+    <!-- Requests Tab -->
+    <div class="tab-content" id="requestsTab">
+        <div class="requests-grid" id="requestsGrid"></div>
+    </div>
+
+    <!-- Sessions Tab -->
+    <div class="tab-content" id="sessionsTab">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+            <div class="calendar-container">
+                <h3>Upcoming Sessions</h3>
+                <div id="upcomingSessionsList"></div>
+            </div>
+            <div class="calendar-container">
+                <h3>Past Sessions</h3>
+                <div id="pastSessionsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings Tab -->
+    <div class="tab-content" id="earningsTab">
+        <div class="calendar-container">
+            <h3>Earnings Overview</h3>
+            <canvas id="earningsChart" style="width:100%; height:400px;"></canvas>
         </div>
     </div>
 
     <!-- Webinars Tab -->
     <div class="tab-content" id="webinarsTab">
         <div class="webinar-form">
-            <h3>Create New Webinar</h3>
-            <form onsubmit="createWebinar(event)">
+            <h3><i class="fas fa-plus-circle"></i> Schedule New Webinar</h3>
+            <form id="webinarForm">
                 <div class="form-group">
                     <label>Webinar Title</label>
                     <input type="text" class="form-control" id="webinarTitle" required>
@@ -501,7 +1121,7 @@
                     <label>Topic</label>
                     <input type="text" class="form-control" id="webinarTopic" required>
                 </div>
-                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-row">
                     <div class="form-group">
                         <label>Date</label>
                         <input type="date" class="form-control" id="webinarDate" required>
@@ -511,7 +1131,7 @@
                         <input type="time" class="form-control" id="webinarTime" required>
                     </div>
                 </div>
-                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-row">
                     <div class="form-group">
                         <label>Duration (minutes)</label>
                         <input type="number" class="form-control" id="webinarDuration" value="60" required>
@@ -526,212 +1146,832 @@
                         <input type="checkbox" id="webinarFree"> Free Webinar
                     </label>
                 </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-plus-circle"></i> Create Webinar
-                </button>
+                <button type="submit" class="btn-save">Create Webinar</button>
             </form>
         </div>
-        <div class="schedule-card" style="margin-top: 30px;">
+        <div class="calendar-container">
             <h3>Your Webinars</h3>
             <div id="webinarsList"></div>
         </div>
     </div>
 
-    <!-- Earnings Tab -->
-    <div class="tab-content" id="earningsTab">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-coins"></i></div>
-                </div>
-                <div class="stat-value" id="totalEarnings">KES 0</div>
-                <div class="stat-label">Total Earnings</div>
+    <!-- Messages Tab -->
+    <div class="tab-content" id="messagesTab">
+        <div class="chat-section">
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-area">
+                <textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea>
+                <button id="sendChatBtn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+        </div>
+    </div>
+
+    <!-- Disputes Tab -->
+    <div class="tab-content" id="disputesTab">
+        <div class="disputes-grid" id="disputesGrid"></div>
+    </div>
+
+    <!-- Calendar Tab -->
+    <div class="tab-content" id="calendarTab">
+        <div class="calendar-container">
+            <div id="fullCalendar"></div>
+        </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="tab-content" id="settingsTab">
+        <div class="calendar-container">
+            <h3>Notification Settings</h3>
+            <div style="margin: 20px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <span>Email Notifications</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="emailNotifications" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
                 </div>
-                <div class="stat-value" id="monthEarnings">KES 0</div>
-                <div class="stat-label">This Month</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <span>SMS Notifications</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="smsNotifications">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>App Notifications</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="appNotifications" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+            <button class="btn-save" onclick="saveSettings()">Save Settings</button>
+        </div>
+    </div>
+
+    <!-- Help Tab -->
+    <div class="tab-content" id="helpTab">
+        <div class="help-section">
+            <h3>How can we help you?</h3>
+            <p>Get support with your professional account, technical issues, or general questions.</p>
+            <div class="help-options">
+                <div class="help-card" onclick="window.location.href='/support'">
+                    <i class="fas fa-headset"></i>
+                    <h4>Contact Support</h4>
                 </div>
-                <div class="stat-value" id="avgRating">0.0</div>
-                <div class="stat-label">Average Rating</div>
+                <div class="help-card" onclick="window.location.href='/faq'">
+                    <i class="fas fa-question"></i>
+                    <h4>FAQ</h4>
+                </div>
+                <div class="help-card" onclick="window.location.href='/guides'">
+                    <i class="fas fa-book"></i>
+                    <h4>Guides</h4>
+                </div>
+                <div class="help-card" onclick="window.location.href='/community'">
+                    <i class="fas fa-users"></i>
+                    <h4>Community</h4>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Profile Edit Modal -->
+<div class="modal" id="profileModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-edit"></i> Edit Profile</h3>
+            <button class="modal-close" onclick="closeModal('profileModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="profileForm">
+                <div class="avatar-upload">
+                    <img src="{{ current_user.profile_pic or '/static/images/default-avatar.jpg' }}" alt="Profile" class="avatar-preview" id="avatarPreview">
+                    <div>
+                        <label for="avatarUpload" class="upload-btn">
+                            <i class="fas fa-camera"></i> Change Photo
+                        </label>
+                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="previewAvatar(this)">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" value="{{ current_user.first_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" id="editLastName" value="{{ current_user.last_name }}" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="editEmail" value="{{ current_user.email }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" class="form-control" id="editPhone" value="{{ current_user.phone }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea class="form-control" id="editBio" rows="4">{{ current_user.bio }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Session Fee (KES)</label>
+                    <input type="number" class="form-control" id="editFee" value="{{ current_user.professional_profile.session_fee }}" min="0" step="100">
+                </div>
+
+                <div class="form-group">
+                    <label>Specializations (comma separated)</label>
+                    <input type="text" class="form-control" id="editSpecializations" value="{{ current_user.professional_profile.get_specializations()|join(', ') }}">
+                </div>
+
+                <button type="submit" class="btn-save">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Postpone Session Modal -->
+<div class="modal" id="postponeModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-clock"></i> Postpone Session</h3>
+            <button class="modal-close" onclick="closeModal('postponeModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="postponeForm">
+                <input type="hidden" id="postponeSessionId">
+                <div class="form-group">
+                    <label>New Date</label>
+                    <input type="date" class="form-control" id="postponeDate" required min="{{ now().date() }}">
+                </div>
+                <div class="form-group">
+                    <label>New Time</label>
+                    <input type="time" class="form-control" id="postponeTime" required>
+                </div>
+                <div class="form-group">
+                    <label>Reason for postponement</label>
+                    <textarea class="form-control" id="postponeReason" rows="3" placeholder="Explain to the client why you need to reschedule..."></textarea>
+                </div>
+                <button type="submit" class="btn-save">Request Postponement</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Dispute Modal -->
+<div class="modal" id="disputeModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-gavel"></i> Respond to Dispute</h3>
+            <button class="modal-close" onclick="closeModal('disputeModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="disputeForm">
+                <input type="hidden" id="disputeId">
+                <div class="form-group">
+                    <label>Client's Complaint</label>
+                    <textarea class="form-control" id="disputeComplaint" rows="3" readonly></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Your Response</label>
+                    <textarea class="form-control" id="disputeResponse" rows="4" placeholder="Provide your explanation..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Proposed Resolution</label>
+                    <select class="form-control" id="disputeResolution">
+                        <option value="refund">Full Refund</option>
+                        <option value="partial_refund">Partial Refund</option>
+                        <option value="reschedule">Free Reschedule</option>
+                        <option value="dismiss">Dismiss Complaint</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-save">Submit Response</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
-let sessionRequests = [];
-let refreshInterval;
+let pendingRequests = [];
+let upcomingSessions = [];
+let messages = [];
+let disputes = [];
+let currentClientId = null;
+let timerInterval;
 
-async function loadDashboard() {
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    loadProfessionalData();
+    loadRequests();
+    loadSessions();
+    loadEarnings();
+    loadWebinars();
+    loadMessages();
+    loadDisputes();
+    initCalendar();
+    startTimerCheck();
+});
+
+async function loadProfessionalData() {
     try {
-        // Simulated data - replace with actual API calls
-        const stats = {
-            totalSessions: 127,
-            pendingRequests: 5,
-            upcomingSessions: 8,
-            responseRate: 94,
-            totalEarnings: 245000,
-            monthEarnings: 65000,
-            avgRating: 4.8
-        };
-
-        updateStats(stats);
-        loadSessionRequests();
-        loadSchedule();
-        loadAvailability();
-        loadWebinars();
-        updateEarnings(stats);
+        const response = await fetch('/professional/api/dashboard/stats');
+        const data = await response.json();
+        
+        document.getElementById('pendingRequests').textContent = data.pending_requests || 0;
+        document.getElementById('todaySessions').textContent = data.today_sessions || 0;
+        document.getElementById('upcomingSessions').textContent = data.upcoming_sessions || 0;
+        document.getElementById('avgRating').textContent = data.avg_rating?.toFixed(1) || '0.0';
+        document.getElementById('totalEarnings').textContent = `KES ${data.total_earnings?.toLocaleString() || 0}`;
+        document.getElementById('requestBadge').textContent = data.pending_requests || 0;
+        
     } catch (error) {
-        console.error('Error loading dashboard:', error);
+        console.error('Error loading professional data:', error);
     }
 }
 
-function updateStats(stats) {
-    document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
-            </div>
-            <div class="stat-value">${stats.totalSessions}</div>
-            <div class="stat-label">Total Sessions</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon"><i class="fas fa-clock"></i></div>
-            </div>
-            <div class="stat-value">${stats.pendingRequests}</div>
-            <div class="stat-label">Pending Requests</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon"><i class="fas fa-video"></i></div>
-            </div>
-            <div class="stat-value">${stats.upcomingSessions}</div>
-            <div class="stat-label">Upcoming Sessions</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-header">
-                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-            </div>
-            <div class="stat-value">${stats.responseRate}%</div>
-            <div class="stat-label">Response Rate</div>
-        </div>
-    `;
+async function loadRequests() {
+    try {
+        const response = await fetch('/professional/api/session-requests');
+        pendingRequests = await response.json();
+        displayRequests();
+        
+        // Show notification for first pending request
+        if (pendingRequests.length > 0) {
+            showNotification(pendingRequests[0]);
+        }
+    } catch (error) {
+        console.error('Error loading requests:', error);
+    }
 }
 
-function loadSessionRequests() {
-    const requests = [
-        {
-            id: 1,
-            type: 'Anxiety',
-            description: 'Feeling overwhelmed with work and family pressure. Need coping strategies.',
-            preferredDate: '2024-03-15',
-            preferredTime: '14:00',
-            sessionType: 'video',
-            urgent: true,
-            timeLeft: '8:32'
-        },
-        {
-            id: 2,
-            type: 'Depression',
-            description: 'Been feeling low for weeks, loss of interest in activities.',
-            preferredDate: '2024-03-16',
-            preferredTime: '10:30',
-            sessionType: 'chat',
-            urgent: false,
-            timeLeft: '25:15'
-        }
-    ];
-
-    document.getElementById('requestsGrid').innerHTML = requests.map(req => `
-        <div class="request-card ${req.urgent ? 'urgent' : ''}">
-            <div class="request-header">
-                <span class="request-type">${req.type}</span>
-                <span class="timer"><i class="fas fa-hourglass-half"></i> ${req.timeLeft}</span>
-            </div>
-            <div class="request-body">
-                <p>${req.description}</p>
-                <div class="request-meta">
-                    <span><i class="fas fa-calendar"></i> ${req.preferredDate}</span>
-                    <span><i class="fas fa-clock"></i> ${req.preferredTime}</span>
-                    <span><i class="fas fa-${req.sessionType}"></i> ${req.sessionType}</span>
+function displayRequests() {
+    const grid = document.getElementById('requestsGrid');
+    
+    if (!pendingRequests.length) {
+        grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; padding: 50px;">No pending requests</p>';
+        return;
+    }
+    
+    grid.innerHTML = pendingRequests.map(req => {
+        const timeLeft = getTimeLeft(req.expires_at);
+        const urgent = timeLeft.minutes < 3;
+        
+        return `
+            <div class="request-card ${urgent ? 'urgent' : ''}" id="request-${req.id}">
+                <div class="request-header">
+                    <span class="request-type">${req.session_type} Session</span>
+                    <span class="timer"><i class="fas fa-hourglass-half"></i> ${timeLeft.minutes}:${timeLeft.seconds}</span>
+                </div>
+                <div class="request-body">
+                    <p>${req.issue}</p>
+                    <div class="request-meta">
+                        <span><i class="fas fa-calendar"></i> ${req.preferred_date || 'Any day'}</span>
+                        <span><i class="fas fa-clock"></i> ${req.preferred_time || 'Any time'}</span>
+                        <span><i class="fas fa-tag"></i> ${req.session_type}</span>
+                    </div>
+                </div>
+                <div class="request-actions">
+                    <button class="btn btn-accept" onclick="acceptRequest(${req.id})">
+                        <i class="fas fa-check"></i> Accept
+                    </button>
+                    <button class="btn btn-decline" onclick="declineRequest(${req.id})">
+                        <i class="fas fa-times"></i> Decline
+                    </button>
+                    <button class="btn btn-postpone" onclick="openPostponeModal(${req.id})">
+                        <i class="fas fa-clock"></i> Postpone
+                    </button>
                 </div>
             </div>
-            <div class="request-actions">
-                <button class="btn btn-primary" onclick="acceptRequest(${req.id})">
-                    <i class="fas fa-check"></i> Accept
+        `;
+    }).join('');
+}
+
+function getTimeLeft(expiresAt) {
+    const now = new Date();
+    const expiry = new Date(expiresAt);
+    const diff = expiry - now;
+    
+    if (diff <= 0) return { minutes: 0, seconds: '00' };
+    
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+    
+    return { minutes, seconds };
+}
+
+function startTimerCheck() {
+    timerInterval = setInterval(() => {
+        pendingRequests.forEach(req => {
+            const timeLeft = getTimeLeft(req.expires_at);
+            const timerElement = document.querySelector(`#request-${req.id} .timer`);
+            if (timerElement) {
+                timerElement.innerHTML = `<i class="fas fa-hourglass-half"></i> ${timeLeft.minutes}:${timeLeft.seconds}`;
+                
+                if (timeLeft.minutes < 3) {
+                    document.getElementById(`request-${req.id}`).classList.add('urgent');
+                }
+                
+                if (timeLeft.minutes === 0 && timeLeft.seconds === '00') {
+                    handleExpiredRequest(req.id);
+                }
+            }
+        });
+    }, 1000);
+}
+
+async function handleExpiredRequest(requestId) {
+    try {
+        const response = await fetch(`/professional/api/session-requests/${requestId}/expire`, {
+            method: 'POST'
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            // Remove from UI
+            document.getElementById(`request-${requestId}`)?.remove();
+            
+            // Refresh requests
+            loadRequests();
+        }
+    } catch (error) {
+        console.error('Error handling expired request:', error);
+    }
+}
+
+function showNotification(request) {
+    const timeLeft = getTimeLeft(request.expires_at);
+    document.getElementById('notificationTitle').textContent = 'New Session Request';
+    document.getElementById('notificationMessage').textContent = 
+        `A client needs a ${request.session_type} session. You have ${timeLeft.minutes} minutes to respond.`;
+    document.getElementById('notificationBar').style.display = 'flex';
+    
+    // Auto-hide after 30 seconds
+    setTimeout(() => {
+        document.getElementById('notificationBar').style.display = 'none';
+    }, 30000);
+}
+
+function handleNotification(action) {
+    if (pendingRequests.length > 0) {
+        if (action === 'accept') {
+            acceptRequest(pendingRequests[0].id);
+        } else {
+            declineRequest(pendingRequests[0].id);
+        }
+        document.getElementById('notificationBar').style.display = 'none';
+    }
+}
+
+async function acceptRequest(requestId) {
+    try {
+        const response = await fetch(`/professional/api/session-requests/${requestId}/accept`, {
+            method: 'POST'
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            Swal.fire('Accepted!', 'Session confirmed successfully', 'success');
+            loadRequests();
+            loadSessions();
+            loadProfessionalData();
+        } else {
+            Swal.fire('Error', result.message, 'error');
+        }
+    } catch (error) {
+        Swal.fire('Error', 'Failed to accept request', 'error');
+    }
+}
+
+async function declineRequest(requestId) {
+    const result = await Swal.fire({
+        title: 'Decline Request?',
+        text: 'Are you sure you want to decline this session request?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#EF4444',
+        cancelButtonColor: '#6B7280',
+        confirmButtonText: 'Yes, decline'
+    });
+    
+    if (result.isConfirmed) {
+        try {
+            const response = await fetch(`/professional/api/session-requests/${requestId}/decline`, {
+                method: 'POST'
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                Swal.fire('Declined', 'Request declined', 'success');
+                loadRequests();
+            } else {
+                Swal.fire('Error', result.message, 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'Failed to decline request', 'error');
+        }
+    }
+}
+
+function openPostponeModal(requestId) {
+    document.getElementById('postponeSessionId').value = requestId;
+    
+    // Set min date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('postponeDate').min = tomorrow.toISOString().split('T')[0];
+    
+    openModal('postponeModal');
+}
+
+document.getElementById('postponeForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const requestId = document.getElementById('postponeSessionId').value;
+    const data = {
+        date: document.getElementById('postponeDate').value,
+        time: document.getElementById('postponeTime').value,
+        reason: document.getElementById('postponeReason').value
+    };
+    
+    try {
+        const response = await fetch(`/professional/api/session-requests/${requestId}/postpone`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            Swal.fire('Postponed', 'Postponement requested. Client will be notified.', 'success');
+            closeModal('postponeModal');
+            loadRequests();
+        } else {
+            Swal.fire('Error', result.message, 'error');
+        }
+    } catch (error) {
+        Swal.fire('Error', 'Failed to postpone session', 'error');
+    }
+});
+
+async function loadSessions() {
+    try {
+        const response = await fetch('/professional/api/sessions');
+        const data = await response.json();
+        
+        const upcomingDiv = document.getElementById('upcomingSessionsList');
+        const pastDiv = document.getElementById('pastSessionsList');
+        
+        upcomingDiv.innerHTML = data.upcoming.map(s => `
+            <div class="session-card">
+                <div class="session-date">${new Date(s.date).toLocaleDateString()} at ${s.time}</div>
+                <div class="session-title">${s.title}</div>
+                <div class="session-status">${s.status}</div>
+            </div>
+        `).join('') || '<p>No upcoming sessions</p>';
+        
+        pastDiv.innerHTML = data.past.map(s => `
+            <div class="session-card">
+                <div class="session-date">${new Date(s.date).toLocaleDateString()}</div>
+                <div class="session-title">${s.title}</div>
+            </div>
+        `).join('') || '<p>No past sessions</p>';
+        
+    } catch (error) {
+        console.error('Error loading sessions:', error);
+    }
+}
+
+async function loadEarnings() {
+    try {
+        const response = await fetch('/professional/api/earnings');
+        const data = await response.json();
+        
+        // Create earnings chart
+        const ctx = document.getElementById('earningsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Earnings (KES)',
+                    data: data.values || [0, 0, 0, 0, 0, 0],
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error loading earnings:', error);
+    }
+}
+
+async function loadWebinars() {
+    try {
+        const response = await fetch('/professional/api/webinars');
+        const webinars = await response.json();
+        
+        const listDiv = document.getElementById('webinarsList');
+        listDiv.innerHTML = webinars.map(w => `
+            <div class="webinar-card">
+                <h4>${w.title}</h4>
+                <p>${new Date(w.date).toLocaleDateString()} at ${w.time}</p>
+                <p>Participants: ${w.current_participants}/${w.max_participants}</p>
+            </div>
+        `).join('') || '<p>No webinars scheduled</p>';
+        
+    } catch (error) {
+        console.error('Error loading webinars:', error);
+    }
+}
+
+document.getElementById('webinarForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const data = {
+        title: document.getElementById('webinarTitle').value,
+        description: document.getElementById('webinarDesc').value,
+        topic: document.getElementById('webinarTopic').value,
+        date: document.getElementById('webinarDate').value,
+        time: document.getElementById('webinarTime').value,
+        duration: document.getElementById('webinarDuration').value,
+        max_participants: document.getElementById('webinarMax').value,
+        is_free: document.getElementById('webinarFree').checked
+    };
+    
+    try {
+        const response = await fetch('/professional/api/webinars/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            Swal.fire('Success!', 'Webinar created successfully', 'success');
+            loadWebinars();
+            document.getElementById('webinarForm').reset();
+        } else {
+            Swal.fire('Error', result.message, 'error');
+        }
+    } catch (error) {
+        Swal.fire('Error', 'Failed to create webinar', 'error');
+    }
+});
+
+async function loadMessages() {
+    try {
+        const response = await fetch('/professional/api/messages');
+        messages = await response.json();
+        displayMessages();
+    } catch (error) {
+        console.error('Error loading messages:', error);
+    }
+}
+
+function displayMessages() {
+    const chatDiv = document.getElementById('chatMessages');
+    chatDiv.innerHTML = messages.map(m => `
+        <div class="message ${m.sent_by_me ? 'sent' : 'received'}">
+            <img src="${m.avatar || '/static/images/default-avatar.jpg'}" class="message-avatar">
+            <div class="message-content">
+                <div>${m.content}</div>
+                <div class="message-time">${new Date(m.timestamp).toLocaleTimeString()}</div>
+            </div>
+        </div>
+    `).join('');
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    try {
+        const response = await fetch('/professional/api/messages/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                client_id: currentClientId,
+                message: message
+            })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            messages.push({
+                content: message,
+                timestamp: new Date().toISOString(),
+                sent_by_me: true,
+                avatar: '/static/images/default-avatar.jpg'
+            });
+            displayMessages();
+            input.value = '';
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+}
+
+async function loadDisputes() {
+    try {
+        const response = await fetch('/professional/api/disputes');
+        disputes = await response.json();
+        displayDisputes();
+    } catch (error) {
+        console.error('Error loading disputes:', error);
+    }
+}
+
+function displayDisputes() {
+    const grid = document.getElementById('disputesGrid');
+    
+    if (!disputes.length) {
+        grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; padding: 50px;">No disputes</p>';
+        return;
+    }
+    
+    grid.innerHTML = disputes.map(d => `
+        <div class="dispute-card">
+            <div class="dispute-header">
+                <span class="dispute-id">Dispute #${d.id}</span>
+                <span class="dispute-status status-${d.status}">${d.status}</span>
+            </div>
+            <div class="dispute-reason">${d.reason}</div>
+            <div class="dispute-actions">
+                <button class="btn btn-accept" onclick="openDisputeModal(${d.id}, '${d.reason}')">
+                    <i class="fas fa-reply"></i> Respond
                 </button>
-                <button class="btn btn-outline" onclick="declineRequest(${req.id})">
-                    <i class="fas fa-times"></i> Decline
-                </button>
             </div>
         </div>
     `).join('');
 }
 
-function loadSchedule() {
-    const today = [
-        { time: '09:00', title: 'Session with Mary K.', link: '#' },
-        { time: '11:30', title: 'Session with John D.', link: '#' },
-        { time: '14:00', title: 'Group Therapy Session', link: '#' }
-    ];
-
-    const upcoming = [
-        { date: 'Tomorrow', time: '10:00', title: 'Session with Anne W.' },
-        { date: 'Mar 15', time: '15:30', title: 'New Client Intake' },
-        { date: 'Mar 16', time: '13:00', title: 'Follow-up with Peter' }
-    ];
-
-    document.getElementById('todayCount').textContent = today.length;
-    document.getElementById('upcomingCount').textContent = upcoming.length;
-
-    document.getElementById('todaySessions').innerHTML = today.map(s => `
-        <div class="session-item">
-            <div>
-                <span class="session-time">${s.time}</span>
-                <span class="session-title"> - ${s.title}</span>
-            </div>
-            <a href="${s.link}" class="join-link">Join <i class="fas fa-arrow-right"></i></a>
-        </div>
-    `).join('');
-
-    document.getElementById('upcomingSessions').innerHTML = upcoming.map(s => `
-        <div class="session-item">
-            <div>
-                <span class="session-time">${s.date} ${s.time}</span>
-                <span class="session-title"> - ${s.title}</span>
-            </div>
-        </div>
-    `).join('');
+function openDisputeModal(disputeId, complaint) {
+    document.getElementById('disputeId').value = disputeId;
+    document.getElementById('disputeComplaint').value = complaint;
+    openModal('disputeModal');
 }
 
-function loadAvailability() {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    document.getElementById('availabilityGrid').innerHTML = days.map(day => `
-        <div class="day-card active">
-            <div class="day-name">${day}</div>
-            <div class="day-time">9AM - 5PM</div>
-        </div>
-    `).join('');
+document.getElementById('disputeForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const disputeId = document.getElementById('disputeId').value;
+    const data = {
+        response: document.getElementById('disputeResponse').value,
+        resolution: document.getElementById('disputeResolution').value
+    };
+    
+    try {
+        const response = await fetch(`/professional/api/disputes/${disputeId}/respond`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            Swal.fire('Response Submitted', 'Your response has been recorded', 'success');
+            closeModal('disputeModal');
+            loadDisputes();
+        } else {
+            Swal.fire('Error', result.message, 'error');
+        }
+    } catch (error) {
+        Swal.fire('Error', 'Failed to submit response', 'error');
+    }
+});
+
+function initCalendar() {
+    const calendarEl = document.getElementById('fullCalendar');
+    const dashboardCalendarEl = document.getElementById('dashboardCalendar');
+    
+    if (calendarEl) {
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+            events: '/professional/api/calendar-events',
+            eventClick: function(info) {
+                Swal.fire({
+                    title: info.event.title,
+                    html: info.event.extendedProps.description || '',
+                    icon: 'info'
+                });
+            }
+        });
+        calendar.render();
+    }
+    
+    if (dashboardCalendarEl) {
+        const dashboardCalendar = new FullCalendar.Calendar(dashboardCalendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: 'today'
+            },
+            events: '/professional/api/calendar-events',
+            height: 400
+        });
+        dashboardCalendar.render();
+    }
 }
 
-function loadWebinars() {
-    document.getElementById('webinarsList').innerHTML = `
-        <p>No webinars scheduled. Create your first webinar above.</p>
-    `;
+function openProfileModal() {
+    document.getElementById('editFirstName').value = '{{ current_user.first_name }}';
+    document.getElementById('editLastName').value = '{{ current_user.last_name }}';
+    document.getElementById('editEmail').value = '{{ current_user.email }}';
+    document.getElementById('editPhone').value = '{{ current_user.phone }}';
+    document.getElementById('editBio').value = '{{ current_user.bio }}';
+    document.getElementById('editFee').value = '{{ current_user.professional_profile.session_fee }}';
+    
+    const specializations = {{ current_user.professional_profile.get_specializations()|tojson }};
+    document.getElementById('editSpecializations').value = specializations.join(', ');
+    
+    openModal('profileModal');
 }
 
-function updateEarnings(stats) {
-    document.getElementById('totalEarnings').textContent = `KES ${stats.totalEarnings.toLocaleString()}`;
-    document.getElementById('monthEarnings').textContent = `KES ${stats.monthEarnings.toLocaleString()}`;
-    document.getElementById('avgRating').textContent = stats.avgRating;
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('first_name', document.getElementById('editFirstName').value);
+    formData.append('last_name', document.getElementById('editLastName').value);
+    formData.append('email', document.getElementById('editEmail').value);
+    formData.append('phone', document.getElementById('editPhone').value);
+    formData.append('bio', document.getElementById('editBio').value);
+    formData.append('session_fee', document.getElementById('editFee').value);
+    
+    const specializations = document.getElementById('editSpecializations').value.split(',').map(s => s.trim());
+    formData.append('specializations', JSON.stringify(specializations));
+    
+    const avatarFile = document.getElementById('avatarUpload').files[0];
+    if (avatarFile) {
+        formData.append('profile_photo', avatarFile);
+    }
+    
+    try {
+        const response = await fetch('/professional/api/update-profile', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            Swal.fire('Success!', 'Profile updated successfully', 'success');
+            closeModal('profileModal');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            Swal.fire('Error', result.message, 'error');
+        }
+    } catch (error) {
+        Swal.fire('Error', 'Failed to update profile', 'error');
+    }
+});
+
+function previewAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('avatarPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function saveSettings() {
+    const settings = {
+        email_notifications: document.getElementById('emailNotifications').checked,
+        sms_notifications: document.getElementById('smsNotifications').checked,
+        app_notifications: document.getElementById('appNotifications').checked
+    };
+    
+    localStorage.setItem('professionalSettings', JSON.stringify(settings));
+    Swal.fire('Settings Saved', 'Your preferences have been updated', 'success');
 }
 
 function showTab(tab) {
@@ -742,27 +1982,43 @@ function showTab(tab) {
     document.getElementById(tab + 'Tab').classList.add('active');
 }
 
-function acceptRequest(id) {
-    alert('Request accepted! The client will be notified.');
+function openModal(modalId) {
+    document.getElementById(modalId).classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
-function declineRequest(id) {
-    alert('Request declined.');
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+    document.body.style.overflow = '';
 }
 
-function saveAvailability() {
-    alert('Availability saved successfully!');
-}
+// Close modals when clicking outside
+window.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal')) {
+        e.target.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
 
-function createWebinar(event) {
-    event.preventDefault();
-    alert('Webinar created successfully!');
-}
+// Enter key to send message
+document.getElementById('chatInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
 
-// Load dashboard on page load
-document.addEventListener('DOMContentLoaded', loadDashboard);
+// Auto-resize textarea
+document.getElementById('chatInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
 
-// Refresh pending requests every 30 seconds
-refreshInterval = setInterval(loadSessionRequests, 30000);
+// Clean up timer on page unload
+window.addEventListener('beforeunload', function() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+});
 </script>
 {% endblock %}
