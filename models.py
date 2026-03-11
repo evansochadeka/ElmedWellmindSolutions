@@ -297,8 +297,8 @@ class Department(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
     
-    # Department head - FIXED: Remove circular dependency
-    head_id = db.Column(db.Integer, nullable=True)  # Temporarily remove FK constraint
+    # FIXED: head_id now properly references department_heads.id
+    head_id = db.Column(db.Integer, db.ForeignKey('department_heads.id'), nullable=True)
     
     # Statistics
     employee_count = db.Column(db.Integer, default=0)
@@ -310,12 +310,10 @@ class Department(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relationships - FIXED: Remove circular backrefs
+    # FIXED: Relationships with proper back_populates
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='departments')
     employees_list = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')
-    
-    # FIXED: Add relationship to department head without circular dependency
-    head = db.relationship('DepartmentHead', foreign_keys='DepartmentHead.department_id', uselist=False)
+    head = db.relationship('DepartmentHead', foreign_keys=[head_id], back_populates='department', uselist=False)
     
     def update_stats(self):
         employees = Client.query.filter_by(department_id=self.id).all()
@@ -343,10 +341,10 @@ class DepartmentHead(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationships - FIXED: No circular backrefs
+    # FIXED: Relationships with proper back_populates
     user = db.relationship('User', foreign_keys=[user_id], back_populates='department_head_profile')
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='department_heads')
-    department = db.relationship('Department', foreign_keys=[department_id], backref='department_head_ref')
+    department = db.relationship('Department', foreign_keys=[department_id], back_populates='head')
     
     def get_department_stats(self):
         if not self.department:
@@ -709,6 +707,7 @@ class Complaint(db.Model):
     # Relationships
     organization = db.relationship('Organization', backref='complaints')
     professional = db.relationship('Professional', backref='complaints')
+
 class ActivityLog(db.Model):
     __tablename__ = 'activity_logs'
     id = db.Column(db.Integer, primary_key=True)
