@@ -504,6 +504,26 @@
         background: #FECACA;
     }
 
+    .btn-chat {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-chat:hover {
+        background: var(--primary-dark);
+        transform: translateY(-3px);
+    }
+
+    .btn-rate {
+        background: var(--warning);
+        color: white;
+    }
+
+    .btn-rate:hover {
+        background: #e68a00;
+        transform: translateY(-3px);
+    }
+
     /* Calendar */
     .calendar-container {
         background: white;
@@ -585,7 +605,7 @@
         border-top: 1px solid #F3F4F6;
     }
 
-    #chatInput {
+    #chatInput, #clientChatInput {
         flex: 1;
         padding: 12px 20px;
         border: 2px solid #F3F4F6;
@@ -595,12 +615,12 @@
         transition: var(--transition);
     }
 
-    #chatInput:focus {
+    #chatInput:focus, #clientChatInput:focus {
         outline: none;
         border-color: var(--primary);
     }
 
-    #sendChatBtn {
+    #sendChatBtn, #sendClientChatBtn {
         width: 50px;
         height: 50px;
         border-radius: 50%;
@@ -611,8 +631,101 @@
         transition: var(--transition);
     }
 
-    #sendChatBtn:hover {
+    #sendChatBtn:hover, #sendClientChatBtn:hover {
         transform: scale(1.1);
+    }
+
+    /* Client List */
+    .client-list {
+        background: white;
+        border-radius: 15px;
+        overflow-y: auto;
+        max-height: 500px;
+    }
+
+    .client-item {
+        padding: 15px;
+        border-bottom: 1px solid #F3F4F6;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .client-item:hover {
+        background: #F9FAFB;
+    }
+
+    .client-item.active {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .client-item.active .client-meta {
+        color: rgba(255,255,255,0.8);
+    }
+
+    .client-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+
+    .client-info {
+        flex: 1;
+    }
+
+    .client-name {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .client-meta {
+        font-size: 0.8rem;
+        color: var(--gray);
+        display: flex;
+        gap: 10px;
+    }
+
+    .client-rating {
+        color: #FFD700;
+    }
+
+    .risk-badge {
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .risk-low {
+        background: #D1FAE5;
+        color: #065F46;
+    }
+
+    .risk-medium {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .risk-high {
+        background: #FEE2E2;
+        color: #991B1B;
+    }
+
+    /* Split View for Chat */
+    .split-view {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 20px;
+        height: 600px;
     }
 
     /* Disputes Section */
@@ -924,6 +1037,11 @@
         .form-row {
             grid-template-columns: 1fr;
         }
+
+        .split-view {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
     }
 
     @media (max-width: 768px) {
@@ -989,8 +1107,12 @@
             <i class="fas fa-tachometer-alt"></i> Dashboard
         </a>
         <a href="#" class="quick-menu-item" onclick="showTab('requests')">
-            <i class="fas fa-clock"></i> Requests
+            <i class="fas fa-clock"></i> My Requests
             <span class="badge" id="requestBadge">0</span>
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('unassigned')">
+            <i class="fas fa-users"></i> Available Clients
+            <span class="badge" id="unassignedBadge">0</span>
         </a>
         <a href="#" class="quick-menu-item" onclick="showTab('sessions')">
             <i class="fas fa-calendar"></i> Sessions
@@ -1003,6 +1125,9 @@
         </a>
         <a href="#" class="quick-menu-item" onclick="showTab('messages')">
             <i class="fas fa-comments"></i> Messages
+        </a>
+        <a href="#" class="quick-menu-item" onclick="showTab('clientChat')">
+            <i class="fas fa-comment-dots"></i> Client Chat
         </a>
         <a href="#" class="quick-menu-item" onclick="showTab('disputes')">
             <i class="fas fa-gavel"></i> Disputes
@@ -1060,11 +1185,13 @@
     <!-- Main Content Tabs -->
     <div class="tabs">
         <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
-        <button class="tab-btn" onclick="showTab('requests')">Session Requests</button>
+        <button class="tab-btn" onclick="showTab('requests')">My Requests</button>
+        <button class="tab-btn" onclick="showTab('unassigned')">Available Clients</button>
         <button class="tab-btn" onclick="showTab('sessions')">My Sessions</button>
         <button class="tab-btn" onclick="showTab('earnings')">Earnings</button>
         <button class="tab-btn" onclick="showTab('webinars')">Webinars</button>
         <button class="tab-btn" onclick="showTab('messages')">Messages</button>
+        <button class="tab-btn" onclick="showTab('clientChat')">Client Chat</button>
         <button class="tab-btn" onclick="showTab('disputes')">Disputes</button>
         <button class="tab-btn" onclick="showTab('calendar')">Calendar</button>
     </div>
@@ -1080,6 +1207,15 @@
     <!-- Requests Tab -->
     <div class="tab-content" id="requestsTab">
         <div class="requests-grid" id="requestsGrid"></div>
+    </div>
+
+    <!-- Unassigned Clients Tab (NEW) -->
+    <div class="tab-content" id="unassignedTab">
+        <div class="calendar-container">
+            <h3><i class="fas fa-users"></i> Available Clients Needing Support</h3>
+            <p class="text-muted">These clients have requested sessions but haven't been assigned yet. You can view their anonymized profile and initiate chat.</p>
+        </div>
+        <div class="requests-grid" id="unassignedClientsGrid"></div>
     </div>
 
     <!-- Sessions Tab -->
@@ -1164,6 +1300,40 @@
                 <button id="sendChatBtn" onclick="sendMessage()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Chat Tab (NEW) -->
+    <div class="tab-content" id="clientChatTab">
+        <div class="split-view">
+            <!-- Client List -->
+            <div class="client-list" id="activeClientsList">
+                <div style="padding: 15px; border-bottom: 1px solid #F3F4F6;">
+                    <h4>Your Active Clients</h4>
+                </div>
+                <div id="clientsListContainer"></div>
+            </div>
+            
+            <!-- Chat Area -->
+            <div class="chat-section" style="height: 600px;">
+                <div id="clientChatHeader" style="padding: 15px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 10px;">
+                    <div class="client-avatar" id="selectedClientAvatar">C</div>
+                    <div style="flex: 1;">
+                        <h4 id="selectedClientName">Select a client to start chatting</h4>
+                        <div id="selectedClientInfo" class="client-meta"></div>
+                    </div>
+                    <button class="btn btn-rate" onclick="showRatingModal(selectedClientId)" id="rateClientBtn" style="display: none;">
+                        <i class="fas fa-star"></i> Rate Client
+                    </button>
+                </div>
+                <div class="chat-messages" id="clientChatMessages"></div>
+                <div class="chat-input-area">
+                    <textarea id="clientChatInput" placeholder="Type your message..." rows="1" disabled></textarea>
+                    <button id="sendClientChatBtn" onclick="sendClientMessage()" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1360,23 +1530,59 @@
     </div>
 </div>
 
+<!-- Rating Modal (NEW) -->
+<div class="modal" id="ratingModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-star"></i> Rate Client</h3>
+            <button class="modal-close" onclick="closeModal('ratingModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="ratingForm">
+                <input type="hidden" id="ratingClientId">
+                <div class="form-group">
+                    <label>Rating</label>
+                    <div style="display: flex; gap: 10px; justify-content: center; margin: 20px 0;">
+                        <span class="rating-star" onclick="setRating(1)">★</span>
+                        <span class="rating-star" onclick="setRating(2)">★</span>
+                        <span class="rating-star" onclick="setRating(3)">★</span>
+                        <span class="rating-star" onclick="setRating(4)">★</span>
+                        <span class="rating-star" onclick="setRating(5)">★</span>
+                    </div>
+                    <input type="hidden" id="ratingValue" value="5">
+                </div>
+                <div class="form-group">
+                    <label>Comments (Optional)</label>
+                    <textarea class="form-control" id="ratingComment" rows="3" placeholder="Any feedback about this client..."></textarea>
+                </div>
+                <button type="submit" class="btn-save">Submit Rating</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 let pendingRequests = [];
+let unassignedClients = [];
 let upcomingSessions = [];
 let messages = [];
 let disputes = [];
-let currentClientId = null;
+let activeClients = [];
+let selectedClientId = null;
 let timerInterval;
+let currentRating = 5;
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', function() {
     loadProfessionalData();
     loadRequests();
+    loadUnassignedClients();
     loadSessions();
     loadEarnings();
     loadWebinars();
     loadMessages();
     loadDisputes();
+    loadActiveClients();
     initCalendar();
     startTimerCheck();
 });
@@ -1455,6 +1661,90 @@ function displayRequests() {
     }).join('');
 }
 
+// NEW: Load unassigned clients
+async function loadUnassignedClients() {
+    try {
+        const response = await fetch('/professional/api/unassigned-clients');
+        unassignedClients = await response.json();
+        document.getElementById('unassignedBadge').textContent = unassignedClients.length;
+        displayUnassignedClients();
+    } catch (error) {
+        console.error('Error loading unassigned clients:', error);
+    }
+}
+
+function displayUnassignedClients() {
+    const grid = document.getElementById('unassignedClientsGrid');
+    
+    if (!unassignedClients.length) {
+        grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; padding: 50px;">No available clients at this time</p>';
+        return;
+    }
+    
+    grid.innerHTML = unassignedClients.map(c => {
+        const ratingStars = getRatingStars(c.client_rating);
+        
+        return `
+            <div class="request-card" id="client-${c.id}">
+                <div class="request-header">
+                    <span class="request-type">${c.session_type} Session</span>
+                    <span class="request-type" style="background: ${getRiskColor(c.risk_level)}; color: white;">
+                        Risk: ${c.risk_level}
+                    </span>
+                </div>
+                <div class="request-body">
+                    <p><strong>Issue:</strong> ${c.issue_description.substring(0, 150)}...</p>
+                    <div class="request-meta">
+                        <span><i class="fas fa-calendar"></i> Prefers: ${c.preferred_date || 'Flexible'}</span>
+                        <span><i class="fas fa-clock"></i> ${c.preferred_time || 'Flexible'}</span>
+                        <span><i class="fas fa-history"></i> Previous sessions: ${c.previous_sessions}</span>
+                    </div>
+                    <div class="client-rating" style="margin: 10px 0;">
+                        <span style="color: #FFD700;">${ratingStars}</span>
+                        <span style="color: #6b7280; margin-left: 5px;">(${c.client_rating.toFixed(1)})</span>
+                    </div>
+                </div>
+                <div class="request-actions">
+                    <button class="btn btn-chat" onclick="startChatWithClient(${c.client_id})">
+                        <i class="fas fa-comments"></i> Start Chat
+                    </button>
+                    <button class="btn btn-accept" onclick="acceptClientRequest(${c.id})">
+                        <i class="fas fa-check"></i> Accept Request
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function getRatingStars(rating) {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    
+    return '★'.repeat(fullStars) + (halfStar ? '½' : '') + '☆'.repeat(emptyStars);
+}
+
+function getRiskColor(risk) {
+    const colors = {
+        'low': '#10B981',
+        'medium': '#F59E0B',
+        'high': '#EF4444',
+        'critical': '#7F1D1D'
+    };
+    return colors[risk] || '#6B7280';
+}
+
+function getRiskClass(risk) {
+    const classes = {
+        'low': 'risk-low',
+        'medium': 'risk-medium',
+        'high': 'risk-high',
+        'critical': 'risk-high'
+    };
+    return classes[risk] || 'risk-low';
+}
+
 function getTimeLeft(expiresAt) {
     const now = new Date();
     const expiry = new Date(expiresAt);
@@ -1496,10 +1786,7 @@ async function handleExpiredRequest(requestId) {
         
         const result = await response.json();
         if (result.success) {
-            // Remove from UI
             document.getElementById(`request-${requestId}`)?.remove();
-            
-            // Refresh requests
             loadRequests();
         }
     } catch (error) {
@@ -1514,7 +1801,6 @@ function showNotification(request) {
         `A client needs a ${request.session_type} session. You have ${timeLeft.minutes} minutes to respond.`;
     document.getElementById('notificationBar').style.display = 'flex';
     
-    // Auto-hide after 30 seconds
     setTimeout(() => {
         document.getElementById('notificationBar').style.display = 'none';
     }, 30000);
@@ -1581,46 +1867,178 @@ async function declineRequest(requestId) {
     }
 }
 
-function openPostponeModal(requestId) {
-    document.getElementById('postponeSessionId').value = requestId;
-    
-    // Set min date to tomorrow
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    document.getElementById('postponeDate').min = tomorrow.toISOString().split('T')[0];
-    
-    openModal('postponeModal');
+function acceptClientRequest(requestId) {
+    acceptRequest(requestId);
 }
 
-document.getElementById('postponeForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+// Chat with client functions
+async function startChatWithClient(clientId) {
+    selectedClientId = clientId;
     
-    const requestId = document.getElementById('postponeSessionId').value;
-    const data = {
-        date: document.getElementById('postponeDate').value,
-        time: document.getElementById('postponeTime').value,
-        reason: document.getElementById('postponeReason').value
-    };
+    document.getElementById('clientChatInput').disabled = false;
+    document.getElementById('sendClientChatBtn').disabled = false;
+    document.getElementById('rateClientBtn').style.display = 'block';
+    document.getElementById('clientChatInput').focus();
+    
+    const client = unassignedClients.find(c => c.client_id === clientId) || 
+                   activeClients.find(c => c.client_id === clientId);
+    
+    if (client) {
+        document.getElementById('selectedClientName').textContent = `Client #${clientId}`;
+        document.getElementById('selectedClientAvatar').textContent = 'C';
+        document.getElementById('selectedClientInfo').innerHTML = `
+            <span class="client-rating">${getRatingStars(client.client_rating)} (${client.client_rating.toFixed(1)})</span>
+            <span class="risk-badge ${getRiskClass(client.risk_level)}">${client.risk_level} risk</span>
+        `;
+    }
+    
+    await loadClientChatHistory(clientId);
+    showTab('clientChat');
+}
+
+async function loadClientChatHistory(clientId) {
+    try {
+        const response = await fetch(`/professional/api/client-chat/${clientId}/history`);
+        const messages = await response.json();
+        displayClientChatMessages(messages);
+    } catch (error) {
+        console.error('Error loading chat history:', error);
+    }
+}
+
+function displayClientChatMessages(messages) {
+    const chatDiv = document.getElementById('clientChatMessages');
+    chatDiv.innerHTML = messages.map(m => `
+        <div class="message ${m.sent_by_me ? 'sent' : 'received'}">
+            <img src="${m.sent_by_me ? '/static/images/default-avatar.jpg' : '/static/images/anonymous-avatar.jpg'}" 
+                 class="message-avatar">
+            <div class="message-content">
+                <div>${m.content}</div>
+                <div class="message-time">${new Date(m.timestamp).toLocaleTimeString()}</div>
+            </div>
+        </div>
+    `).join('');
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+
+async function sendClientMessage() {
+    if (!selectedClientId) {
+        Swal.fire('No Client Selected', 'Please select a client to chat with', 'warning');
+        return;
+    }
+    
+    const input = document.getElementById('clientChatInput');
+    const message = input.value.trim();
+    if (!message) return;
     
     try {
-        const response = await fetch(`/professional/api/session-requests/${requestId}/postpone`, {
+        const response = await fetch('/professional/api/client-chat/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                client_id: selectedClientId,
+                message: message
+            })
         });
         
         const result = await response.json();
         if (result.success) {
-            Swal.fire('Postponed', 'Postponement requested. Client will be notified.', 'success');
-            closeModal('postponeModal');
-            loadRequests();
+            const chatDiv = document.getElementById('clientChatMessages');
+            chatDiv.innerHTML += `
+                <div class="message sent">
+                    <img src="/static/images/default-avatar.jpg" class="message-avatar">
+                    <div class="message-content">
+                        <div>${message}</div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            `;
+            input.value = '';
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+}
+
+// Rating functions
+function setRating(rating) {
+    currentRating = rating;
+    document.getElementById('ratingValue').value = rating;
+    
+    const stars = document.querySelectorAll('.rating-star');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.style.color = '#FFD700';
+        } else {
+            star.style.color = '#E5E7EB';
+        }
+    });
+}
+
+function showRatingModal(clientId) {
+    selectedClientId = clientId;
+    document.getElementById('ratingClientId').value = clientId;
+    setRating(5); // Default to 5 stars
+    openModal('ratingModal');
+}
+
+document.getElementById('ratingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const clientId = document.getElementById('ratingClientId').value;
+    const rating = document.getElementById('ratingValue').value;
+    const comment = document.getElementById('ratingComment').value;
+    
+    try {
+        const response = await fetch('/professional/api/rate-client', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                client_id: parseInt(clientId),
+                rating: parseInt(rating),
+                comment: comment
+            })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            Swal.fire('Thank You!', 'Your rating has been recorded', 'success');
+            closeModal('ratingModal');
         } else {
             Swal.fire('Error', result.message, 'error');
         }
     } catch (error) {
-        Swal.fire('Error', 'Failed to postpone session', 'error');
+        console.error('Error rating client:', error);
+        Swal.fire('Error', 'Failed to submit rating', 'error');
     }
 });
+
+// Load active clients for chat sidebar
+async function loadActiveClients() {
+    try {
+        const response = await fetch('/professional/api/sessions?active_only=true');
+        const data = await response.json();
+        activeClients = data.active_clients || [];
+        
+        const container = document.getElementById('clientsListContainer');
+        container.innerHTML = activeClients.map(c => `
+            <div class="client-item" onclick="startChatWithClient(${c.client_id})">
+                <div class="client-avatar">C</div>
+                <div class="client-info">
+                    <div class="client-name">Client #${c.client_id}</div>
+                    <div class="client-meta">
+                        <span class="client-rating">${getRatingStars(c.rating || 0)}</span>
+                        <span class="risk-badge ${getRiskClass(c.risk_level)}">${c.risk_level}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('') || '<p style="padding: 20px; text-align: center;">No active clients</p>';
+        
+    } catch (error) {
+        console.error('Error loading active clients:', error);
+    }
+}
 
 async function loadSessions() {
     try {
@@ -1631,19 +2049,21 @@ async function loadSessions() {
         const pastDiv = document.getElementById('pastSessionsList');
         
         upcomingDiv.innerHTML = data.upcoming.map(s => `
-            <div class="session-card">
-                <div class="session-date">${new Date(s.date).toLocaleDateString()} at ${s.time}</div>
-                <div class="session-title">${s.title}</div>
-                <div class="session-status">${s.status}</div>
+            <div class="session-card" style="padding: 15px; border-bottom: 1px solid #F3F4F6;">
+                <div style="display: flex; justify-content: space-between;">
+                    <div><strong>${new Date(s.date).toLocaleDateString()} at ${s.time}</strong></div>
+                    <span class="request-type">${s.status}</span>
+                </div>
+                <div style="margin-top: 5px;">${s.title}</div>
             </div>
-        `).join('') || '<p>No upcoming sessions</p>';
+        `).join('') || '<p style="padding: 20px;">No upcoming sessions</p>';
         
         pastDiv.innerHTML = data.past.map(s => `
-            <div class="session-card">
-                <div class="session-date">${new Date(s.date).toLocaleDateString()}</div>
-                <div class="session-title">${s.title}</div>
+            <div class="session-card" style="padding: 15px; border-bottom: 1px solid #F3F4F6;">
+                <div><strong>${new Date(s.date).toLocaleDateString()}</strong></div>
+                <div style="margin-top: 5px;">${s.title}</div>
             </div>
-        `).join('') || '<p>No past sessions</p>';
+        `).join('') || '<p style="padding: 20px;">No past sessions</p>';
         
     } catch (error) {
         console.error('Error loading sessions:', error);
@@ -1655,7 +2075,6 @@ async function loadEarnings() {
         const response = await fetch('/professional/api/earnings');
         const data = await response.json();
         
-        // Create earnings chart
         const ctx = document.getElementById('earningsChart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
@@ -1692,12 +2111,12 @@ async function loadWebinars() {
         
         const listDiv = document.getElementById('webinarsList');
         listDiv.innerHTML = webinars.map(w => `
-            <div class="webinar-card">
+            <div class="webinar-card" style="padding: 15px; border-bottom: 1px solid #F3F4F6;">
                 <h4>${w.title}</h4>
                 <p>${new Date(w.date).toLocaleDateString()} at ${w.time}</p>
                 <p>Participants: ${w.current_participants}/${w.max_participants}</p>
             </div>
-        `).join('') || '<p>No webinars scheduled</p>';
+        `).join('') || '<p style="padding: 20px;">No webinars scheduled</p>';
         
     } catch (error) {
         console.error('Error loading webinars:', error);
@@ -1963,6 +2382,46 @@ function previewAvatar(input) {
     }
 }
 
+function openPostponeModal(requestId) {
+    document.getElementById('postponeSessionId').value = requestId;
+    
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('postponeDate').min = tomorrow.toISOString().split('T')[0];
+    
+    openModal('postponeModal');
+}
+
+document.getElementById('postponeForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const requestId = document.getElementById('postponeSessionId').value;
+    const data = {
+        date: document.getElementById('postponeDate').value,
+        time: document.getElementById('postponeTime').value,
+        reason: document.getElementById('postponeReason').value
+    };
+    
+    try {
+        const response = await fetch(`/professional/api/session-requests/${requestId}/postpone`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            Swal.fire('Postponed', 'Postponement requested. Client will be notified.', 'success');
+            closeModal('postponeModal');
+            loadRequests();
+        } else {
+            Swal.fire('Error', result.message, 'error');
+        }
+    } catch (error) {
+        Swal.fire('Error', 'Failed to postpone session', 'error');
+    }
+});
+
 function saveSettings() {
     const settings = {
         email_notifications: document.getElementById('emailNotifications').checked,
@@ -1980,6 +2439,13 @@ function showTab(tab) {
     
     event.target.classList.add('active');
     document.getElementById(tab + 'Tab').classList.add('active');
+    
+    // Load tab-specific data
+    if (tab === 'unassigned') {
+        loadUnassignedClients();
+    } else if (tab === 'clientChat') {
+        loadActiveClients();
+    }
 }
 
 function openModal(modalId) {
@@ -2008,8 +2474,20 @@ document.getElementById('chatInput').addEventListener('keydown', function(e) {
     }
 });
 
+document.getElementById('clientChatInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendClientMessage();
+    }
+});
+
 // Auto-resize textarea
 document.getElementById('chatInput').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
+
+document.getElementById('clientChatInput').addEventListener('input', function() {
     this.style.height = 'auto';
     this.style.height = (this.scrollHeight) + 'px';
 });
@@ -2021,4 +2499,71 @@ window.addEventListener('beforeunload', function() {
     }
 });
 </script>
+
+<style>
+    .rating-star {
+        font-size: 2rem;
+        cursor: pointer;
+        color: #E5E7EB;
+        transition: color 0.3s;
+    }
+    
+    .rating-star:hover {
+        transform: scale(1.2);
+    }
+    
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+    
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+    
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    
+    input:checked + .toggle-slider {
+        background-color: var(--primary);
+    }
+    
+    input:checked + .toggle-slider:before {
+        transform: translateX(26px);
+    }
+    
+    .badge {
+        background: var(--danger);
+        color: white;
+        border-radius: 10px;
+        padding: 2px 6px;
+        font-size: 0.7rem;
+        margin-left: 5px;
+    }
+</style>
 {% endblock %}
