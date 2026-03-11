@@ -1,4 +1,4 @@
-# models.py - COMPLETE WITH ALL ORIGINAL AND NEW FEATURES - RELATIONSHIP ERROR FIXED
+# models.py - COMPLETE WORKING VERSION - RELATIONSHIP ERROR FIXED
 from extensions import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
@@ -297,7 +297,7 @@ class Department(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
     
-    # Fixed: Proper ForeignKey to department_heads.id
+    # FIXED: Proper ForeignKey to department_heads.id
     head_id = db.Column(db.Integer, db.ForeignKey('department_heads.id'), nullable=True)
     
     # Statistics
@@ -310,16 +310,15 @@ class Department(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # FIXED: Relationships with proper remote_side to resolve direction conflict
+    # FIXED: Relationships - REMOVED remote_side from here
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='departments')
     employees_list = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')
     
-    # FIXED: Added remote_side to resolve the many-to-one direction conflict
+    # FIXED: This side should NOT have remote_side
     head = db.relationship('DepartmentHead', 
                           foreign_keys=[head_id], 
                           back_populates='department', 
-                          uselist=False,
-                          remote_side='DepartmentHead.id')  # Added remote_side
+                          uselist=False)
     
     def update_stats(self):
         employees = Client.query.filter_by(department_id=self.id).all()
@@ -347,16 +346,16 @@ class DepartmentHead(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # FIXED: Relationships with proper remote_side to resolve direction conflict
+    # FIXED: Relationships - remote_side ONLY on this side
     user = db.relationship('User', foreign_keys=[user_id], back_populates='department_head_profile')
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='department_heads')
     
-    # FIXED: Added remote_side to resolve the many-to-one direction conflict
+    # FIXED: This side SHOULD have remote_side (the "many" side)
     department = db.relationship('Department', 
                                 foreign_keys=[department_id], 
                                 back_populates='head', 
                                 uselist=False,
-                                remote_side='Department.id')  # Added remote_side
+                                remote_side='Department.id')  # Keep remote_side here
     
     def get_department_stats(self):
         if not self.department:
