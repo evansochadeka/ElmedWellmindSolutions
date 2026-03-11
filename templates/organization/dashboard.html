@@ -1,0 +1,1469 @@
+<!-- templates/organization/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Dashboard | Elmed Wellmind</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+            --gradient-primary: linear-gradient(135deg, #667eea, #764ba2);
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F3F4F6;
+            min-height: 100vh;
+        }
+
+        /* Custom Header - No navigation, just title and user menu */
+        .org-header {
+            background: white;
+            box-shadow: var(--shadow-sm);
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .org-header h1 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .org-header h1 i {
+            color: var(--primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray);
+            text-decoration: none;
+        }
+
+        .user-menu-item:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--light);
+        }
+
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--light);
+            color: var(--primary);
+            padding-left: 25px;
+        }
+
+        .dropdown-menu i {
+            width: 20px;
+            color: var(--primary);
+        }
+
+        .dashboard-container {
+            padding: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Welcome Section */
+        .welcome-card {
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .welcome-content p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .employee-code {
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.2rem;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .employee-code i {
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .employee-code i:hover {
+            transform: scale(1.2);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .stat-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .stat-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Department Grid */
+        .dept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .dept-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .dept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .dept-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .dept-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .dept-count {
+            background: var(--light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .dept-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--light);
+        }
+
+        .dept-stat {
+            text-align: center;
+        }
+
+        .dept-stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .dept-stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .risk-high { color: var(--danger); }
+        .risk-medium { color: var(--warning); }
+        .risk-low { color: var(--success); }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 10px;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            border-radius: 25px;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            background: #F3F4F6;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Professionals Grid */
+        .professionals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .professional-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            cursor: pointer;
+        }
+
+        .professional-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .card-header {
+            height: 80px;
+            background: var(--gradient-primary);
+            position: relative;
+        }
+
+        .profile-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: absolute;
+            bottom: -40px;
+            left: 20px;
+            object-fit: cover;
+            background: white;
+        }
+
+        .card-body {
+            padding: 50px 20px 20px;
+        }
+
+        .professional-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .professional-type {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            color: #FFD700;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .specializations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .specialization-tag {
+            background: var(--light);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border-top: 1px solid var(--light);
+        }
+
+        .action-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* AI Chat Section */
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-top: 30px;
+        }
+
+        .chat-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            background: var(--light);
+            padding: 12px 18px;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.sent .message-content {
+            background: var(--gradient-primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 18px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid var(--light);
+            display: flex;
+            gap: 10px;
+        }
+
+        #chatInput {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid var(--light);
+            border-radius: 25px;
+            resize: none;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        #chatInput:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        #sendChatBtn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        #sendChatBtn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Professional Profile Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .profile-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .profile-section h4 {
+            margin-bottom: 10px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-large {
+            font-size: 1.2rem;
+            color: #FFD700;
+        }
+
+        .specializations-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .specialization-item {
+            background: var(--light);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .complaint-form {
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Complaint List */
+        .complaint-item {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .complaint-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .complaint-status {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .status-resolved { background: #D1FAE5; color: #065F46; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 20px;
+            }
+
+            .welcome-content h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Organization Header (No navigation, just user menu) -->
+    <header class="org-header">
+        <h1>
+            <i class="fas fa-building"></i>
+            <span id="orgName">Organization Dashboard</span>
+        </h1>
+        <div class="user-menu">
+            <div class="user-menu-item" onclick="openAIChat()">
+                <i class="fas fa-robot"></i>
+                <span>AI Assistant</span>
+            </div>
+            <div class="user-menu-item" onclick="window.location.href='/assessment/take'">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Assessment</span>
+            </div>
+            <div class="user-dropdown">
+                <div class="user-avatar" onclick="toggleDropdown()">
+                    {{ current_user.get_full_name()[0] }}
+                </div>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="#" onclick="showProfile()"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#" onclick="showComplaints()"><i class="fas fa-exclamation-triangle"></i> My Complaints</a>
+                    <a href="/auth/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <div class="welcome-content">
+                <h1>Welcome back, {{ current_user.get_full_name() }}! 👋</h1>
+                <p>Manage your organization's wellness program, track employee progress, and connect with professionals.</p>
+                <div class="employee-code" id="employeeCode">
+                    <i class="fas fa-qrcode"></i>
+                    <span id="codeText">{{ organization.employee_registration_code }}</span>
+                    <i class="fas fa-copy" onclick="copyCode()" title="Copy code"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-content">
+                    <h3 id="totalEmployees">0</h3>
+                    <p>Total Employees</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                <div class="stat-content">
+                    <h3 id="activeToday">0</h3>
+                    <p>Active Today</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-content">
+                    <h3 id="totalSessions">0</h3>
+                    <p>Sessions Completed</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-heartbeat"></i></div>
+                <div class="stat-content">
+                    <h3 id="avgWellness">0</h3>
+                    <p>Avg Wellness Score</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('overview')">
+                <i class="fas fa-chart-pie"></i> Overview
+            </button>
+            <button class="tab-btn" onclick="showTab('departments')">
+                <i class="fas fa-sitemap"></i> Departments
+            </button>
+            <button class="tab-btn" onclick="showTab('employees')">
+                <i class="fas fa-users"></i> Employees
+            </button>
+            <button class="tab-btn" onclick="showTab('professionals')">
+                <i class="fas fa-user-md"></i> Professionals
+            </button>
+            <button class="tab-btn" onclick="showTab('sessions')">
+                <i class="fas fa-calendar"></i> Sessions
+            </button>
+            <button class="tab-btn" onclick="showTab('complaints')">
+                <i class="fas fa-exclamation-triangle"></i> Complaints
+            </button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div class="tab-content active" id="overviewTab">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
+                <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+                    <h3 style="margin-bottom: 20px;">Wellness Distribution</h3>
+                    <canvas id="wellnessChart" style="width:100%; height:300px;"></canvas>
+                </div>
+                <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+                    <h3 style="margin-bottom: 20px;">Department Breakdown</h3>
+                    <canvas id="deptChart" style="width:100%; height:300px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departments Tab -->
+        <div class="tab-content" id="departmentsTab">
+            <div class="dept-grid" id="deptGrid"></div>
+        </div>
+
+        <!-- Employees Tab -->
+        <div class="tab-content" id="employeesTab">
+            <div class="stat-card">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--light);">
+                            <th style="padding: 15px; text-align: left;">Employee ID</th>
+                            <th style="padding: 15px; text-align: left;">Department</th>
+                            <th style="padding: 15px; text-align: left;">Wellness Score</th>
+                            <th style="padding: 15px; text-align: left;">Risk Level</th>
+                            <th style="padding: 15px; text-align: left;">Last Active</th>
+                            <th style="padding: 15px; text-align: left;">Sessions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeesTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Professionals Tab -->
+        <div class="tab-content" id="professionalsTab">
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="searchProfessionals" placeholder="Search professionals..." style="width: 100%; padding: 15px; border: 2px solid var(--light); border-radius: 10px;">
+            </div>
+            <div class="professionals-grid" id="professionalsGrid"></div>
+        </div>
+
+        <!-- Sessions Tab -->
+        <div class="tab-content" id="sessionsTab">
+            <div class="stat-card">
+                <h3 style="margin-bottom: 20px;">Upcoming Sessions</h3>
+                <div id="sessionsList"></div>
+            </div>
+        </div>
+
+        <!-- Complaints Tab -->
+        <div class="tab-content" id="complaintsTab">
+            <div class="stat-card">
+                <h3 style="margin-bottom: 20px;">Your Complaints</h3>
+                <div id="complaintsList"></div>
+            </div>
+        </div>
+
+        <!-- AI Chat Section -->
+        <div class="chat-container" id="aiChat" style="display: none;">
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h3>Elmed AI Assistant</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.9;">Ask me anything about mental wellness</p>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message received">
+                    <div class="message-content">
+                        Hello! I'm your AI assistant. How can I help you today?
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea>
+                <button id="sendChatBtn" onclick="sendAIMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Profile Modal -->
+    <div class="modal" id="professionalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-md"></i> Professional Profile</h3>
+                <button class="modal-close" onclick="closeModal('professionalModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="professionalModalBody">
+                <!-- Content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Complaint Modal -->
+    <div class="modal" id="complaintModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Submit Complaint</h3>
+                <button class="modal-close" onclick="closeModal('complaintModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="complaintForm">
+                    <input type="hidden" id="complaintProfessionalId">
+                    <div class="profile-section">
+                        <h4>Professional: <span id="complaintProfessionalName"></span></h4>
+                    </div>
+                    <div class="complaint-form">
+                        <label>Complaint Type</label>
+                        <select id="complaintType" class="form-control" style="width: 100%; padding: 12px; border: 2px solid var(--light); border-radius: 10px; margin-bottom: 15px;">
+                            <option value="unprofessional">Unprofessional Conduct</option>
+                            <option value="missed_session">Missed Session</option>
+                            <option value="late_arrival">Late Arrival</option>
+                            <option value="billing">Billing Issue</option>
+                            <option value="other">Other</option>
+                        </select>
+                        
+                        <label>Description</label>
+                        <textarea id="complaintDescription" rows="4" placeholder="Describe your complaint in detail..." required></textarea>
+                        
+                        <button type="submit" class="btn btn-primary">Submit Complaint</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let organizationData = {};
+        let professionals = [];
+        let currentChatSession = 'org_' + Date.now();
+
+        // Load dashboard data
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrganizationData();
+            loadProfessionals();
+            loadComplaints();
+            initCharts();
+        });
+
+        async function loadOrganizationData() {
+            try {
+                const response = await fetch('/organization/api/dashboard/data');
+                const data = await response.json();
+                organizationData = data;
+                
+                document.getElementById('totalEmployees').textContent = data.stats.total_employees || 0;
+                document.getElementById('activeToday').textContent = data.stats.active_today || 0;
+                document.getElementById('totalSessions').textContent = data.stats.total_sessions || 0;
+                document.getElementById('avgWellness').textContent = data.stats.avg_wellness?.toFixed(1) || 0;
+                
+                updateDepartmentGrid(data.departments);
+                updateEmployeesTable(data.employees);
+                updateCharts(data);
+                
+            } catch (error) {
+                console.error('Error loading organization data:', error);
+            }
+        }
+
+        function updateDepartmentGrid(departments) {
+            const grid = document.getElementById('deptGrid');
+            if (!departments || departments.length === 0) {
+                grid.innerHTML = '<p>No departments created yet</p>';
+                return;
+            }
+            
+            grid.innerHTML = departments.map(dept => `
+                <div class="dept-card">
+                    <div class="dept-header">
+                        <span class="dept-name">${dept.name}</span>
+                        <span class="dept-count">${dept.employee_count} employees</span>
+                    </div>
+                    <div class="dept-stats">
+                        <div class="dept-stat">
+                            <div class="dept-stat-value ${dept.avg_wellness > 70 ? 'risk-low' : dept.avg_wellness > 40 ? 'risk-medium' : 'risk-high'}">${dept.avg_wellness?.toFixed(1)}</div>
+                            <div class="dept-stat-label">Avg Wellness</div>
+                        </div>
+                        <div class="dept-stat">
+                            <div class="dept-stat-value risk-high">${dept.high_risk}</div>
+                            <div class="dept-stat-label">High Risk</div>
+                        </div>
+                        <div class="dept-stat">
+                            <div class="dept-stat-value">${dept.active_today || 0}</div>
+                            <div class="dept-stat-label">Active</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateEmployeesTable(employees) {
+            const tbody = document.getElementById('employeesTableBody');
+            if (!employees || employees.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px;">No employees registered yet</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = employees.map(emp => `
+                <tr style="border-bottom: 1px solid var(--light);">
+                    <td style="padding: 15px;">EMP-${emp.id}</td>
+                    <td style="padding: 15px;">${emp.department || 'N/A'}</td>
+                    <td style="padding: 15px;">${emp.wellness_score?.toFixed(1) || 0}</td>
+                    <td style="padding: 15px;"><span class="risk-${emp.risk_level}">${emp.risk_level}</span></td>
+                    <td style="padding: 15px;">${emp.last_active ? new Date(emp.last_active).toLocaleDateString() : 'Never'}</td>
+                    <td style="padding: 15px;">${emp.sessions || 0}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadProfessionals() {
+            try {
+                const response = await fetch('/organization/api/professionals');
+                professionals = await response.json();
+                displayProfessionals(professionals);
+            } catch (error) {
+                console.error('Error loading professionals:', error);
+            }
+        }
+
+        function displayProfessionals(pros) {
+            const grid = document.getElementById('professionalsGrid');
+            grid.innerHTML = pros.map(p => `
+                <div class="professional-card" onclick="viewProfessional(${p.id})">
+                    <div class="card-header">
+                        <img src="${p.profile_pic ? '/static/uploads/profiles/' + p.profile_pic : '/static/images/default-avatar.jpg'}" 
+                             class="profile-image" alt="${p.name}">
+                    </div>
+                    <div class="card-body">
+                        <div class="professional-name">${p.name}</div>
+                        <div class="professional-type">${p.type}</div>
+                        <div class="rating">
+                            ${getRatingStars(p.average_rating)}
+                        </div>
+                        <div class="specializations">
+                            ${p.specializations.slice(0, 3).map(s => `<span class="specialization-tag">${s}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span>${p.years_experience} yrs exp</span>
+                        <button class="action-btn" onclick="event.stopPropagation(); viewProfessional(${p.id})">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getRatingStars(rating) {
+            const full = Math.floor(rating);
+            const half = rating % 1 >= 0.5;
+            let stars = '';
+            for (let i = 0; i < full; i++) stars += '<i class="fas fa-star"></i>';
+            if (half) stars += '<i class="fas fa-star-half-alt"></i>';
+            for (let i = 0; i < 5 - full - (half ? 1 : 0); i++) stars += '<i class="far fa-star"></i>';
+            return stars;
+        }
+
+        async function viewProfessional(professionalId) {
+            const pro = professionals.find(p => p.id === professionalId);
+            if (!pro) return;
+            
+            const modalBody = document.getElementById('professionalModalBody');
+            modalBody.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="${pro.profile_pic ? '/static/uploads/profiles/' + pro.profile_pic : '/static/images/default-avatar.jpg'}" 
+                         style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 15px;">
+                    <h2>${pro.name}</h2>
+                    <p>${pro.type}</p>
+                    <div class="rating-large">${getRatingStars(pro.average_rating)} (${pro.review_count || 0} reviews)</div>
+                </div>
+                
+                <div class="profile-section">
+                    <h4><i class="fas fa-graduation-cap"></i> Qualifications</h4>
+                    <p><strong>License:</strong> ${pro.license_number}</p>
+                    <p><strong>Experience:</strong> ${pro.years_experience} years</p>
+                </div>
+                
+                <div class="profile-section">
+                    <h4><i class="fas fa-tags"></i> Specializations</h4>
+                    <div class="specializations-list">
+                        ${pro.specializations.map(s => `<span class="specialization-item">${s}</span>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h4><i class="fas fa-chart-line"></i> Statistics</h4>
+                    <p><strong>Sessions:</strong> ${pro.total_sessions}</p>
+                    <p><strong>Response Rate:</strong> ${pro.response_rate}%</p>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-primary" style="flex: 1;" onclick="initiateChat(${pro.id})">
+                        <i class="fas fa-comments"></i> Chat
+                    </button>
+                    <button class="btn btn-danger" style="flex: 1;" onclick="openComplaintModal(${pro.id}, '${pro.name}')">
+                        <i class="fas fa-exclamation-triangle"></i> Complain
+                    </button>
+                </div>
+            `;
+            
+            openModal('professionalModal');
+        }
+
+        function openComplaintModal(professionalId, professionalName) {
+            document.getElementById('complaintProfessionalId').value = professionalId;
+            document.getElementById('complaintProfessionalName').textContent = professionalName;
+            closeModal('professionalModal');
+            openModal('complaintModal');
+        }
+
+        document.getElementById('complaintForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const professionalId = document.getElementById('complaintProfessionalId').value;
+            const data = {
+                professional_id: professionalId,
+                type: document.getElementById('complaintType').value,
+                description: document.getElementById('complaintDescription').value
+            };
+            
+            try {
+                const response = await fetch('/organization/api/submit-complaint', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    Swal.fire('Success', 'Complaint submitted successfully', 'success');
+                    closeModal('complaintModal');
+                    loadComplaints();
+                } else {
+                    Swal.fire('Error', result.message, 'error');
+                }
+            } catch (error) {
+                Swal.fire('Error', 'Failed to submit complaint', 'error');
+            }
+        });
+
+        async function loadComplaints() {
+            try {
+                const response = await fetch('/organization/api/complaints');
+                const complaints = await response.json();
+                displayComplaints(complaints);
+            } catch (error) {
+                console.error('Error loading complaints:', error);
+            }
+        }
+
+        function displayComplaints(complaints) {
+            const list = document.getElementById('complaintsList');
+            if (!complaints || complaints.length === 0) {
+                list.innerHTML = '<p>No complaints submitted</p>';
+                return;
+            }
+            
+            list.innerHTML = complaints.map(c => `
+                <div class="complaint-item">
+                    <div class="complaint-header">
+                        <span><strong>Against:</strong> ${c.professional_name}</span>
+                        <span class="complaint-status status-${c.status}">${c.status}</span>
+                    </div>
+                    <p><strong>Type:</strong> ${c.type}</p>
+                    <p>${c.description}</p>
+                    <small>Submitted: ${new Date(c.created_at).toLocaleDateString()}</small>
+                    ${c.response ? `<p><strong>Response:</strong> ${c.response}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function initiateChat(professionalId) {
+            closeModal('professionalModal');
+            // Implement chat with professional
+            Swal.fire('Coming Soon', 'Direct chat with professionals will be available soon', 'info');
+        }
+
+        function openAIChat() {
+            document.getElementById('aiChat').style.display = 'block';
+            document.getElementById('aiChat').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const messagesDiv = document.getElementById('chatMessages');
+            
+            // Add user message
+            messagesDiv.innerHTML += `
+                <div class="message sent">
+                    <div class="message-content">
+                        ${message}
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            `;
+            
+            input.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: currentChatSession
+                    })
+                });
+                
+                const data = await response.json();
+                
+                messagesDiv.innerHTML += `
+                    <div class="message received">
+                        <div class="message-content">
+                            ${data.response}
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                `;
+                
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                
+            } catch (error) {
+                messagesDiv.innerHTML += `
+                    <div class="message received">
+                        <div class="message-content">
+                            I'm having trouble connecting. Please try again.
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeText').textContent;
+            navigator.clipboard.writeText(code);
+            Swal.fire('Copied!', 'Employee code copied to clipboard', 'success');
+        }
+
+        function toggleDropdown() {
+            document.getElementById('userDropdown').classList.toggle('active');
+        }
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-dropdown')) {
+                document.getElementById('userDropdown')?.classList.remove('active');
+            }
+        });
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function showProfile() {
+            Swal.fire({
+                title: 'Profile Information',
+                html: `
+                    <p><strong>Name:</strong> {{ current_user.get_full_name() }}</p>
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    <p><strong>Phone:</strong> {{ current_user.phone }}</p>
+                    <p><strong>Role:</strong> Organization Admin</p>
+                `,
+                icon: 'info'
+            });
+        }
+
+        function showSettings() {
+            Swal.fire('Settings', 'Organization settings coming soon', 'info');
+        }
+
+        function showComplaints() {
+            showTab('complaints');
+        }
+
+        function initCharts() {
+            // Wellness Distribution Chart
+            const wellnessCtx = document.getElementById('wellnessChart').getContext('2d');
+            new Chart(wellnessCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['High Risk', 'Medium Risk', 'Low Risk'],
+                    datasets: [{
+                        data: [15, 35, 50],
+                        backgroundColor: ['#EF4444', '#F59E0B', '#10B981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            
+            // Department Chart
+            const deptCtx = document.getElementById('deptChart').getContext('2d');
+            new Chart(deptCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['HR', 'IT', 'Sales', 'Marketing', 'Operations'],
+                    datasets: [{
+                        label: 'Employees',
+                        data: [12, 19, 15, 8, 10],
+                        backgroundColor: '#667eea'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function updateCharts(data) {
+            // Update with real data
+        }
+
+        // Search professionals
+        document.getElementById('searchProfessionals').addEventListener('input', function() {
+            const search = this.value.toLowerCase();
+            const filtered = professionals.filter(p => 
+                p.name.toLowerCase().includes(search) ||
+                p.type.toLowerCase().includes(search) ||
+                p.specializations.some(s => s.toLowerCase().includes(search))
+            );
+            displayProfessionals(filtered);
+        });
+
+        // Enter key to send message
+        document.getElementById('chatInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendAIMessage();
+            }
+        });
+
+        // Auto-resize textarea
+        document.getElementById('chatInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+</body>
+</html>
