@@ -3,14 +3,15 @@ import os
 import sys
 import json
 import threading
+import secrets  # ADDED: Missing import
 from datetime import datetime, timedelta
-import secrets
 
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect, url_for, session
 from flask_cors import CORS
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
 from sqlalchemy import text
+from werkzeug.utils import secure_filename  # ADDED: Missing import
 
 # Load environment variables
 load_dotenv()
@@ -182,9 +183,6 @@ try:
     print("✅ Loaded employee blueprint")
 except ImportError as e:
     print(f"⚠️ Could not load employee blueprint (this is okay if not needed): {e}")
-    # Define a placeholder function for employee dashboard redirect
-    def employee_dashboard():
-        return redirect(url_for('home'))
 
 try:
     from chat_routes import chat_bp
@@ -263,8 +261,6 @@ with app.app_context():
     except Exception as e:
         print(f"❌ PostgreSQL connection failed: {e}")
         print("Please check your DATABASE_URL environment variable")
-        # Don't exit - let the app try to continue in case it's a temporary issue
-        # sys.exit(1)
 
 # --------------------------------------------------
 # ORIGINAL ROUTES - ALL RETAINED
@@ -448,6 +444,13 @@ def assessment_history():
 # DASHBOARD REDIRECT - With fallbacks for missing templates
 # --------------------------------------------------
 
+# ADDED: Missing client dashboard function
+@app.route('/client/dashboard')
+@login_required
+def client_dashboard():
+    """Client dashboard"""
+    return render_template('client/dashboard.html')
+
 @app.route('/dashboard')
 @login_required
 def dashboard_redirect():
@@ -468,11 +471,11 @@ def dashboard_redirect():
             if 'employee' in loaded_blueprints:
                 return redirect(url_for('employee.dashboard'))
             else:
-                return render_template('client/dashboard.html')
+                return redirect(url_for('client_dashboard'))
         else:
-            return render_template('client/dashboard.html')
-    except Exception as e:
-        print(f"Dashboard redirect error: {e}")
+            return redirect(url_for('client_dashboard'))
+    except Exception as err:  # FIXED: Renamed variable to 'err'
+        print(f"Dashboard redirect error: {err}")
         return render_template('index.html')
 
 # --------------------------------------------------
@@ -483,7 +486,7 @@ def dashboard_redirect():
 def not_found(e):
     if request.path.startswith('/api/'):
         return jsonify({"error": "Endpoint not found"}), 404
-    return render_template("index.html"), 200
+    return render_template("404.html"), 404  # FIXED: Use 404 status code
 
 @app.errorhandler(500)
 def internal_error(e):
@@ -491,7 +494,7 @@ def internal_error(e):
     print(f"Internal server error: {e}")
     if request.path.startswith('/api/'):
         return jsonify({"error": "Internal server error"}), 500
-    return render_template("index.html"), 500
+    return render_template("500.html"), 500
 
 # --------------------------------------------------
 # TEMPLATE CONTEXT PROCESSORS
@@ -607,11 +610,12 @@ def test_route():
     return "App is working! Blueprints loaded: " + ", ".join(loaded_blueprints)
 
 # --------------------------------------------------
-# RUN APP
+# RUN APP - This is only for local development
+# Gunicorn will use the app object directly in production
 # --------------------------------------------------
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))  # Changed default to 10000 for Render
+    port = int(os.environ.get("PORT", 10000))
     debug = os.getenv("FLASK_DEBUG", "False").lower() == "true"
     print(f"✅ Starting app on port {port} with debug={debug}")
     print(f"✅ Loaded blueprints: {loaded_blueprints}")
