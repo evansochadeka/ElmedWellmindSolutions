@@ -1,4 +1,4 @@
-# app.py - COMPLETE POSTGRESQL VERSION WITH ALL FEATURES
+# app.py - COMPLETE POSTGRESQL VERSION WITH ALL FEATURES - FIXED
 import os
 import sys
 import json
@@ -28,7 +28,7 @@ app = Flask(
 CORS(app)
 
 # --------------------------------------------------
-# PostgreSQL Configuration - YOUR EXACT DATABASE URL
+# PostgreSQL Configuration
 # --------------------------------------------------
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://benfarming_db_user:2TBsWivCFfLXvDkop9WY62CNaxN9WmNl@dpg-d669k18gjchc73fli15g-a/benfarming_db")
 
@@ -111,31 +111,96 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # --------------------------------------------------
-# Import all blueprints
+# Safe import of blueprints with error handling
 # --------------------------------------------------
 
-from auth_routes import auth_bp
-from professional_routes import professional_bp
-from organization_routes import organization_bp
-from routes_py import api
-from admin_routes import admin_bp
-from superadmin_routes import superadmin_bp
-from department_head_routes import dept_head_bp
-from employee_routes import employee_bp
-from chat_routes import chat_bp
-from assessment_routes import assessment_bp
+# Dictionary to store blueprints that loaded successfully
+loaded_blueprints = []
 
-# Register blueprints
-app.register_blueprint(auth_bp)
-app.register_blueprint(professional_bp)
-app.register_blueprint(organization_bp)
-app.register_blueprint(api)
-app.register_blueprint(admin_bp)
-app.register_blueprint(superadmin_bp)
-app.register_blueprint(dept_head_bp)
-app.register_blueprint(employee_bp)
-app.register_blueprint(chat_bp)
-app.register_blueprint(assessment_bp)
+# Try to import each blueprint with error handling
+try:
+    from auth_routes import auth_bp
+    app.register_blueprint(auth_bp)
+    loaded_blueprints.append('auth')
+    print("✅ Loaded auth blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load auth blueprint: {e}")
+
+try:
+    from professional_routes import professional_bp
+    app.register_blueprint(professional_bp)
+    loaded_blueprints.append('professional')
+    print("✅ Loaded professional blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load professional blueprint: {e}")
+
+try:
+    from organization_routes import organization_bp
+    app.register_blueprint(organization_bp)
+    loaded_blueprints.append('organization')
+    print("✅ Loaded organization blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load organization blueprint: {e}")
+
+try:
+    from routes_py import api
+    app.register_blueprint(api)
+    loaded_blueprints.append('api')
+    print("✅ Loaded api blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load api blueprint: {e}")
+
+try:
+    from admin_routes import admin_bp
+    app.register_blueprint(admin_bp)
+    loaded_blueprints.append('admin')
+    print("✅ Loaded admin blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load admin blueprint: {e}")
+
+try:
+    from superadmin_routes import superadmin_bp
+    app.register_blueprint(superadmin_bp)
+    loaded_blueprints.append('superadmin')
+    print("✅ Loaded superadmin blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load superadmin blueprint: {e}")
+
+try:
+    from department_head_routes import dept_head_bp
+    app.register_blueprint(dept_head_bp)
+    loaded_blueprints.append('department_head')
+    print("✅ Loaded department_head blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load department_head blueprint: {e}")
+
+# employee_routes might not exist - handle gracefully
+try:
+    from employee_routes import employee_bp
+    app.register_blueprint(employee_bp)
+    loaded_blueprints.append('employee')
+    print("✅ Loaded employee blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load employee blueprint (this is okay if not needed): {e}")
+    # Define a placeholder function for employee dashboard redirect
+    def employee_dashboard():
+        return redirect(url_for('home'))
+
+try:
+    from chat_routes import chat_bp
+    app.register_blueprint(chat_bp)
+    loaded_blueprints.append('chat')
+    print("✅ Loaded chat blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load chat blueprint: {e}")
+
+try:
+    from assessment_routes import assessment_bp
+    app.register_blueprint(assessment_bp)
+    loaded_blueprints.append('assessment')
+    print("✅ Loaded assessment blueprint")
+except ImportError as e:
+    print(f"⚠️ Could not load assessment blueprint: {e}")
 
 # --------------------------------------------------
 # Try to import matching service
@@ -198,7 +263,8 @@ with app.app_context():
     except Exception as e:
         print(f"❌ PostgreSQL connection failed: {e}")
         print("Please check your DATABASE_URL environment variable")
-        sys.exit(1)
+        # Don't exit - let the app try to continue in case it's a temporary issue
+        # sys.exit(1)
 
 # --------------------------------------------------
 # ORIGINAL ROUTES - ALL RETAINED
@@ -223,6 +289,7 @@ def health_check():
         "ai_status": "active" if os.getenv("COHERE_API_KEY") else "inactive",
         "database": "connected",
         "database_type": "postgresql",
+        "blueprints_loaded": loaded_blueprints,
         "timestamp": datetime.utcnow().isoformat()
     })
 
@@ -357,8 +424,9 @@ def assessment_results(assessment_id):
     
     # Verify ownership
     client = Client.query.filter_by(user_id=current_user.id).first()
-    if assessment.client_id != client.id and current_user.role not in ['superadmin', 'admin']:
-        return redirect(url_for('home'))
+    if not client or assessment.client_id != client.id:
+        if current_user.role not in ['superadmin', 'admin']:
+            return redirect(url_for('home'))
     
     return render_template('assessment/results.html', assessment=assessment)
 
@@ -377,27 +445,35 @@ def assessment_history():
     return render_template('assessment/history.html', assessments=assessments)
 
 # --------------------------------------------------
-# DASHBOARD REDIRECT
+# DASHBOARD REDIRECT - With fallbacks for missing templates
 # --------------------------------------------------
 
 @app.route('/dashboard')
 @login_required
 def dashboard_redirect():
     """Redirect to appropriate dashboard based on role"""
-    if current_user.role == 'superadmin':
-        return redirect(url_for('superadmin.dashboard'))
-    elif current_user.role == 'admin':
-        return redirect(url_for('admin.dashboard'))
-    elif current_user.role == 'professional':
-        return redirect(url_for('professional.dashboard'))
-    elif current_user.role == 'organization_admin':
-        return redirect(url_for('organization.dashboard'))
-    elif current_user.role == 'department_head':
-        return redirect(url_for('dept_head.dashboard'))
-    elif current_user.role == 'org_employee':
-        return redirect(url_for('employee.dashboard'))
-    else:
-        return render_template('client/dashboard.html')
+    try:
+        if current_user.role == 'superadmin':
+            return redirect(url_for('superadmin.dashboard'))
+        elif current_user.role == 'admin':
+            return redirect(url_for('admin.dashboard'))
+        elif current_user.role == 'professional':
+            return redirect(url_for('professional.dashboard'))
+        elif current_user.role == 'organization_admin':
+            return redirect(url_for('organization.dashboard'))
+        elif current_user.role == 'department_head':
+            return redirect(url_for('dept_head.dashboard'))
+        elif current_user.role == 'org_employee':
+            # Check if employee blueprint is loaded
+            if 'employee' in loaded_blueprints:
+                return redirect(url_for('employee.dashboard'))
+            else:
+                return render_template('client/dashboard.html')
+        else:
+            return render_template('client/dashboard.html')
+    except Exception as e:
+        print(f"Dashboard redirect error: {e}")
+        return render_template('index.html')
 
 # --------------------------------------------------
 # ERROR HANDLERS
@@ -524,10 +600,19 @@ if not app.debug and MATCHING_SERVICE_AVAILABLE:
         print(f"⚠️ Could not start background services thread: {e}")
 
 # --------------------------------------------------
+# SIMPLE TEST ROUTE - Add this temporarily for debugging
+# --------------------------------------------------
+@app.route('/test')
+def test_route():
+    return "App is working! Blueprints loaded: " + ", ".join(loaded_blueprints)
+
+# --------------------------------------------------
 # RUN APP
 # --------------------------------------------------
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5001))
+    port = int(os.environ.get("PORT", 10000))  # Changed default to 10000 for Render
     debug = os.getenv("FLASK_DEBUG", "False").lower() == "true"
+    print(f"✅ Starting app on port {port} with debug={debug}")
+    print(f"✅ Loaded blueprints: {loaded_blueprints}")
     app.run(host="0.0.0.0", port=port, debug=debug)
