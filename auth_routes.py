@@ -676,7 +676,112 @@ def api_get_current_user():
         }
     
     return jsonify(user_data)
-
+@auth_bp.route('/api/register/organization', methods=['POST'])
+def api_register_organization():
+    """Register organization with manager option"""
+    try:
+        data = request.json
+        
+        # Verify registration code
+        if data.get('registration_code') != 'Papai123':
+            return jsonify({'success': False, 'message': 'Invalid registration code'}), 400
+        
+        # Validate required fields
+        required = ['company_name', 'registration_number', 'employee_count', 'email', 'phone', 'password']
+        for field in required:
+            if not data.get(field):
+                return jsonify({'success': False, 'message': f'{field} is required'}), 400
+        
+        # Check if user managing their own account
+        is_manager = data.get('is_manager', False)
+        manager_username = data.get('manager_username') if is_manager else None
+        manager_password = data.get('manager_password') if is_manager else data.get('password')
+        
+        # Validate email
+        if not validate_email(data['email']):
+            return jsonify({'success': False, 'message': 'Invalid email format'}), 400
+        
+        # Validate phone
+        if not validate_phone(data['phone']):
+            return jsonify({'success': False, 'message': 'Invalid phone number format'}), 400
+        
+        # Check if user exists
+        if User.query.filter_by(email=data['email']).first():
+            return jsonify({'success': False, 'message': 'Email already registered'}), 400
+        
+        # Create username
+        base_username = manager_username if manager_username else data['email'].split('@')[0]
+        username = base_username
+        counter = 1
+        while User.query.filter_by(username=username).first():
+            username = f"{base_username}{counter}"
+            counter += 1
+        
+        # Parse contact person name
+        name_parts = data.get('contact_person', 'Organization Manager').strip().split()
+        first_name = name_parts[0] if name_parts else 'Organization'
+        last_name = ' '.join(name_parts[1:]) if len(name_parts) > 1 else 'Manager'
+        
+        # Create user (organization admin)
+        user = User(
+            username=username,
+            email=data['email'],
+            first_name=first_name,
+            last_name=last_name,
+            phone=data['phone'],
+            role='organization_admin'
+        )
+        user.set_password(manager_password if is_manager else data['password'])
+        
+        db.session.add(user)
+        db.session.flush()
+        
+        # Generate employee registration code
+        employee_code = secrets.token_hex(4).upper()
+        while Organization.query.filter_by(employee_registration_code=employee_code).first():
+            employee_code = secrets.token_hex(4).upper()
+        
+        # Create organization profile
+        organization = Organization(
+            user_id=user.id,
+            company_name=data['company_name'],
+            registration_number=data['registration_number'],
+            industry=data.get('industry', ''),
+            company_size=int(data['employee_count']),
+            employee_registration_code=employee_code,
+            anonymize_employee_data=True,
+            is_manager=is_manager
+        )
+        
+        db.session.add(organization)
+        
+        # If departments are provided, create them
+        if data.get('departments'):
+            depts = data.get('departments', '').split(',')
+            for dept_name in depts:
+                if dept_name.strip():
+                    dept = Department(
+                        organization_id=organization.id,
+                        name=dept_name.strip()
+                    )
+                    db.session.add(dept)
+        
+        db.session.commit()
+        
+        # Log activity
+        log_activity(user.id, 'REGISTER', f'Organization registered: {data["company_name"]}', 'organization', organization.id)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Organization registered successfully! Your employee registration code is: {employee_code}',
+            'employee_code': employee_code,
+            'redirect': url_for('auth.login')
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        print(f"Organization registration error: {str(e)}")
+        return jsonify({'success': False, 'message': 'Registration failed. Please try again.'}), 500
 # API: Forgot password
 @auth_bp.route('/api/forgot-password', methods=['POST'])
 def api_forgot_password():
