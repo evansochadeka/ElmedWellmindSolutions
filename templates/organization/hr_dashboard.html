@@ -1,131 +1,1296 @@
-{% extends "base.html" %}
+<!-- templates/organization/hr_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Dashboard | Elmed Wellmind</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+            --gradient-primary: linear-gradient(135deg, #667eea, #764ba2);
+            --gradient-success: linear-gradient(135deg, #10B981, #34D399);
+            --gradient-warning: linear-gradient(135deg, #F59E0B, #FBBF24);
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 50px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
 
-{% block title %}HR Dashboard{% endblock %}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-{% block content %}
-<style>
-    .dashboard {
-        padding: 100px 30px 40px;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    .header {
-        background: linear-gradient(135deg, #EC4899, #DB2777);
-        border-radius: 20px;
-        padding: 30px;
-        color: white;
-        margin-bottom: 30px;
-    }
-    
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-    
-    .stat-card {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    }
-    
-    .stat-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #EC4899;
-    }
-    
-    .metric-card {
-        background: white;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    }
-    
-    .progress-bar {
-        width: 100%;
-        height: 10px;
-        background: #E5E7EB;
-        border-radius: 5px;
-        margin: 10px 0;
-    }
-    
-    .progress-fill {
-        height: 100%;
-        background: linear-gradient(135deg, #EC4899, #DB2777);
-        border-radius: 5px;
-    }
-</style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F3F4F6;
+        }
 
-<div class="dashboard">
-    <div class="header">
-        <h1 id="orgName">Loading...</h1>
-        <p>HR Dashboard - Employee Engagement</p>
+        .org-header {
+            background: white;
+            box-shadow: var(--shadow-sm);
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .org-header h1 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .org-header h1 i {
+            color: var(--primary);
+        }
+
+        .org-header h1 span {
+            font-size: 0.9rem;
+            color: var(--success);
+            margin-left: 15px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gray);
+            text-decoration: none;
+        }
+
+        .user-menu-item:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--light);
+        }
+
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--light);
+            color: var(--primary);
+            padding-left: 25px;
+        }
+
+        .dashboard-container {
+            padding: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-content h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .welcome-content p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-card h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .engagement-metrics {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-info h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .metric-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.excellent { background: var(--success); }
+        .progress-fill.good { background: var(--primary); }
+        .progress-fill.fair { background: var(--warning); }
+        .progress-fill.poor { background: var(--danger); }
+
+        .department-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .dept-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid;
+        }
+
+        .dept-card.high-risk { border-left-color: var(--danger); }
+        .dept-card.medium-risk { border-left-color: var(--warning); }
+        .dept-card.low-risk { border-left-color: var(--success); }
+
+        .dept-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .dept-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .dept-count {
+            background: var(--light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        .dept-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .dept-stat {
+            text-align: center;
+        }
+
+        .dept-stat-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .dept-stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 10px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            border-radius: 25px;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            background: #F3F4F6;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .professionals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .professional-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .professional-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            height: 80px;
+            background: var(--gradient-primary);
+            position: relative;
+        }
+
+        .profile-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: absolute;
+            bottom: -40px;
+            left: 20px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 50px 20px 20px;
+        }
+
+        .professional-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .professional-type {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        .rating {
+            color: #FFD700;
+            margin: 10px 0;
+        }
+
+        .specializations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .specialization-tag {
+            background: var(--light);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .card-footer {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            border-top: 1px solid var(--light);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message-content {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 15px;
+            background: white;
+        }
+
+        .message.sent .message-content {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        #chatInput {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--light);
+            border-radius: 20px;
+            resize: none;
+        }
+
+        #sendChatBtn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1024px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 20px;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="org-header">
+        <h1>
+            <i class="fas fa-building"></i>
+            <span id="orgName">{{ organization.company_name }}</span>
+            <span>HR Dashboard</span>
+        </h1>
+        <div class="user-menu">
+            <div class="user-menu-item" onclick="showAIChat()">
+                <i class="fas fa-robot"></i> AI Assistant
+            </div>
+            <div class="user-menu-item" onclick="window.location.href='/assessment/take'">
+                <i class="fas fa-clipboard-list"></i> Assessment
+            </div>
+            <div class="user-dropdown">
+                <div class="user-avatar" onclick="toggleDropdown()">
+                    {{ current_user.get_full_name()[0] }}
+                </div>
+                <div class="dropdown-menu" id="userDropdown">
+                    <a href="#" onclick="showProfile()"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#" onclick="showSettings()"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="/auth/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <div class="welcome-content">
+                <h1>Welcome back, {{ current_user.get_full_name() }}! 👋</h1>
+                <p>Monitor employee wellness, engagement metrics, and connect with professionals.</p>
+            </div>
+        </div>
+
+        <!-- HR Stats -->
+        <div class="stats-grid" id="hrStats">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-value" id="totalEmployees">0</div>
+                </div>
+                <div class="stat-label">Total Employees</div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up trend-up"></i>
+                    <span>+12% from last month</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-heartbeat"></i></div>
+                    <div class="stat-value" id="avgWellness">0</div>
+                </div>
+                <div class="stat-label">Avg Wellness Score</div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up trend-up"></i>
+                    <span>+5% improvement</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
+                    <div class="stat-value" id="assessmentRate">0%</div>
+                </div>
+                <div class="stat-label">Assessment Completion</div>
+                <div class="progress-bar">
+                    <div class="progress-fill excellent" id="assessmentProgress" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-value" id="engagementRate">0%</div>
+                </div>
+                <div class="stat-label">Employee Engagement</div>
+                <div class="progress-bar">
+                    <div class="progress-fill good" id="engagementProgress" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Distribution -->
+        <div class="metrics-grid">
+            <div class="chart-card">
+                <h3><i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> Risk Distribution</h3>
+                <canvas id="riskChart" style="width:100%; height:300px;"></canvas>
+            </div>
+            <div class="engagement-metrics">
+                <h3><i class="fas fa-chart-line" style="color: var(--success);"></i> Key Metrics</h3>
+                <div class="metric-item">
+                    <div class="metric-info">
+                        <h4>High Risk Employees</h4>
+                        <p>Need immediate attention</p>
+                    </div>
+                    <div class="metric-value" id="highRiskCount" style="color: var(--danger);">0</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-info">
+                        <h4>Medium Risk</h4>
+                        <p>Monitor closely</p>
+                    </div>
+                    <div class="metric-value" id="mediumRiskCount" style="color: var(--warning);">0</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-info">
+                        <h4>Low Risk</h4>
+                        <p>Doing well</p>
+                    </div>
+                    <div class="metric-value" id="lowRiskCount" style="color: var(--success);">0</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-info">
+                        <h4>Sessions This Month</h4>
+                        <p>Utilization rate</p>
+                    </div>
+                    <div class="metric-value" id="monthlySessions">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Wellness -->
+        <h2 style="margin: 30px 0 20px;"><i class="fas fa-sitemap"></i> Department Wellness Overview</h2>
+        <div class="department-grid" id="deptGrid"></div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('wellness')">
+                <i class="fas fa-heartbeat"></i> Wellness Analytics
+            </button>
+            <button class="tab-btn" onclick="showTab('professionals')">
+                <i class="fas fa-user-md"></i> Professionals
+            </button>
+            <button class="tab-btn" onclick="showTab('reports')">
+                <i class="fas fa-file-alt"></i> Reports
+            </button>
+        </div>
+
+        <!-- Wellness Tab -->
+        <div class="tab-content active" id="wellnessTab">
+            <div class="metrics-grid">
+                <div class="chart-card">
+                    <h3>Wellness Trend (Last 6 Months)</h3>
+                    <canvas id="wellnessTrendChart" style="width:100%; height:300px;"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Assessment Completion by Dept</h3>
+                    <canvas id="deptCompletionChart" style="width:100%; height:300px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Professionals Tab -->
+        <div class="tab-content" id="professionalsTab">
+            <div style="margin-bottom: 20px;">
+                <input type="text" id="searchProfessionals" placeholder="Search professionals..." style="width: 100%; padding: 15px; border: 2px solid var(--light); border-radius: 10px;">
+            </div>
+            <div class="professionals-grid" id="professionalsGrid"></div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div class="tab-content" id="reportsTab">
+            <div class="engagement-metrics">
+                <h3>Generate Reports</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <button class="btn-primary" onclick="generateReport('wellness')">
+                        <i class="fas fa-heartbeat"></i> Wellness Report
+                    </button>
+                    <button class="btn-primary" onclick="generateReport('engagement')">
+                        <i class="fas fa-chart-line"></i> Engagement Report
+                    </button>
+                    <button class="btn-primary" onclick="generateReport('risk')">
+                        <i class="fas fa-exclamation-triangle"></i> Risk Assessment
+                    </button>
+                    <button class="btn-primary" onclick="generateReport('department')">
+                        <i class="fas fa-sitemap"></i> Department Summary
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div class="stats-grid" id="statsGrid"></div>
-    
-    <div class="metric-card">
-        <h3>Engagement Metrics</h3>
-        <div id="engagementMetrics"></div>
-    </div>
-    
-    <div class="metric-card">
-        <h3>Department Summary</h3>
-        <div id="deptSummary"></div>
-    </div>
-</div>
 
-<script>
-async function loadDashboard() {
-    const response = await fetch('/organization/api/dashboard/data');
-    const data = await response.json();
-    
-    document.getElementById('orgName').textContent = data.organization.name;
-    
-    document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-card">
-            <div class="stat-value">${data.organization.total_employees}</div>
-            <div>Total Employees</div>
+    <!-- Professional Modal -->
+    <div class="modal" id="professionalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-md"></i> Professional Profile</h3>
+                <button class="modal-close" onclick="closeModal('professionalModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="professionalModalBody"></div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value">${data.engagement.active_this_month}</div>
-            <div>Active This Month</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">${data.engagement.active_percentage}%</div>
-            <div>Active Rate</div>
-        </div>
-    `;
-    
-    document.getElementById('engagementMetrics').innerHTML = `
-        <div style="margin: 15px 0;">
-            <strong>Assessment Rate:</strong> ${data.engagement.assessment_rate}%
-            <div class="progress-bar"><div class="progress-fill" style="width: ${data.engagement.assessment_rate}%"></div></div>
-        </div>
-        <div style="margin: 15px 0;">
-            <strong>Sessions per Employee:</strong> ${data.engagement.sessions_per_employee}
-        </div>
-        <div style="margin: 15px 0;">
-            <strong>Current Wellness Avg:</strong> ${data.wellness.current_avg}
-        </div>
-        <div style="margin: 15px 0;">
-            <strong>Trend:</strong> ${data.wellness.trend_avg > data.wellness.current_avg ? 'Improving 📈' : 'Declining 📉'}
-        </div>
-    `;
-    
-    document.getElementById('deptSummary').innerHTML = data.department_summary.map(dept => `
-        <div style="border-bottom: 1px solid #E5E7EB; padding: 15px 0;">
-            <h4>${dept.name}</h4>
-            <p>Employees: ${dept.employee_count} | Avg Wellness: ${dept.avg_wellness.toFixed(1)} | High Risk: ${dept.high_risk}</p>
-        </div>
-    `).join('');
-}
+    </div>
 
-document.addEventListener('DOMContentLoaded', loadDashboard);
-</script>
-{% endblock %}
+    <!-- Request Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus"></i> Request Session</h3>
+                <button class="modal-close" onclick="closeModal('requestModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="requestForm">
+                    <input type="hidden" id="requestProfessionalId">
+                    <div class="form-group">
+                        <label>Issue Description</label>
+                        <textarea class="form-control" id="requestIssue" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Date</label>
+                        <input type="date" class="form-control" id="requestDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Time</label>
+                        <input type="time" class="form-control" id="requestTime" required>
+                    </div>
+                    <button type="submit" class="btn-save">Submit Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div class="modal" id="chatModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-comments"></i> Chat with <span id="chatProfessionalName"></span></h3>
+                <button class="modal-close" onclick="closeModal('chatModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <textarea id="chatInput" placeholder="Type your message..." rows="1"></textarea>
+                    <button id="sendChatBtn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let professionals = [];
+        let currentProfessional = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHRData();
+            loadProfessionals();
+            initCharts();
+        });
+
+        async function loadHRData() {
+            try {
+                const response = await fetch('/organization/api/dashboard/data');
+                const data = await response.json();
+                
+                document.getElementById('totalEmployees').textContent = data.stats.total_employees;
+                document.getElementById('avgWellness').textContent = data.stats.avg_wellness.toFixed(1);
+                document.getElementById('assessmentRate').textContent = data.stats.assessment_rate + '%';
+                document.getElementById('engagementRate').textContent = data.stats.engagement_rate + '%';
+                document.getElementById('highRiskCount').textContent = data.stats.high_risk;
+                document.getElementById('mediumRiskCount').textContent = data.stats.medium_risk;
+                document.getElementById('lowRiskCount').textContent = data.stats.low_risk;
+                document.getElementById('monthlySessions').textContent = data.stats.monthly_sessions;
+                
+                document.getElementById('assessmentProgress').style.width = data.stats.assessment_rate + '%';
+                document.getElementById('engagementProgress').style.width = data.stats.engagement_rate + '%';
+                
+                updateDepartments(data.departments);
+                updateRiskChart(data.stats);
+                updateWellnessTrend(data.wellness_trend);
+                
+            } catch (error) {
+                console.error('Error loading HR data:', error);
+            }
+        }
+
+        function updateDepartments(departments) {
+            const grid = document.getElementById('deptGrid');
+            grid.innerHTML = departments.map(d => {
+                const riskClass = d.avg_wellness > 70 ? 'low-risk' : d.avg_wellness > 40 ? 'medium-risk' : 'high-risk';
+                return `
+                    <div class="dept-card ${riskClass}">
+                        <div class="dept-header">
+                            <span class="dept-name">${d.name}</span>
+                            <span class="dept-count">${d.employee_count} employees</span>
+                        </div>
+                        <div class="dept-stats">
+                            <div class="dept-stat">
+                                <div class="dept-stat-value">${d.avg_wellness.toFixed(1)}</div>
+                                <div class="dept-stat-label">Avg Wellness</div>
+                            </div>
+                            <div class="dept-stat">
+                                <div class="dept-stat-value" style="color: #EF4444;">${d.high_risk}</div>
+                                <div class="dept-stat-label">High Risk</div>
+                            </div>
+                            <div class="dept-stat">
+                                <div class="dept-stat-value">${d.completion_rate || 0}%</div>
+                                <div class="dept-stat-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill good" style="width: ${d.completion_rate || 0}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadProfessionals() {
+            try {
+                const response = await fetch('/organization/api/professionals');
+                professionals = await response.json();
+                displayProfessionals(professionals);
+            } catch (error) {
+                console.error('Error loading professionals:', error);
+            }
+        }
+
+        function displayProfessionals(pros) {
+            const grid = document.getElementById('professionalsGrid');
+            grid.innerHTML = pros.map(p => `
+                <div class="professional-card" onclick="viewProfessional(${p.id})">
+                    <div class="card-header">
+                        <img src="${p.profile_pic ? '/static/uploads/profiles/' + p.profile_pic : '/static/images/default-avatar.jpg'}" 
+                             class="profile-image">
+                    </div>
+                    <div class="card-body">
+                        <div class="professional-name">${p.name}</div>
+                        <div class="professional-type">${p.type}</div>
+                        <div class="rating">
+                            ${getRatingStars(p.average_rating)}
+                        </div>
+                        <div class="specializations">
+                            ${p.specializations.slice(0, 3).map(s => `<span class="specialization-tag">${s}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="action-btn btn-primary" onclick="event.stopPropagation(); requestSession(${p.id}, '${p.name}')">
+                            <i class="fas fa-calendar-plus"></i> Request
+                        </button>
+                        <button class="action-btn btn-secondary" onclick="event.stopPropagation(); openChat(${p.id}, '${p.name}')">
+                            <i class="fas fa-comments"></i> Chat
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getRatingStars(rating) {
+            const full = Math.floor(rating);
+            const half = rating % 1 >= 0.5;
+            let stars = '';
+            for (let i = 0; i < full; i++) stars += '<i class="fas fa-star"></i>';
+            if (half) stars += '<i class="fas fa-star-half-alt"></i>';
+            for (let i = 0; i < 5 - full - (half ? 1 : 0); i++) stars += '<i class="far fa-star"></i>';
+            return stars;
+        }
+
+        function viewProfessional(professionalId) {
+            const pro = professionals.find(p => p.id === professionalId);
+            if (!pro) return;
+            
+            document.getElementById('professionalModalBody').innerHTML = `
+                <div style="text-align: center;">
+                    <img src="${pro.profile_pic ? '/static/uploads/profiles/' + pro.profile_pic : '/static/images/default-avatar.jpg'}" 
+                         style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 15px;">
+                    <h2>${pro.name}</h2>
+                    <p>${pro.type} • ${pro.years_experience} years</p>
+                    <div class="rating">${getRatingStars(pro.average_rating)}</div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <h4>Specializations</h4>
+                    <div class="specializations">
+                        ${pro.specializations.map(s => `<span class="specialization-tag">${s}</span>`).join('')}
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-primary" style="flex: 1;" onclick="requestSession(${pro.id}, '${pro.name}')">
+                        Request Session
+                    </button>
+                    <button class="btn-secondary" style="flex: 1;" onclick="openChat(${pro.id}, '${pro.name}')">
+                        Chat
+                    </button>
+                </div>
+            `;
+            openModal('professionalModal');
+        }
+
+        function requestSession(professionalId, professionalName) {
+            document.getElementById('requestProfessionalId').value = professionalId;
+            openModal('requestModal');
+        }
+
+        document.getElementById('requestForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const data = {
+                professional_id: document.getElementById('requestProfessionalId').value,
+                issue: document.getElementById('requestIssue').value,
+                preferred_date: document.getElementById('requestDate').value,
+                preferred_time: document.getElementById('requestTime').value
+            };
+            
+            try {
+                const response = await fetch('/organization/api/request-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    Swal.fire('Success', 'Session request sent!', 'success');
+                    closeModal('requestModal');
+                }
+            } catch (error) {
+                Swal.fire('Error', 'Failed to send request', 'error');
+            }
+        });
+
+        function openChat(professionalId, professionalName) {
+            currentProfessional = { id: professionalId, name: professionalName };
+            document.getElementById('chatProfessionalName').textContent = professionalName;
+            document.getElementById('chatMessages').innerHTML = '';
+            openModal('chatModal');
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message || !currentProfessional) return;
+            
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.innerHTML += `
+                <div class="message sent">
+                    <div class="message-content">${escapeHtml(message)}</div>
+                </div>
+            `;
+            input.value = '';
+            
+            try {
+                await fetch('/organization/api/chat/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        professional_id: currentProfessional.id,
+                        message: message
+                    })
+                });
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function initCharts() {
+            const riskCtx = document.getElementById('riskChart').getContext('2d');
+            new Chart(riskCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Low Risk', 'Medium Risk', 'High Risk'],
+                    datasets: [{
+                        data: [60, 30, 10],
+                        backgroundColor: ['#10B981', '#F59E0B', '#EF4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            
+            const trendCtx = document.getElementById('wellnessTrendChart').getContext('2d');
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Wellness Score',
+                        data: [65, 68, 72, 70, 75, 78],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                }
+            });
+            
+            const deptCtx = document.getElementById('deptCompletionChart').getContext('2d');
+            new Chart(deptCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['HR', 'IT', 'Sales', 'Marketing'],
+                    datasets: [{
+                        label: 'Completion Rate %',
+                        data: [85, 72, 68, 90],
+                        backgroundColor: '#667eea'
+                    }]
+                }
+            });
+        }
+
+        function generateReport(type) {
+            Swal.fire({
+                title: 'Generating Report',
+                text: `Your ${type} report is being generated. You will be notified when ready.`,
+                icon: 'info',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+
+        function toggleDropdown() {
+            document.getElementById('userDropdown').classList.toggle('active');
+        }
+
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-dropdown')) {
+                document.getElementById('userDropdown')?.classList.remove('active');
+            }
+        });
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function showProfile() {
+            Swal.fire({
+                title: 'Profile Information',
+                html: `
+                    <p><strong>Name:</strong> {{ current_user.get_full_name() }}</p>
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    <p><strong>Role:</strong> HR Manager</p>
+                `,
+                icon: 'info'
+            });
+        }
+
+        function showSettings() {
+            Swal.fire('Settings', 'HR settings coming soon', 'info');
+        }
+
+        function showAIChat() {
+            Swal.fire('AI Assistant', 'AI chat feature coming soon!', 'info');
+        }
+
+        document.getElementById('searchProfessionals')?.addEventListener('input', function() {
+            const search = this.value.toLowerCase();
+            const filtered = professionals.filter(p => 
+                p.name.toLowerCase().includes(search) ||
+                p.type.toLowerCase().includes(search) ||
+                p.specializations.some(s => s.toLowerCase().includes(search))
+            );
+            displayProfessionals(filtered);
+        });
+    </script>
+</body>
+</html>
