@@ -50,7 +50,7 @@ google-generativeai==0.8.5
 googleapis-common-protos==1.72.0
 greenlet==3.2.4
 grpcio==1.76.0
-grpcio-status==1.71.2
+grpcio-status==1.76.0
 gunicorn==24.0.0
 h11==0.16.0
 hf-xet==1.2.0
