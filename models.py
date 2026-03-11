@@ -1,4 +1,4 @@
-# models.py - COMPLETE WITH ALL ORIGINAL AND NEW FEATURES - ALL RELATIONSHIPS FIXED
+# models.py - COMPLETE WITH ALL ORIGINAL AND NEW FEATURES - RELATIONSHIP ERROR FIXED
 from extensions import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import relationship
@@ -297,7 +297,7 @@ class Department(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
     
-    # FIXED: head_id now properly references department_heads.id
+    # Fixed: Proper ForeignKey to department_heads.id
     head_id = db.Column(db.Integer, db.ForeignKey('department_heads.id'), nullable=True)
     
     # Statistics
@@ -310,10 +310,16 @@ class Department(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # FIXED: Relationships with proper back_populates
+    # FIXED: Relationships with proper remote_side to resolve direction conflict
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='departments')
     employees_list = db.relationship('Client', foreign_keys='Client.department_id', back_populates='department')
-    head = db.relationship('DepartmentHead', foreign_keys=[head_id], back_populates='department', uselist=False)
+    
+    # FIXED: Added remote_side to resolve the many-to-one direction conflict
+    head = db.relationship('DepartmentHead', 
+                          foreign_keys=[head_id], 
+                          back_populates='department', 
+                          uselist=False,
+                          remote_side='DepartmentHead.id')  # Added remote_side
     
     def update_stats(self):
         employees = Client.query.filter_by(department_id=self.id).all()
@@ -341,10 +347,16 @@ class DepartmentHead(db.Model):
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # FIXED: Relationships with proper back_populates
+    # FIXED: Relationships with proper remote_side to resolve direction conflict
     user = db.relationship('User', foreign_keys=[user_id], back_populates='department_head_profile')
     organization = db.relationship('Organization', foreign_keys=[organization_id], back_populates='department_heads')
-    department = db.relationship('Department', foreign_keys=[department_id], back_populates='head')
+    
+    # FIXED: Added remote_side to resolve the many-to-one direction conflict
+    department = db.relationship('Department', 
+                                foreign_keys=[department_id], 
+                                back_populates='head', 
+                                uselist=False,
+                                remote_side='Department.id')  # Added remote_side
     
     def get_department_stats(self):
         if not self.department:
