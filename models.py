@@ -692,6 +692,23 @@ class Notification(db.Model):
         self.is_read = True
         self.read_at = datetime.utcnow()
 
+class Complaint(db.Model):
+    __tablename__ = 'complaints'
+    id = db.Column(db.Integer, primary_key=True)
+    organization_id = db.Column(db.Integer, db.ForeignKey('organizations.id'), nullable=False)
+    professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=False)
+    
+    type = db.Column(db.String(50), nullable=False)  # unprofessional, missed_session, late, billing, other
+    description = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), default='pending')  # pending, reviewed, resolved, dismissed
+    response = db.Column(db.Text, nullable=True)
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    organization = db.relationship('Organization', backref='complaints')
+    professional = db.relationship('Professional', backref='complaints')
 class ActivityLog(db.Model):
     __tablename__ = 'activity_logs'
     id = db.Column(db.Integer, primary_key=True)
