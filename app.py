@@ -28,6 +28,43 @@ app = Flask(
 
 CORS(app)
 
+
+
+
+
+dupliicate code
+# app.py - COMPLETE POSTGRESQL VERSION WITH ALL FEATURES - FIXED
+import os
+import sys
+import json
+import threading
+import secrets  # ADDED: Missing import
+from datetime import datetime, timedelta
+
+from flask import Flask, render_template, jsonify, request, send_from_directory, redirect, url_for, session
+from flask_cors import CORS
+from dotenv import load_dotenv
+from flask_login import LoginManager, login_required, current_user, login_user, logout_user
+from sqlalchemy import text
+from werkzeug.utils import secure_filename  # ADDED: Missing import
+
+# Load environment variables
+load_dotenv()
+
+# Import extensions
+from extensions import db
+
+# Create Flask app
+app = Flask(
+    __name__,
+    static_folder="static",
+    template_folder="templates"
+)
+
+CORS(app)
+duplicate code
+
+
 # --------------------------------------------------
 # PostgreSQL Configuration
 # --------------------------------------------------
